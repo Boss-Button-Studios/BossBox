@@ -1,0 +1,8 @@
+README.md
+pyproject.toml
+bossbox.egg-info/PKG-INFO
+bossbox.egg-info/SOURCES.txt
+bossbox.egg-info/dependency_links.txt
+bossbox.egg-info/entry_points.txt
+bossbox.egg-info/requires.txt
+bossbox.egg-info/top_level.txt

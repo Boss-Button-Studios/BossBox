@@ -1,0 +1,2 @@
+[console_scripts]
+bossbox = bossbox.cli:main
