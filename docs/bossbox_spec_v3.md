@@ -964,7 +964,33 @@ Guided in-application setup flow for ntfy.sh that BossBox executes on itself. De
 
 Formal paper describing the hypervisor-isolated self-audit architecture, its relationship to the Task Shield and weak-to-strong monitoring literature, and empirical evaluation against AgentDojo. In preparation separately.
 
-### 16.6 v2 GUI Migration
+### 16.6 Peer Review Skill
+
+A multi-stage analytical skill that takes a draft document and runs a structured review pipeline: extracting key claims, searching for prior art against each claim via Google Scholar, arXiv, and EBSCO (credentials in secrets store), identifying gaps between claims and found support, and synthesizing findings into a structured review with flagged claims, suggested citations, scope concerns, and a calibrated novelty assessment.
+
+Novelty assessment uses ensemble reasoning mode (Section 16.7) — multiple runs at higher temperature with consensus highlighting and outlier surfacing.
+
+**The skill produces two distinct outputs with different reproducibility properties:**
+
+*Search record* — fully reproducible and citable. Documents what sources were searched, what queries were used verbatim, the date range, results returned per query, filtering criteria applied, and the final corpus. This is methods-appendix quality output. A researcher can cite it as procedure and another researcher can reproduce it exactly. This part closes the gap in academic practice where literature search methods are treated as background rather than method.
+
+*Analytical report* — intentionally non-deterministic, ensemble-synthesized, confidence-weighted. Recurring findings across runs are surfaced as high-confidence. Findings that appear in only one or two runs are flagged as outliers worth considering. This output is a structured first-pass review — useful input to the researcher's own judgment, not a citable finding in itself.
+
+**Epistemic honesty in absence findings:** Absence of evidence is evidence of absence — the strength of that evidence depends on search quality, not search effort. The search record characterizes each absence finding by coverage: a high-quality search of arXiv, EBSCO, and ACM Digital Library that finds nothing for a specific technical claim is meaningful evidence of novelty. A narrow search that finds nothing is not. The skill knows the difference and says so. The goal is to avoid the streetlight problem — searching only where it is easy to search and treating that as comprehensive coverage.
+
+EBSCO credentials and Google Scholar search capability established for this skill generalize to any research-oriented skill in the library — medical billing literature, regulatory references, technical standards. The peer review skill is the reference implementation for research-capable skills.
+
+### 16.7 Ensemble Reasoning Mode
+
+Skill profiles may optionally declare an ensemble mode — running the same analytical pipeline multiple times with higher temperature to produce meaningfully different reasoning paths, then synthesizing the results. Findings that appear consistently across runs are surfaced as high-confidence. Findings that appear in only one or two runs are flagged as outliers worth considering but not presented as conclusions.
+
+This approach makes model uncertainty visible in the output rather than hidden behind a confident-sounding single response. It also economizes the smaller language models — multiple short runs with variance can outperform a single long run that exhausts context. Implementation requires an `ensemble` parameter in the skill profile schema with `runs` and `consensus_threshold` fields, and a synthesis step handled by the reasoner tier comparing structured outputs across runs.
+
+Per-subtask parameter tuning — different temperature, top_p, and max_tokens settings for each stage within a multi-stage skill — is a related capability. The search query generation stage wants low temperature for consistent results; the novelty assessment stage wants higher temperature for genuine variance. The current skill profile schema applies parameters globally across the skill. Stage-level overrides are the natural extension.
+
+Both capabilities build on a working single-run pipeline and are deferred to v2 to avoid speccing parameters for a system that doesn't yet exist. The right values are empirically discovered, not designed in advance.
+
+### 16.8 v2 GUI Migration
 
 Tauri + React shell replacement. Post-launch.
 
@@ -1160,7 +1186,7 @@ bossbox/
 
 ---
 
-### Step 18 — RAG Corpus Indexer
+### Step 19 — RAG Corpus Indexer
 
 **Task:** Implement `skills/rag.py`. Builds and maintains a vector index over a skill's reference document corpus. Indexes at skill load time if corpus has changed since last index. Retrieves top-k chunks at inference time and returns them for context injection. Passes all corpus documents through the physical sanitizer before indexing.
 
@@ -1172,7 +1198,7 @@ bossbox/
 
 ---
 
-### Step 19 — Hypervisor Process
+### Step 20 — Hypervisor Process
 
 **Task:** Implement `hypervisor/hypervisor.py` as a separate process. Write-once goal store. Hardcoded audit prompt template. IPC via local socket. `evaluate_input()` and `evaluate_action()` endpoints. Shear thickening rate control. Score suppression in audit log.
 
@@ -1196,7 +1222,7 @@ bossbox/
 
 ---
 
-### Step 20 — GUI Shell v1
+### Step 21 — GUI Shell v1
 
 **Task:** Implement `gui/app.py` using CustomTkinter. All model output delivered via thread-safe queues — GUI thread never blocks. Implement all primary views: Dashboard, Task Input, Pipeline View (thought stream, stop/redirect), Skill Editor (plain controls, Save, Refine), Model Manager (biographies, VRAM allocation), Security Center, Settings.
 
@@ -1204,7 +1230,7 @@ bossbox/
 
 ---
 
-### Step 21 — Onboarding Wizard
+### Step 22 — Onboarding Wizard
 
 **Task:** Implement `gui/wizard.py`. Five-step first-run wizard per Section 5.4. Minimum spec check with graceful exit if below threshold. Hardware detection display. Plain-language portfolio recommendation with honest constraint explanations. Model acquisition with per-model progress. Optional extensions including ntfy.sh guided setup. First-run flag written to config on completion.
 
@@ -1212,7 +1238,7 @@ bossbox/
 
 ---
 
-### Step 22 — PyInstaller Build Script
+### Step 23 — PyInstaller Build Script
 
 **Task:** Create `build/build.py` and PyInstaller `.spec` file. Bundles complete application, default skill profiles, and first-run Ollama installation check.
 
