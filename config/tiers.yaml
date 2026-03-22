@@ -1,33 +1,43 @@
+# BossBox tier configuration
+#
+# Each tier names a primary model (provider/model:tag) and an ordered list of
+# fallbacks.  The supervisor tries the primary first; if it is unavailable it
+# works through the fallback list in order.  An empty fallback list means the
+# tier fails hard when the primary is unavailable.
+#
+# Model strings follow the pattern:  <provider>/<model>:<tag>
+#   ollama/smollm:360m          → local Ollama model
+#   anthropic/claude-haiku-4-5  → Anthropic cloud (requires API key)
+#   openai/gpt-4o-mini          → OpenAI cloud (requires API key)
+
 tiers:
+  # Always loaded.  Receives every request first; makes routing decisions.
   nano:
-    role: "Router / classifier / first-touch / hypervisor audit model"
-    always_loaded: true
     primary: ollama/smollm:360m
     fallback: []
+
+  # Task decomposition, summarisation, intermediate outputs, injection
+  # detection.  Loaded on demand.
   micro:
-    role: "Task decomposer / summarizer / intermediate outputs / injection detector"
-    always_loaded: false
     primary: ollama/smollm:1.7b
     fallback: []
+
+  # Domain-specific tasks — primarily code.  Loaded on demand.
   specialist:
-    role: "Domain-specific tasks — code generation and review"
-    always_loaded: false
     primary: ollama/qwen2.5-coder:1.5b
     fallback: []
+
+  # Complex logic, plan evaluation, final review.  Loaded on demand.
+  # Falls back to cloud when local is unavailable or confidence is low.
   reasoner:
-    role: "Complex logic / plan evaluation / final review"
-    always_loaded: false
     primary: ollama/deepseek-r1:7b
     fallback:
       - anthropic/claude-haiku-4-5
       - openai/gpt-4o-mini
+
+  # Explicit cloud escalation path.  Only invoked on user direction or a
+  # defined fallback condition.
   cloud:
-    role: "Escalation / fallback / high-priority override"
-    always_loaded: false
     primary: anthropic/claude-haiku-4-5
     fallback:
       - openai/gpt-4o-mini
-eviction_priority:
-  - reasoner
-  - specialist
-  - micro
