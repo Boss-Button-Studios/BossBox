@@ -67,17 +67,11 @@ def test_cli_callable():
     from bossbox import cli
     assert callable(cli.main)
 
-def test_load_config_not_implemented():
-    from bossbox.config.loader import load_config
-    with pytest.raises(NotImplementedError): load_config()
 
 def test_sanitize_not_implemented():
     from bossbox.ingest.sanitizer import sanitize
     with pytest.raises(NotImplementedError): sanitize(b"x", "f.pdf")
 
-def test_audit_logger_not_implemented():
-    from bossbox.audit.logger import AuditLogger
-    with pytest.raises(NotImplementedError): AuditLogger().log({})
 
 def test_vram_budgeter_not_implemented():
     from bossbox.vram.budgeter import VRAMBudgeter

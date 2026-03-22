@@ -36,4 +36,5 @@ bossbox/skills/elicitor.py
 bossbox/skills/loader.py
 bossbox/vram/__init__.py
 bossbox/vram/budgeter.py
+tests/test_audit_logger.py
 tests/test_step01_scaffold.py

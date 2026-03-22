@@ -10,26 +10,36 @@
 #   anthropic/claude-haiku-4-5  → Anthropic cloud (requires API key)
 #   openai/gpt-4o-mini          → OpenAI cloud (requires API key)
 
+eviction_priority:
+  - reasoner
+  - specialist
+  - micro
+
 tiers:
   # Always loaded.  Receives every request first; makes routing decisions.
   nano:
+    always_loaded: true
+    eviction_priority: null     #always needed, never evicted
     primary: ollama/smollm:360m
     fallback: []
 
   # Task decomposition, summarisation, intermediate outputs, injection
   # detection.  Loaded on demand.
   micro:
+    eviction_priority: 4
     primary: ollama/smollm:1.7b
     fallback: []
 
   # Domain-specific tasks — primarily code.  Loaded on demand.
   specialist:
+    eviction_priority: 3
     primary: ollama/qwen2.5-coder:1.5b
     fallback: []
 
   # Complex logic, plan evaluation, final review.  Loaded on demand.
   # Falls back to cloud when local is unavailable or confidence is low.
   reasoner:
+    eviction_priority: 1    #evicted first (heaviest, least frequent)
     primary: ollama/deepseek-r1:7b
     fallback:
       - anthropic/claude-haiku-4-5
@@ -38,6 +48,7 @@ tiers:
   # Explicit cloud escalation path.  Only invoked on user direction or a
   # defined fallback condition.
   cloud:
+    eviction_priority: null     #not a local model; not subject to VRAM eviction
     primary: anthropic/claude-haiku-4-5
     fallback:
       - openai/gpt-4o-mini
