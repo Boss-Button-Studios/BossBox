@@ -30,7 +30,7 @@ pytest tests/ --cov=bossbox --cov-report=term-missing
 
 ## Architecture
 
-See `bossbox_spec_v3.md` for the full specification.
+See `bossbox_spec_v4.md` for the full specification.
 
 ## License
 
