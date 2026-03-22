@@ -1,0 +1,33 @@
+tiers:
+  nano:
+    role: "Router / classifier / first-touch / hypervisor audit model"
+    always_loaded: true
+    primary: ollama/smollm:360m
+    fallback: []
+  micro:
+    role: "Task decomposer / summarizer / intermediate outputs / injection detector"
+    always_loaded: false
+    primary: ollama/smollm:1.7b
+    fallback: []
+  specialist:
+    role: "Domain-specific tasks — code generation and review"
+    always_loaded: false
+    primary: ollama/qwen2.5-coder:1.5b
+    fallback: []
+  reasoner:
+    role: "Complex logic / plan evaluation / final review"
+    always_loaded: false
+    primary: ollama/deepseek-r1:7b
+    fallback:
+      - anthropic/claude-haiku-4-5
+      - openai/gpt-4o-mini
+  cloud:
+    role: "Escalation / fallback / high-priority override"
+    always_loaded: false
+    primary: anthropic/claude-haiku-4-5
+    fallback:
+      - openai/gpt-4o-mini
+eviction_priority:
+  - reasoner
+  - specialist
+  - micro

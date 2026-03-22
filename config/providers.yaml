@@ -1,0 +1,9 @@
+providers:
+  ollama:
+    base_url: http://localhost:11434
+  anthropic:
+    api_key: ${ANTHROPIC_API_KEY}
+    default_model: claude-haiku-4-5
+  openai:
+    api_key: ${OPENAI_API_KEY}
+    default_model: gpt-4o-mini
