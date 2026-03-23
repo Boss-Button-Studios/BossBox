@@ -1,14 +1,10 @@
-# BossBox tier configuration
+# config/tiers.yaml
 #
-# Each tier names a primary model (provider/model:tag) and an ordered list of
-# fallbacks.  The supervisor tries the primary first; if it is unavailable it
-# works through the fallback list in order.  An empty fallback list means the
-# tier fails hard when the primary is unavailable.
+# Tier assignment and fallback chains (Section 5 and 6.3).
 #
-# Model strings follow the pattern:  <provider>/<model>:<tag>
-#   ollama/smollm:360m          → local Ollama model
-#   anthropic/claude-haiku-4-5  → Anthropic cloud (requires API key)
-#   openai/gpt-4o-mini          → OpenAI cloud (requires API key)
+# eviction_priority: ordered list of tiers to evict when VRAM is tight,
+#   lowest priority first. Nano is intentionally absent — it is never evicted.
+#   See Section 5.5 for the full eviction order.
 
 eviction_priority:
   - reasoner
@@ -16,39 +12,30 @@ eviction_priority:
   - micro
 
 tiers:
-  # Always loaded.  Receives every request first; makes routing decisions.
   nano:
-    always_loaded: true
-    eviction_priority: null     #always needed, never evicted
     primary: ollama/smollm:360m
+    always_loaded: true
     fallback: []
 
-  # Task decomposition, summarisation, intermediate outputs, injection
-  # detection.  Loaded on demand.
   micro:
-    eviction_priority: 4
     primary: ollama/smollm:1.7b
+    always_loaded: false
     fallback: []
 
-  # Domain-specific tasks — primarily code.  Loaded on demand.
   specialist:
-    eviction_priority: 3
     primary: ollama/qwen2.5-coder:1.5b
+    always_loaded: false
     fallback: []
 
-  # Complex logic, plan evaluation, final review.  Loaded on demand.
-  # Falls back to cloud when local is unavailable or confidence is low.
   reasoner:
-    eviction_priority: 1    #evicted first (heaviest, least frequent)
     primary: ollama/deepseek-r1:7b
+    always_loaded: false
     fallback:
-      - anthropic/claude-haiku-4-5
+      - anthropic/claude-haiku-4-5-20251001
       - openai/gpt-4o-mini
 
-  # Explicit cloud escalation path.  Only invoked on user direction or a
-  # defined fallback condition.
   cloud:
-    eviction_priority: null     #not a local model; not subject to VRAM eviction
-    primary: anthropic/claude-haiku-4-5
+    primary: anthropic/claude-haiku-4-5-20251001
+    always_loaded: false
     fallback:
       - openai/gpt-4o-mini

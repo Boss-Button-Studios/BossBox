@@ -29,8 +29,11 @@ bossbox/pipeline/decomposer.py
 bossbox/pipeline/envelope.py
 bossbox/pipeline/supervisor.py
 bossbox/providers/__init__.py
+bossbox/providers/anthropic.py
 bossbox/providers/base.py
 bossbox/providers/ollama.py
+bossbox/providers/openai.py
+bossbox/providers/registry.py
 bossbox/skills/__init__.py
 bossbox/skills/elicitor.py
 bossbox/skills/loader.py

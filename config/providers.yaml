@@ -1,20 +1,30 @@
-# BossBox provider configuration
+# config/providers.yaml
 #
-# Cloud provider sections (anthropic, openai) are optional.
-# Missing API keys resolve to null rather than raising — the provider will be
-# registered as unavailable and the router will skip it silently.
+# Provider Abstraction Layer configuration (Section 6.2).
 #
-# Set keys via environment variables (recommended) or paste values directly
-# (not recommended — they will appear in shell history and version control).
+# All cloud API keys are read from environment variables via the
+# config loader's env-var expansion.  Set the env var to activate
+# the provider; leave it unset to keep the provider silently
+# unavailable (ProviderRegistry registers None — no error raised).
+#
+# Nothing in this file is sent anywhere automatically.  Cloud
+# providers are strictly opt-in and require explicit user direction
+# or a defined fallback condition to be used (Section 5.3).
 
 providers:
   ollama:
+    # Base URL for the local Ollama HTTP API.
+    # Default is fine for standard Ollama installs.
     base_url: http://localhost:11434
 
   anthropic:
+    # Leave ANTHROPIC_API_KEY unset to keep Anthropic unavailable.
     api_key: ${ANTHROPIC_API_KEY}
-    default_model: claude-haiku-4-5
+    # Model used when the caller does not specify one explicitly.
+    # Must match a model available on the Anthropic API.
+    default_model: claude-haiku-4-5-20251001
 
   openai:
+    # Leave OPENAI_API_KEY unset to keep OpenAI unavailable.
     api_key: ${OPENAI_API_KEY}
     default_model: gpt-4o-mini

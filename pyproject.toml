@@ -16,11 +16,14 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
+cloud = [
+     "anthropic>=0.40.0",
+     "openai>=1.50.0",
+]
 dev = [
-    "pytest>=8.0",
-    "pytest-asyncio>=0.23",
-    "pytest-cov>=5.0",
-    "respx>=0.21",
+     "pytest>=8.0",
+     "pytest-asyncio>=0.23",
+     "pytest-mock>=3.14",
 ]
 
 [project.scripts]
