@@ -1,42 +1,63 @@
 [build-system]
-requires = ["setuptools", "wheel"]
-build-backend = "setuptools.build_meta"
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.backends.legacy:build"
 
 [project]
 name = "bossbox"
-version = "0.1.0"
-description = "Local-first AI workbench — Boss Button Studios"
+version = "0.1.0-dev"
+description = "Staffing agency for AI assistants — local, secure, free."
 readme = "README.md"
-requires-python = ">=3.11"
 license = { text = "Apache-2.0" }
+requires-python = ">=3.11"
 
 dependencies = [
+    # ── Step 2  Config loader ──────────────────────────────────────────
     "pyyaml>=6.0",
+
+    # ── Step 5  Ollama provider ────────────────────────────────────────
     "httpx>=0.27",
+
+    # ── Step 7  Secrets manager ────────────────────────────────────────
+    "cryptography>=42.0",     # AES-256-GCM
+    "argon2-cffi>=23.0",      # Argon2id key derivation
+    "keyring>=25.0",          # OS keychain (Windows / macOS / Linux)
 ]
 
-[project.optional-dependencies]
-cloud = [
-     "anthropic>=0.40.0",
-     "openai>=1.50.0",
-]
-dev = [
-     "pytest>=8.0",
-     "pytest-asyncio>=0.23",
-     "pytest-mock>=3.14",
-]
-
+#added by Gemini
 [project.scripts]
 bossbox = "bossbox.cli:main"
+
+[project.optional-dependencies]
+token = [
+    # Hardware PKCS#11 token support (niche; not required for standard install)
+    "python-pkcs11>=0.7.0",
+]
+
+dev = [
+    "pytest>=8.1",
+    "pytest-asyncio>=0.23",
+    "pytest-cov>=5.0",
+]
 
 [tool.setuptools.packages.find]
 where = ["."]
 include = ["bossbox*"]
 
 [tool.pytest.ini_options]
-testpaths = ["tests"]
-asyncio_mode = "auto"
+testpaths      = ["tests"]
+asyncio_mode   = "auto"
+log_cli        = true
+log_cli_level  = "INFO"
+#added by Gemini
 markers = [
-    "ollama: requires a live Ollama instance at localhost:11434",
+    "ollama: tests that require a local Ollama instance",
 ]
-addopts = "-v --tb=short"
+
+[tool.coverage.run]
+source  = ["bossbox"]
+omit    = ["**/gui/**", "**/wizard.py"]
+
+[tool.coverage.report]
+show_missing = true
+
+
