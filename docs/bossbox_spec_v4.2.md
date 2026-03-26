@@ -1,10 +1,10 @@
-# BossBox — Project Specification v4.1
+# BossBox — Project Specification v4.2
 
 **Studio:** Boss Button Studios  
 **Document Status:** Living Draft  
-**Version:** 4.1  
+**Version:** 4.2  
 **Last Updated:** 2026-03-19  
-**Supersedes:** v4.0
+**Supersedes:** v4.1
 
 ---
 
@@ -498,6 +498,8 @@ Every external document passes through two sequential layers before any model se
 
 ### 9.1 Layer 1 — Physical Sanitization
 
+**Dual purpose:** Physical sanitization serves two goals simultaneously. The security goal is to strip hidden, injected, or adversarial content before any model sees it. The efficiency goal is to reduce noise so that the model's context window is used for meaningful content rather than boilerplate, metadata, and invisible markup. Both goals are served by the same process — thoroughness is a performance requirement as much as a security requirement.
+
 **Tiered approach by security posture:**
 
 **Standard (default):** High-quality text extraction with aggressive hidden-element stripping. Removes: hidden character-formatted text, metadata, non-visible DOM elements, zero-width Unicode characters, homoglyphs. If suspicious elements are detected during extraction, the document is automatically escalated to Deep mode for that element set only.
@@ -723,6 +725,8 @@ Repeated privilege escalation requests, persistent scope violations, and consist
 ### 10.11 Audit Trail
 
 Every state change, privilege escalation request, anomaly flag, and model invocation written to append-only JSONL at `~/.bossbox/audit/`. Never truncated by the application.
+
+**Log rotation:** To prevent unbounded growth from crashing a long-running BossBox instance, the audit log rotates at a configurable size threshold (default 50MB) or age (default 30 days). Rotated logs are retained for a configurable number of rotations (default 5). The current active log is never deleted. Rotated logs are never deleted by the application unless the user explicitly configures a retention limit. Log rotation settings are configurable in the Security Center.
 
 ---
 
@@ -1192,6 +1196,8 @@ bossbox/
 **Task:** Implement `pipeline/supervisor.py`. Stages: ingest → decompose → human_checkpoint → execute → review → complete. Logs transitions. Respects `auto_approve` flag. Supports `redirect(new_direction)`. Calls VRAM Budgeter before tier invocations. Calls hypervisor shields at appropriate levels.
 
 **Output:** `Supervisor` with `async run()`, `advance()`, `pause()`, `abort()`, `redirect()`. Checkpoint callback wired to GUI in later steps.
+
+**Async requirement:** The supervisor must be non-blocking throughout. Provider calls, hypervisor evaluations, and checkpoint waits are all async. The supervisor never blocks waiting for one stage to complete before preparing the next. A synchronous supervisor produces a sluggish user experience regardless of model performance.
 
 **Acceptance:** Simple task advances through all stages. Transitions in audit log. Pauses at checkpoint (unless auto_approve). `redirect()` appends direction and resumes without restarting. With auto_approve True, decomposition checkpoint is skipped. **Security checkpoints — hypervisor calls, privilege checks, and scope validations — are mandatory code paths in every execution, not optional integrations. No pipeline execution completes without passing through them. These are not features to be added later; they are the skeleton the rest of the implementation hangs on.**
 

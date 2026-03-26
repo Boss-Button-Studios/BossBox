@@ -85,11 +85,11 @@ tests/pipeline/test_envelope.py::TestPrivilegeLevelValidation::test_invalid_leve
 tests/pipeline/test_envelope.py::TestPrivilegeLevelValidation::test_invalid_levels_rejected_on_assignment[999] PASSED [ 17%]
 tests/pipeline/test_envelope.py::TestPrivilegeLevelValidation::test_privilege_level_escalation_valid PASSED [ 18%]
 tests/pipeline/test_envelope.py::TestPrivilegeLevelValidation::test_privilege_level_not_float PASSED [ 18%]
-tests/pipeline/test_envelope.py::TestStatusValidation::test_valid_statuses_accepted[complete] PASSED [ 18%]
-tests/pipeline/test_envelope.py::TestStatusValidation::test_valid_statuses_accepted[failed] PASSED [ 18%]
 tests/pipeline/test_envelope.py::TestStatusValidation::test_valid_statuses_accepted[pending] PASSED [ 18%]
+tests/pipeline/test_envelope.py::TestStatusValidation::test_valid_statuses_accepted[running] PASSED [ 18%]
+tests/pipeline/test_envelope.py::TestStatusValidation::test_valid_statuses_accepted[failed] PASSED [ 18%]
+tests/pipeline/test_envelope.py::TestStatusValidation::test_valid_statuses_accepted[complete] PASSED [ 19%]
 tests/pipeline/test_envelope.py::TestStatusValidation::test_valid_statuses_accepted[paused] PASSED [ 19%]
-tests/pipeline/test_envelope.py::TestStatusValidation::test_valid_statuses_accepted[running] PASSED [ 19%]
 tests/pipeline/test_envelope.py::TestStatusValidation::test_invalid_statuses_rejected_on_assignment[done] PASSED [ 19%]
 tests/pipeline/test_envelope.py::TestStatusValidation::test_invalid_statuses_rejected_on_assignment[error] PASSED [ 19%]
 tests/pipeline/test_envelope.py::TestStatusValidation::test_invalid_statuses_rejected_on_assignment[RUNNING] PASSED [ 20%]
@@ -476,4 +476,4 @@ tests/test_step01_scaffold.py::test_cli_callable PASSED                  [ 99%]
 tests/test_step01_scaffold.py::test_sanitize_not_implemented PASSED      [ 99%]
 tests/test_step01_scaffold.py::test_vram_budgeter_not_implemented PASSED [100%]
 
-============================= 411 passed in 22.96s =============================
+============================= 411 passed in 22.01s =============================
