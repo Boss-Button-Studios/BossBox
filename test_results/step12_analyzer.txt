@@ -1,0 +1,106 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.3, pytest-9.0.2, pluggy-1.6.0 -- /home/jarrod/Projects/BBS/BossBox/.venv/bin/python3
+cachedir: .pytest_cache
+rootdir: /home/jarrod/Projects/BBS/BossBox
+configfile: pyproject.toml
+plugins: cov-7.1.0, asyncio-1.3.0, mock-3.15.1, respx-0.22.0, anyio-4.13.0
+asyncio: mode=Mode.AUTO, debug=False, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
+collecting ... collected 51 items
+
+tests/ingest/test_analyzer.py::TestExtractYamlBlock::test_raw_yaml_without_fence PASSED [  1%]
+tests/ingest/test_analyzer.py::TestExtractYamlBlock::test_fenced_yaml_block PASSED [  3%]
+tests/ingest/test_analyzer.py::TestExtractYamlBlock::test_fenced_block_without_language_tag PASSED [  5%]
+tests/ingest/test_analyzer.py::TestExtractYamlBlock::test_raises_on_unrecognised_response PASSED [  7%]
+tests/ingest/test_analyzer.py::TestParseResponse::test_clean_invoice_parses_correctly PASSED [  9%]
+tests/ingest/test_analyzer.py::TestParseResponse::test_type_match_false_preserved PASSED [ 11%]
+tests/ingest/test_analyzer.py::TestParseResponse::test_injection_warn_preserved PASSED [ 13%]
+tests/ingest/test_analyzer.py::TestParseResponse::test_unknown_verdict_defaults_to_block 
+-------------------------------- live log call ---------------------------------
+WARNING  bossbox.ingest.analyzer:analyzer.py:182 Unrecognised injection_verdict 'maybe' — defaulting to block
+WARNING  bossbox.ingest.analyzer:analyzer.py:189 Unrecognised overall_verdict 'maybe' — defaulting to block
+PASSED                                                                   [ 15%]
+tests/ingest/test_analyzer.py::TestParseResponse::test_coherence_score_clamped_to_range PASSED [ 17%]
+tests/ingest/test_analyzer.py::TestParseResponse::test_missing_flagged_passages_defaults_to_empty_list PASSED [ 19%]
+tests/ingest/test_analyzer.py::TestParseResponse::test_raises_on_totally_invalid_yaml PASSED [ 21%]
+tests/ingest/test_analyzer.py::TestParseResponse::test_raises_when_no_yaml_block PASSED [ 23%]
+tests/ingest/test_analyzer.py::TestFailSafe::test_returns_block_verdict 
+-------------------------------- live log call ---------------------------------
+ERROR    bossbox.ingest.analyzer:analyzer.py:205 Linguistic analysis fail-safe triggered: test reason
+PASSED                                                                   [ 25%]
+tests/ingest/test_analyzer.py::TestFailSafe::test_type_match_is_false 
+-------------------------------- live log call ---------------------------------
+ERROR    bossbox.ingest.analyzer:analyzer.py:205 Linguistic analysis fail-safe triggered: test
+PASSED                                                                   [ 27%]
+tests/ingest/test_analyzer.py::TestFailSafe::test_coherence_score_is_zero 
+-------------------------------- live log call ---------------------------------
+ERROR    bossbox.ingest.analyzer:analyzer.py:205 Linguistic analysis fail-safe triggered: test
+PASSED                                                                   [ 29%]
+tests/ingest/test_analyzer.py::TestFailSafe::test_declared_type_preserved 
+-------------------------------- live log call ---------------------------------
+ERROR    bossbox.ingest.analyzer:analyzer.py:205 Linguistic analysis fail-safe triggered: test
+PASSED                                                                   [ 31%]
+tests/ingest/test_analyzer.py::TestAnalyzeAcceptanceCriteria::test_clean_invoice_returns_pass PASSED [ 33%]
+tests/ingest/test_analyzer.py::TestAnalyzeAcceptanceCriteria::test_invoice_with_injection_returns_warn_or_block PASSED [ 35%]
+tests/ingest/test_analyzer.py::TestAnalyzeAcceptanceCriteria::test_python_script_declared_as_invoice_returns_type_match_false PASSED [ 37%]
+tests/ingest/test_analyzer.py::TestAnalyzeAcceptanceCriteria::test_provider_failure_returns_fail_safe_block 
+-------------------------------- live log call ---------------------------------
+ERROR    bossbox.ingest.analyzer:analyzer.py:205 Linguistic analysis fail-safe triggered: Provider call failed: down
+PASSED                                                                   [ 39%]
+tests/ingest/test_analyzer.py::TestAnalyzeAcceptanceCriteria::test_unparseable_model_response_returns_fail_safe_block 
+-------------------------------- live log call ---------------------------------
+ERROR    bossbox.ingest.analyzer:analyzer.py:205 Linguistic analysis fail-safe triggered: Model response did not contain a recognisable YAML block. Response preview: "I don't know what this document is."
+PASSED                                                                   [ 41%]
+tests/ingest/test_analyzer.py::TestAnalyzeAcceptanceCriteria::test_model_override_passed_to_provider PASSED [ 43%]
+tests/ingest/test_analyzer.py::TestAnalyzeAcceptanceCriteria::test_result_is_document_analysis_dataclass PASSED [ 45%]
+tests/ingest/test_analyzer.py::TestAnalyzeAcceptanceCriteria::test_block_invoice_has_populated_flagged_passages PASSED [ 47%]
+tests/ingest/test_analyzer.py::TestDocumentAnalysisDataclass::test_default_verdict_is_block PASSED [ 49%]
+tests/ingest/test_analyzer.py::TestDocumentAnalysisDataclass::test_flagged_passages_defaults_to_empty_list PASSED [ 50%]
+tests/ingest/test_analyzer.py::TestDocumentAnalysisDataclass::test_flagged_passage_fields PASSED [ 52%]
+tests/ingest/test_analyzer_unittest.py::TestExtractYamlBlockUnittest::test_fenced_yaml PASSED [ 54%]
+tests/ingest/test_analyzer_unittest.py::TestExtractYamlBlockUnittest::test_raises_on_unrecognised_response PASSED [ 56%]
+tests/ingest/test_analyzer_unittest.py::TestExtractYamlBlockUnittest::test_raw_yaml PASSED [ 58%]
+tests/ingest/test_analyzer_unittest.py::TestParseResponseUnittest::test_clean_invoice PASSED [ 60%]
+tests/ingest/test_analyzer_unittest.py::TestParseResponseUnittest::test_injection_warn PASSED [ 62%]
+tests/ingest/test_analyzer_unittest.py::TestParseResponseUnittest::test_raises_on_invalid_yaml PASSED [ 64%]
+tests/ingest/test_analyzer_unittest.py::TestParseResponseUnittest::test_raises_when_no_yaml_block PASSED [ 66%]
+tests/ingest/test_analyzer_unittest.py::TestParseResponseUnittest::test_type_match_false PASSED [ 68%]
+tests/ingest/test_analyzer_unittest.py::TestParseResponseUnittest::test_unknown_verdict_defaults_to_block 
+-------------------------------- live log call ---------------------------------
+WARNING  bossbox.ingest.analyzer:analyzer.py:182 Unrecognised injection_verdict 'maybe' — defaulting to block
+WARNING  bossbox.ingest.analyzer:analyzer.py:189 Unrecognised overall_verdict 'maybe' — defaulting to block
+PASSED                                                                   [ 70%]
+tests/ingest/test_analyzer_unittest.py::TestFailSafeUnittest::test_coherence_zero 
+-------------------------------- live log call ---------------------------------
+ERROR    bossbox.ingest.analyzer:analyzer.py:205 Linguistic analysis fail-safe triggered: r
+PASSED                                                                   [ 72%]
+tests/ingest/test_analyzer_unittest.py::TestFailSafeUnittest::test_declared_type_preserved 
+-------------------------------- live log call ---------------------------------
+ERROR    bossbox.ingest.analyzer:analyzer.py:205 Linguistic analysis fail-safe triggered: r
+PASSED                                                                   [ 74%]
+tests/ingest/test_analyzer_unittest.py::TestFailSafeUnittest::test_returns_block 
+-------------------------------- live log call ---------------------------------
+ERROR    bossbox.ingest.analyzer:analyzer.py:205 Linguistic analysis fail-safe triggered: reason
+PASSED                                                                   [ 76%]
+tests/ingest/test_analyzer_unittest.py::TestFailSafeUnittest::test_type_match_false 
+-------------------------------- live log call ---------------------------------
+ERROR    bossbox.ingest.analyzer:analyzer.py:205 Linguistic analysis fail-safe triggered: r
+PASSED                                                                   [ 78%]
+tests/ingest/test_analyzer_unittest.py::TestAnalyzeAcceptanceUnittest::test_block_result_has_flagged_passages PASSED [ 80%]
+tests/ingest/test_analyzer_unittest.py::TestAnalyzeAcceptanceUnittest::test_clean_invoice_returns_pass PASSED [ 82%]
+tests/ingest/test_analyzer_unittest.py::TestAnalyzeAcceptanceUnittest::test_invoice_with_injection_returns_warn_or_block PASSED [ 84%]
+tests/ingest/test_analyzer_unittest.py::TestAnalyzeAcceptanceUnittest::test_model_override_forwarded PASSED [ 86%]
+tests/ingest/test_analyzer_unittest.py::TestAnalyzeAcceptanceUnittest::test_provider_failure_returns_block 
+-------------------------------- live log call ---------------------------------
+ERROR    bossbox.ingest.analyzer:analyzer.py:205 Linguistic analysis fail-safe triggered: Provider call failed: down
+PASSED                                                                   [ 88%]
+tests/ingest/test_analyzer_unittest.py::TestAnalyzeAcceptanceUnittest::test_python_script_declared_as_invoice_returns_type_match_false PASSED [ 90%]
+tests/ingest/test_analyzer_unittest.py::TestAnalyzeAcceptanceUnittest::test_result_is_document_analysis PASSED [ 92%]
+tests/ingest/test_analyzer_unittest.py::TestAnalyzeAcceptanceUnittest::test_unparseable_response_returns_block 
+-------------------------------- live log call ---------------------------------
+ERROR    bossbox.ingest.analyzer:analyzer.py:205 Linguistic analysis fail-safe triggered: Model response did not contain a recognisable YAML block. Response preview: "I don't know what this document is."
+PASSED                                                                   [ 94%]
+tests/ingest/test_analyzer_unittest.py::TestDocumentAnalysisDataclassUnittest::test_default_overall_verdict_is_block PASSED [ 96%]
+tests/ingest/test_analyzer_unittest.py::TestDocumentAnalysisDataclassUnittest::test_flagged_passage_fields PASSED [ 98%]
+tests/ingest/test_analyzer_unittest.py::TestDocumentAnalysisDataclassUnittest::test_flagged_passages_defaults_empty PASSED [100%]
+
+============================== 51 passed in 0.19s ==============================

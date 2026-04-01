@@ -15,3 +15,11 @@ class SanitizerFormatError(SanitizerError):
 
 class SanitizerDeepModeError(SanitizerError):
     """Raised when deep-mode (OCR) sanitization is requested but tesseract is unavailable."""
+
+
+class AnalyzerError(Exception):
+    """Base class for all linguistic-analysis errors."""
+
+
+class AnalyzerParseError(AnalyzerError):
+    """Raised when the model response cannot be parsed into a DocumentAnalysis."""
