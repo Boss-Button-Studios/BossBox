@@ -68,9 +68,11 @@ def test_cli_callable():
     assert callable(cli.main)
 
 
-def test_sanitize_not_implemented():
-    from bossbox.ingest.sanitizer import sanitize
-    with pytest.raises(NotImplementedError): sanitize(b"x", "f.pdf")
+def test_sanitize_implemented():
+    from bossbox.ingest.sanitizer import SanitizedDocument, sanitize
+    result = sanitize(b"hello world", "note.txt")
+    assert isinstance(result, SanitizedDocument)
+    assert "hello world" in result.clean_text
 
 
 def test_vram_budgeter_implemented():
