@@ -1,0 +1,107 @@
+# Document Analysis Output Schema — BossBox Atomic Step 10
+#
+# Defines the structured output returned by the injection_detector skill.
+# All fields listed in spec Section 9.2 are represented here.
+# The Linguistic Analysis Agent (Step 12) validates model output against this schema.
+
+schema_name: document_analysis
+version: "1.0"
+
+fields:
+  document_analysis:
+    type: object
+    required: true
+    description: Top-level wrapper for all analysis results.
+    fields:
+
+      declared_type:
+        type: string
+        required: true
+        description: >
+          The document type as stated by the caller (e.g. "invoice", "contract",
+          "code_file", "email", "report"). Passed in from the task envelope.
+
+      assessed_type:
+        type: string
+        required: true
+        description: >
+          The document type the model believes the content actually represents,
+          based on its linguistic and structural features.
+
+      type_match:
+        type: boolean
+        required: true
+        description: >
+          True when declared_type and assessed_type agree. False when the content
+          does not match its declared type (e.g. a Python script submitted as an invoice).
+
+      coherence_score:
+        type: float
+        required: true
+        minimum: 0.0
+        maximum: 1.0
+        description: >
+          Probability-style score (0.0–1.0) expressing how well the document content
+          matches the expected structure and vocabulary of its declared type.
+          Scores below 0.40 trigger an automatic block verdict.
+
+      injection_verdict:
+        type: string
+        required: true
+        enum: [pass, warn, block]
+        description: >
+          Verdict based solely on injection signal strength, independent of coherence.
+          pass  — no injection language detected.
+          warn  — low-confidence or ambiguous injection signal.
+          block — clear injection attempt present.
+
+      flagged_passages:
+        type: array
+        required: true
+        description: >
+          List of passages that contributed to a warn or block verdict.
+          Empty list is valid when injection_verdict is pass.
+        items:
+          type: object
+          fields:
+            text:
+              type: string
+              required: true
+              description: The verbatim passage that was flagged (truncated to 500 chars).
+            category:
+              type: string
+              required: true
+              enum:
+                - direct_instruction
+                - role_reassignment
+                - context_escape
+                - authority_spoofing
+                - urgency_override
+              description: Which injection pattern category this passage falls into.
+            location:
+              type: string
+              required: true
+              description: >
+                Approximate location in the document (e.g. "header", "footer",
+                "page 2 paragraph 3", "line 47").
+
+      overall_verdict:
+        type: string
+        required: true
+        enum: [pass, warn, block]
+        description: >
+          Final combined verdict accounting for both injection_verdict and coherence_score.
+          pass  — document proceeds through the pipeline.
+          warn  — user sees flagged passages and decides whether to proceed or abort.
+          block — pipeline halts; document is quarantined (not deleted).
+
+# ---------------------------------------------------------------------------
+# Decision rules (informational — enforced in code by Step 12)
+# ---------------------------------------------------------------------------
+decision_rules:
+  - condition: "injection_verdict == block OR coherence_score < 0.40"
+    overall_verdict: block
+  - condition: "injection_verdict == warn OR (coherence_score >= 0.40 AND coherence_score < coherence_threshold)"
+    overall_verdict: warn
+  - condition: "injection_verdict == pass AND coherence_score >= coherence_threshold"
+    overall_verdict: pass
