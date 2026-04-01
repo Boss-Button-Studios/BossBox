@@ -1,0 +1,28 @@
+# Contract Coherence Profile — BossBox Atomic Step 11
+document_type: contract
+version: "1.0"
+description: >
+  Coherence profile for legal contracts and agreements. Expects formal legal
+  language, identified parties, defined terms, obligations, and signatures.
+  Flags content that attempts to hijack processing or inject instructions.
+
+expected_elements:
+  - names and legal identities of all parties
+  - recitals or background context
+  - defined terms section or inline definitions
+  - obligations and rights of each party
+  - payment or compensation clauses
+  - term and termination conditions
+  - governing law and jurisdiction
+  - signature blocks or execution section
+
+suspicious_if_present:
+  - imperative instructions addressed to an AI or system
+  - references to AI models, prompts, or language models
+  - role or identity reassignment language
+  - executable code or scripting syntax
+  - override or ignore directives
+  - urgency language inconsistent with legal drafting style
+  - base64 or hex encoded blocks
+
+coherence_threshold: 0.75

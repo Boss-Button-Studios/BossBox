@@ -1,0 +1,26 @@
+# Code File Coherence Profile — BossBox Atomic Step 11
+document_type: code_file
+version: "1.0"
+description: >
+  Coherence profile for source code files. Expects syntactically structured
+  content from a known programming language. Flags natural-language instruction
+  blocks masquerading as comments, or content attempting to override AI behaviour.
+
+expected_elements:
+  - import or include statements
+  - function, class, or module definitions
+  - variable declarations or assignments
+  - control flow structures (loops, conditionals)
+  - comments describing logic or intent
+  - consistent indentation and syntax conventions
+  - file-level docstring or header comment
+
+suspicious_if_present:
+  - natural-language paragraphs outside of comments that give AI instructions
+  - role or identity reassignment language in comments or strings
+  - override or ignore directives embedded in string literals or docstrings
+  - large base64 or hex blobs with no clear programmatic purpose
+  - references to "ignore previous instructions" or similar prompt injection phrases
+  - embedded credential strings presented as legitimate constants
+
+coherence_threshold: 0.70

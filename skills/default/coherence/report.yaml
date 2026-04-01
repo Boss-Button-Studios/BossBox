@@ -1,0 +1,27 @@
+# Report Coherence Profile — BossBox Atomic Step 11
+document_type: report
+version: "1.0"
+description: >
+  Coherence profile for formal reports (business, technical, research, audit).
+  Expects structured sections with prose, data, and conclusions. Flags any
+  content that attempts to instruct an AI or override processing behaviour.
+
+expected_elements:
+  - title and author or organisation identification
+  - executive summary or abstract
+  - table of contents or structured section headings
+  - body sections with analysis, findings, or data
+  - conclusions or recommendations
+  - references, citations, or bibliography
+  - date of preparation or version number
+
+suspicious_if_present:
+  - imperative instructions addressed to an AI or automated system
+  - references to AI models, prompts, or language model behaviour
+  - role or identity reassignment language
+  - executable code or scripting syntax outside appendices
+  - override or ignore directives
+  - base64 or hex encoded blocks with no clear data provenance
+  - content inconsistent with formal report register (e.g. chat-style commands)
+
+coherence_threshold: 0.75

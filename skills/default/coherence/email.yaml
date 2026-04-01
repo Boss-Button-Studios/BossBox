@@ -1,0 +1,26 @@
+# Email Coherence Profile — BossBox Atomic Step 11
+document_type: email
+version: "1.0"
+description: >
+  Coherence profile for email messages. Expects standard header fields,
+  a greeting, body prose, and a sign-off. Flags content that attempts to
+  instruct an AI system or reassign its identity or context.
+
+expected_elements:
+  - from, to, and subject header fields
+  - date and time of sending
+  - salutation or greeting
+  - body paragraphs in natural prose
+  - closing and sender signature
+  - optional attachments list or reference
+
+suspicious_if_present:
+  - imperative instructions addressed to an AI or automated system
+  - references to AI models, prompts, or language model behaviour
+  - role or identity reassignment language
+  - executable code or scripting syntax in the body
+  - override or ignore directives
+  - base64 or hex encoded blocks outside of legitimate MIME attachments
+  - urgency language demanding bypass of normal processing
+
+coherence_threshold: 0.75

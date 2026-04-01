@@ -1,0 +1,27 @@
+# Invoice Coherence Profile — BossBox Atomic Step 11
+document_type: invoice
+version: "1.0"
+description: >
+  Coherence profile for commercial invoices. Expects vendor/buyer details,
+  itemised charges, totals, and payment terms. Flags any content that
+  attempts to give instructions to an AI system or execute arbitrary logic.
+
+expected_elements:
+  - vendor name and contact information
+  - buyer name and billing address
+  - invoice number and issue date
+  - line items with descriptions and unit prices
+  - subtotal, taxes, and total amount due
+  - payment terms and due date
+  - currency designation
+
+suspicious_if_present:
+  - imperative instructions addressed to an AI or system
+  - references to AI models, prompts, or language models
+  - role or identity language (e.g. "you are", "act as", "pretend")
+  - executable code or scripting syntax
+  - override or ignore language (e.g. "ignore previous", "disregard")
+  - base64 or hex encoded blocks
+  - requests to access external URLs or file paths
+
+coherence_threshold: 0.75
