@@ -1,10 +1,24 @@
-# BossBox — Project Specification v4.2
+# BossBox — Project Specification v4.3
 
 **Studio:** Boss Button Studios  
 **Document Status:** Living Draft  
-**Version:** 4.2  
-**Last Updated:** 2026-03-19  
-**Supersedes:** v4.1
+**Version:** 4.3  
+**Last Updated:** 2026-03-31  
+**Supersedes:** v4.2
+
+---
+
+## Changelog
+
+**v4.3 (2026-03-31)**
+- Inserted **Step 7 — Secrets Manager** into the Atomic Implementation Steps sequence.
+  The Secrets Manager was implemented between Steps 6 and 7 in the v4.2 sequence but
+  was not reflected as a numbered step in that document. The implementation exists in
+  the repository at `bossbox/secrets/manager.py` and is fully tested.
+- Renumbered all subsequent steps: old Step 7 (VRAM Budgeter) is now Step 8;
+  old Steps 8–23 are now Steps 9–24.
+- No other content changes. All section text, architecture, and design decisions
+  are identical to v4.2.
 
 ---
 
@@ -706,7 +720,9 @@ Each skill profile declares a permitted output scope. The supervisor validates s
 
 ### 10.8 Secrets Management
 
-- API keys and SMTP credentials in `~/.bossbox/secrets/` with restrictive file permissions, or environment variables
+- API keys and SMTP credentials stored in `~/.bossbox/secrets/` with AES-256-GCM encryption at rest; file permissions 600 on Unix
+- Three-factor unlock: OS keychain (primary AES key), user passphrase (Argon2id/scrypt KDF), optional PKCS#11 hardware token
+- Session key held in process memory only; never written to disk
 - Never written to logs, envelopes, audit trails, or notification content
 - Providers instantiated at runtime with keys injected; supervisor does not retain key references
 
@@ -1051,9 +1067,11 @@ Tauri + React shell replacement. Post-launch.
 
 Each step is a single, self-contained coding task with defined inputs and outputs. Steps are ordered for dependency safety.
 
+Steps 1–7 are complete and present in the repository. The current working step is **Step 8 — VRAM Budgeter**.
+
 ---
 
-### Step 1 — Project Scaffold
+### Step 1 — Project Scaffold ✅
 
 **Task:** Create the `bossbox` Python project directory structure with placeholder files and pyproject.toml.
 
@@ -1085,7 +1103,7 @@ bossbox/
 
 ---
 
-### Step 2 — Configuration Loader
+### Step 2 — Configuration Loader ✅
 
 **Task:** Implement `config/loader.py`. Read YAML configs, expand environment variables, return typed dataclasses. Missing optional keys return `None`.
 
@@ -1093,7 +1111,7 @@ bossbox/
 
 ---
 
-### Step 3 — Task Envelope Dataclass
+### Step 3 — Task Envelope Dataclass ✅
 
 **Task:** Implement `pipeline/envelope.py`. `TaskEnvelope` per Section 8.1 including `thought_stream` and `auto_approve` fields. `create_envelope()` factory. `log_event()`, `add_thought()`, `to_dict()` methods.
 
@@ -1101,7 +1119,7 @@ bossbox/
 
 ---
 
-### Step 4 — Audit Logger
+### Step 4 — Audit Logger ✅
 
 **Task:** Implement `audit/logger.py`. Append-only JSONL at `~/.bossbox/audit/audit.log`. File permissions 600 on Unix. Never truncates.
 
@@ -1109,7 +1127,7 @@ bossbox/
 
 ---
 
-### Step 5 — Provider Base and Ollama Implementation
+### Step 5 — Provider Base and Ollama Implementation ✅
 
 **Task:** Implement abstract `ModelProvider` and `OllamaProvider`. Raises `ProviderUnavailableError` and `ModelNotFoundError` appropriately.
 
@@ -1117,7 +1135,7 @@ bossbox/
 
 ---
 
-### Step 6 — Provider Registry
+### Step 6 — Provider Registry ✅
 
 **Task:** Instantiate providers from config. Missing credentials register as `None` silently.
 
@@ -1125,7 +1143,38 @@ bossbox/
 
 ---
 
-### Step 7 — VRAM Budgeter
+### Step 7 — Secrets Manager ✅
+
+**Task:** Implement `secrets/manager.py`. Three-factor unlock strategy for storing API keys and other credentials securely at rest.
+
+**Unlock factors:**
+- **Keychain** — OS keychain (Windows Credential Manager / macOS Keychain / libsecret). 32-byte AES key generated on first run and stored in the keychain.
+- **Password** — User passphrase. Key derived with Argon2id (preferred) or stdlib scrypt (fallback). Salt lives in the secrets file header. Derived key held in process memory only; never written to disk.
+- **Token** — PKCS#11 hardware token. Optional; requires `python-pkcs11`.
+
+**On-disk format (50-byte header, big-endian):**
+```
+Offset  Size  Field
+     0     4  Magic b'BBOX'
+     4     1  Format version (1)
+     5     1  Method byte (0=keychain, 1=password, 2=token)
+     6    32  Salt
+    38    12  AES-GCM nonce
+    50     N  Ciphertext (JSON secrets dict + 16-byte GCM tag)
+```
+Header is included as AES-GCM AAD — tampering with it is detected on decrypt. Session key never written to disk.
+
+**Storage:** `~/.bossbox/secrets/` with file permissions 600 on Unix.
+
+**Dependencies:** `keyring`, `argon2-cffi` (Argon2id preferred), `hashlib.scrypt` (stdlib fallback), `cryptography` (AES-256-GCM), `python-pkcs11` (optional, hardware token only).
+
+**Output:** `SecretsManager` class with `store(key, value)`, `retrieve(key) -> str`, `unlock(passphrase, token=None)`, `is_unlocked() -> bool`. `SecretsException` hierarchy covering unlock failure, tamper detection, and missing key.
+
+**Acceptance:** Secrets round-trip (store → retrieve). Wrong passphrase raises appropriate exception. Tampered ciphertext detected on decrypt. Keychain fallback works when `python-pkcs11` absent. Session key not present in any log output.
+
+---
+
+### Step 8 — VRAM Budgeter
 
 **Task:** Implement `vram/budgeter.py` as a background thread. Tracks current VRAM allocation per loaded model. Before any tier invocation, checks whether loading would exceed available budget. If so, signals lowest-priority loaded model to evict first. Surfaces allocation data for the Model Manager tab. Logs eviction events to the thought stream.
 
@@ -1137,7 +1186,7 @@ bossbox/
 
 ---
 
-### Step 8 — Physical Document Sanitizer
+### Step 9 — Physical Document Sanitizer
 
 **Task:** Implement `ingest/sanitizer.py`. Tiered sanitization per Section 9.1. Standard mode by default; Deep mode on escalation or explicit selection.
 
@@ -1151,7 +1200,7 @@ bossbox/
 
 ---
 
-### Step 9 — Injection Detection Skill Profile
+### Step 10 — Injection Detection Skill Profile
 
 **Task:** Author `skills/default/injection_detector.yaml` and `skills/default/schemas/document_analysis.yaml`.
 
@@ -1159,7 +1208,7 @@ bossbox/
 
 ---
 
-### Step 10 — Document Type Coherence Profiles
+### Step 11 — Document Type Coherence Profiles
 
 **Task:** Author default coherence profiles for: invoice, contract, code file, email, report.
 
@@ -1167,7 +1216,7 @@ bossbox/
 
 ---
 
-### Step 11 — Linguistic Analysis Agent
+### Step 12 — Linguistic Analysis Agent
 
 **Task:** Implement `ingest/analyzer.py`. Invokes injection detection skill. Parses structured output. Returns typed result.
 
@@ -1175,7 +1224,7 @@ bossbox/
 
 ---
 
-### Step 12 — Backup Manager
+### Step 13 — Backup Manager
 
 **Task:** Implement `pipeline/backup.py`. Timestamped backup before any destructive operation. Backup directory never deleted from by the application.
 
@@ -1183,7 +1232,7 @@ bossbox/
 
 ---
 
-### Step 13 — Task Decomposer
+### Step 14 — Task Decomposer
 
 **Task:** Implement `pipeline/decomposer.py`. Micro tier invocation. Ordered subtask list. Separates core from suggested. Appends reasoning to thought stream.
 
@@ -1191,7 +1240,7 @@ bossbox/
 
 ---
 
-### Step 14 — Supervisor State Machine
+### Step 15 — Supervisor State Machine
 
 **Task:** Implement `pipeline/supervisor.py`. Stages: ingest → decompose → human_checkpoint → execute → review → complete. Logs transitions. Respects `auto_approve` flag. Supports `redirect(new_direction)`. Calls VRAM Budgeter before tier invocations. Calls hypervisor shields at appropriate levels.
 
@@ -1203,7 +1252,7 @@ bossbox/
 
 ---
 
-### Step 15 — CLI Runner
+### Step 16 — CLI Runner
 
 **Task:** Implement `bossbox/cli.py`. Accepts goal string. Prints stage transitions and thought stream. Prompts at human checkpoints. Supports `--auto` flag for Trust Mode and `--redirect` flag.
 
@@ -1211,7 +1260,7 @@ bossbox/
 
 ---
 
-### Step 16 — Notification Service
+### Step 17 — Notification Service
 
 **Task:** Implement `notify/notifier.py`. OS native (plyer). Optional SMTP. Optional ntfy.sh. Strictly templated email content.
 
@@ -1219,7 +1268,7 @@ bossbox/
 
 ---
 
-### Step 17 — Skill Profile Loader and Validator
+### Step 18 — Skill Profile Loader and Validator
 
 **Task:** Implement `skills/loader.py`. Load from local and community directories. Validate against permitted field schema. Reject unpermitted fields.
 
@@ -1227,7 +1276,7 @@ bossbox/
 
 ---
 
-### Step 18 — Skill Elicitor
+### Step 19 — Skill Elicitor
 
 **Task:** Implement `skills/elicitor.py`. Multi-turn elicitation via `skill_elicitor` meta-skill. Security review of instruction text on finalization. Returns proposed profile with diff.
 
@@ -1239,11 +1288,11 @@ bossbox/
 
 ---
 
-### Step 19 — RAG Corpus Indexer
+### Step 20 — RAG Corpus Indexer
 
 **Task:** Implement `skills/rag.py`. Builds and maintains a vector index over a skill's reference document corpus. Indexes at skill load time if corpus has changed since last index. Retrieves top-k chunks at inference time and returns them for context injection. Passes all corpus documents through the physical sanitizer before indexing.
 
-**Input:** Skill corpus directory path. Physical sanitizer from Step 8. `top_k` and `chunk_size` from skill profile. Provider registry (embedding model — Ollama or local sentence-transformers).
+**Input:** Skill corpus directory path. Physical sanitizer from Step 9. `top_k` and `chunk_size` from skill profile. Provider registry (embedding model — Ollama or local sentence-transformers).
 
 **Output:** `CorpusIndexer` class with `index(corpus_dir: Path)` and `retrieve(query: str, top_k: int) -> list[str]`. Index stored as a lightweight vector store at `~/.bossbox/skills/local/[skill_name]/.index/`. Index is invalidated and rebuilt if corpus files have changed since last build.
 
@@ -1251,7 +1300,7 @@ bossbox/
 
 ---
 
-### Step 20 — Hypervisor Process
+### Step 21 — Hypervisor Process
 
 **Task:** Implement `hypervisor/hypervisor.py` as a separate process. Write-once goal store. Hardcoded audit prompt template. IPC via local socket. `evaluate_input()` and `evaluate_action()` endpoints. Shear thickening rate control. Score suppression in audit log.
 
@@ -1275,7 +1324,7 @@ bossbox/
 
 ---
 
-### Step 21 — GUI Shell v1
+### Step 22 — GUI Shell v1
 
 **Task:** Implement `gui/app.py` using CustomTkinter. All model output delivered via thread-safe queues — GUI thread never blocks. Implement all primary views: Dashboard, Task Input, Pipeline View (thought stream, stop/redirect), Skill Editor (plain controls, Save, Refine), Model Manager (biographies, VRAM allocation), Security Center, Settings.
 
@@ -1287,7 +1336,7 @@ bossbox/
 
 ---
 
-### Step 22 — Onboarding Wizard
+### Step 23 — Onboarding Wizard
 
 **Task:** Implement `gui/wizard.py`. Five-step first-run wizard per Section 5.4. Minimum spec check with graceful exit if below threshold. Hardware detection display. Plain-language portfolio recommendation with honest constraint explanations. Model acquisition with per-model progress. Optional extensions including ntfy.sh guided setup. First-run flag written to config on completion.
 
@@ -1295,7 +1344,7 @@ bossbox/
 
 ---
 
-### Step 23 — PyInstaller Build Script
+### Step 24 — PyInstaller Build Script
 
 **Task:** Create `build/build.py` and PyInstaller `.spec` file. Bundles complete application, default skill profiles, and first-run Ollama installation check.
 
@@ -1303,6 +1352,6 @@ bossbox/
 
 ---
 
-*End of BossBox Specification v4.1*
+*End of BossBox Specification v4.3*
 
 *This is a living document. The Atomic Implementation Steps section is the authoritative task sequence for implementation agents. Design decisions are recorded with their rationale so that future contributors understand not just what was decided but why.*
