@@ -73,6 +73,7 @@ def test_sanitize_not_implemented():
     with pytest.raises(NotImplementedError): sanitize(b"x", "f.pdf")
 
 
-def test_vram_budgeter_not_implemented():
+def test_vram_budgeter_implemented():
     from bossbox.vram.budgeter import VRAMBudgeter
-    with pytest.raises(NotImplementedError): VRAMBudgeter().request_load("m")
+    b = VRAMBudgeter(vram_budget_bytes=2 * 1024**3, auto_start=False)
+    assert isinstance(b.request_load("smollm:360m"), bool)
