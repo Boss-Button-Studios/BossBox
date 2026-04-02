@@ -310,6 +310,13 @@ class Supervisor:
         self._envelope.add_thought("progress", f"Asking {model_label} to execute…")
 
         # Provider call — execute the goal.
+        redirects = [
+            e["redirect"] for e in self._envelope.context if e.get("type") == "redirect"
+        ]
+        user_content = goal
+        if redirects:
+            user_content = goal + "\n\nAdditional direction: " + "; ".join(redirects)
+
         messages = [
             {
                 "role": "system",
@@ -318,7 +325,7 @@ class Supervisor:
                     "concisely and accurately."
                 ),
             },
-            {"role": "user", "content": goal},
+            {"role": "user", "content": user_content},
         ]
         kwargs: dict = {}
         if self._model:
