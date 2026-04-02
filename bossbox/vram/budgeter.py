@@ -108,8 +108,10 @@ _UNKNOWN_MODEL_ESTIMATE: float = DEFAULT_VRAM_BYTES * 0.5
 
 def _detect_vram_bytes() -> float:
     """
-    Detect total VRAM on the primary GPU.
+    Detect currently free VRAM on the primary GPU.
 
+    Uses free VRAM (not total) so the budget reflects what is actually
+    available after display drivers, kernel buffers, and other GPU consumers.
     Tries pynvml first; falls back to DEFAULT_VRAM_BYTES if the library is
     not installed.  Raises VRAMDetectionError only when pynvml is present
     but reports an unexpected error.
@@ -121,9 +123,10 @@ def _detect_vram_bytes() -> float:
         handle = pynvml.nvmlDeviceGetHandleByIndex(0)
         info = pynvml.nvmlDeviceGetMemoryInfo(handle)
         pynvml.nvmlShutdown()
-        detected = float(info.total)
-        log.debug(
-            "VRAM detected via pynvml: %.2f GiB", detected / 1024**3
+        detected = float(info.free)
+        log.info(
+            "VRAM: total=%.0f MiB, free=%.0f MiB; budget set to free.",
+            info.total / 1024**2, info.free / 1024**2,
         )
         return detected
     except ImportError:
@@ -457,5 +460,26 @@ class VRAMBudgeter:
             if bare:
                 fresh[bare] = size
 
-        with self._lock:
-            self._loaded = fresh
+        # Recalibrate budget from pynvml free VRAM so available() tracks
+        # reality (display drivers etc. consume VRAM outside our accounting).
+        # Formula: budget = info.free + sum(loaded)  →  available() = info.free
+        try:
+            import pynvml
+
+            pynvml.nvmlInit()
+            handle = pynvml.nvmlDeviceGetHandleByIndex(0)
+            mem = pynvml.nvmlDeviceGetMemoryInfo(handle)
+            pynvml.nvmlShutdown()
+            recalibrated = float(mem.free) + sum(fresh.values())
+            with self._lock:
+                self._loaded = fresh
+                self._budget = recalibrated
+            log.debug(
+                "VRAM poll: free=%.0f MiB, loaded=%s; budget recalibrated to %.0f MiB.",
+                mem.free / 1024**2,
+                {k: f"{v/1024**2:.0f}MiB" for k, v in fresh.items()},
+                recalibrated / 1024**2,
+            )
+        except Exception:
+            with self._lock:
+                self._loaded = fresh

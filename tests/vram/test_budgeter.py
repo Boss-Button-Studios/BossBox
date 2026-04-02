@@ -99,10 +99,11 @@ class TestHelpers:
         mock_pynvml = MagicMock()
         mock_info = MagicMock()
         mock_info.total = int(4 * 1024**3)
+        mock_info.free = int(3 * 1024**3)
         mock_pynvml.nvmlDeviceGetMemoryInfo.return_value = mock_info
         with patch.dict("sys.modules", {"pynvml": mock_pynvml}):
             result = _detect_vram_bytes()
-        assert result == float(4 * 1024**3)
+        assert result == float(3 * 1024**3)
 
     def test_detect_vram_raises_detection_error_on_unexpected_pynvml_failure(self):
         from bossbox.vram.budgeter import _detect_vram_bytes

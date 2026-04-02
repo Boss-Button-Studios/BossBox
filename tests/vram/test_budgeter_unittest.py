@@ -105,10 +105,11 @@ class TestHelpers(unittest.TestCase):
         mock_pynvml = MagicMock()
         mock_info = MagicMock()
         mock_info.total = int(4 * 1024**3)
+        mock_info.free = int(3 * 1024**3)
         mock_pynvml.nvmlDeviceGetMemoryInfo.return_value = mock_info
         with patch.dict("sys.modules", {"pynvml": mock_pynvml}):
             result = _detect_vram_bytes()
-        self.assertEqual(result, float(4 * 1024**3))
+        self.assertEqual(result, float(3 * 1024**3))
 
     def test_detect_vram_raises_on_unexpected_pynvml_error(self):
         mock_pynvml = MagicMock()
