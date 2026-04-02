@@ -1,0 +1,128 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.3, pytest-9.0.2, pluggy-1.6.0 -- /home/jarrod/Projects/BBS/BossBox/.venv/bin/python3
+cachedir: .pytest_cache
+rootdir: /home/jarrod/Projects/BBS/BossBox
+configfile: pyproject.toml
+plugins: cov-7.1.0, asyncio-1.3.0, mock-3.15.1, respx-0.22.0, anyio-4.13.0
+asyncio: mode=Mode.AUTO, debug=False, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
+collecting ... collected 63 items
+
+tests/pipeline/test_decomposer.py::TestExtractYamlBlock::test_raw_yaml PASSED [  1%]
+tests/pipeline/test_decomposer.py::TestExtractYamlBlock::test_fenced_yaml PASSED [  3%]
+tests/pipeline/test_decomposer.py::TestExtractYamlBlock::test_fenced_no_language_tag PASSED [  4%]
+tests/pipeline/test_decomposer.py::TestExtractYamlBlock::test_raises_on_unrecognised_response PASSED [  6%]
+tests/pipeline/test_decomposer.py::TestParseResponse::test_returns_decomposition_result PASSED [  7%]
+tests/pipeline/test_decomposer.py::TestParseResponse::test_core_tasks_parsed PASSED [  9%]
+tests/pipeline/test_decomposer.py::TestParseResponse::test_suggested_tasks_parsed PASSED [ 11%]
+tests/pipeline/test_decomposer.py::TestParseResponse::test_reasoning_parsed PASSED [ 12%]
+tests/pipeline/test_decomposer.py::TestParseResponse::test_empty_suggested_tasks_allowed PASSED [ 14%]
+tests/pipeline/test_decomposer.py::TestParseResponse::test_subtask_has_title_and_description PASSED [ 15%]
+tests/pipeline/test_decomposer.py::TestParseResponse::test_raises_on_invalid_yaml PASSED [ 17%]
+tests/pipeline/test_decomposer.py::TestParseResponse::test_raises_on_no_yaml_block PASSED [ 19%]
+tests/pipeline/test_decomposer.py::TestParseResponse::test_malformed_task_items_skipped PASSED [ 20%]
+tests/pipeline/test_decomposer.py::TestFailSafe::test_returns_decomposition_result 
+-------------------------------- live log call ---------------------------------
+ERROR    bossbox.pipeline.decomposer:decomposer.py:162 Task decomposition fail-safe triggered: reason
+PASSED                                                                   [ 22%]
+tests/pipeline/test_decomposer.py::TestFailSafe::test_single_core_task 
+-------------------------------- live log call ---------------------------------
+ERROR    bossbox.pipeline.decomposer:decomposer.py:162 Task decomposition fail-safe triggered: reason
+PASSED                                                                   [ 23%]
+tests/pipeline/test_decomposer.py::TestFailSafe::test_core_task_contains_goal 
+-------------------------------- live log call ---------------------------------
+ERROR    bossbox.pipeline.decomposer:decomposer.py:162 Task decomposition fail-safe triggered: reason
+PASSED                                                                   [ 25%]
+tests/pipeline/test_decomposer.py::TestFailSafe::test_suggested_tasks_empty 
+-------------------------------- live log call ---------------------------------
+ERROR    bossbox.pipeline.decomposer:decomposer.py:162 Task decomposition fail-safe triggered: reason
+PASSED                                                                   [ 26%]
+tests/pipeline/test_decomposer.py::TestFailSafe::test_reasoning_contains_failure_note 
+-------------------------------- live log call ---------------------------------
+ERROR    bossbox.pipeline.decomposer:decomposer.py:162 Task decomposition fail-safe triggered: network error
+PASSED                                                                   [ 28%]
+tests/pipeline/test_decomposer.py::TestFailSafe::test_long_goal_title_truncated 
+-------------------------------- live log call ---------------------------------
+ERROR    bossbox.pipeline.decomposer:decomposer.py:162 Task decomposition fail-safe triggered: r
+PASSED                                                                   [ 30%]
+tests/pipeline/test_decomposer.py::TestDecomposeAcceptanceCriteria::test_multi_part_goal_returns_at_least_two_core_tasks PASSED [ 31%]
+tests/pipeline/test_decomposer.py::TestDecomposeAcceptanceCriteria::test_suggested_tasks_are_separate PASSED [ 33%]
+tests/pipeline/test_decomposer.py::TestDecomposeAcceptanceCriteria::test_reasoning_appended_to_thought_stream PASSED [ 34%]
+tests/pipeline/test_decomposer.py::TestDecomposeAcceptanceCriteria::test_output_is_decomposition_result_dataclass PASSED [ 36%]
+tests/pipeline/test_decomposer.py::TestDecomposeAcceptanceCriteria::test_provider_failure_returns_fail_safe 
+-------------------------------- live log call ---------------------------------
+ERROR    bossbox.pipeline.decomposer:decomposer.py:162 Task decomposition fail-safe triggered: Provider call failed: down
+PASSED                                                                   [ 38%]
+tests/pipeline/test_decomposer.py::TestDecomposeAcceptanceCriteria::test_fail_safe_still_adds_reasoning_to_thought_stream 
+-------------------------------- live log call ---------------------------------
+ERROR    bossbox.pipeline.decomposer:decomposer.py:162 Task decomposition fail-safe triggered: Provider call failed: down
+PASSED                                                                   [ 39%]
+tests/pipeline/test_decomposer.py::TestDecomposeAcceptanceCriteria::test_unparseable_response_returns_fail_safe 
+-------------------------------- live log call ---------------------------------
+ERROR    bossbox.pipeline.decomposer:decomposer.py:162 Task decomposition fail-safe triggered: No decomposition YAML block found in response. Preview: 'I have no idea what you want.'
+PASSED                                                                   [ 41%]
+tests/pipeline/test_decomposer.py::TestDecomposeAcceptanceCriteria::test_model_override_forwarded_to_provider PASSED [ 42%]
+tests/pipeline/test_decomposer.py::TestDecomposeAcceptanceCriteria::test_subtasks_have_title_and_description PASSED [ 44%]
+tests/pipeline/test_decomposer.py::TestDecomposeAcceptanceCriteria::test_core_tasks_ordered PASSED [ 46%]
+tests/pipeline/test_decomposer.py::TestDecomposeAcceptanceCriteria::test_thought_stream_entry_has_timestamp PASSED [ 47%]
+tests/pipeline/test_decomposer.py::TestDecomposeAcceptanceCriteria::test_no_reasoning_in_response_still_adds_thought PASSED [ 49%]
+tests/pipeline/test_decomposer.py::TestDataclasses::test_subtask_fields PASSED [ 50%]
+tests/pipeline/test_decomposer.py::TestDataclasses::test_decomposition_result_defaults PASSED [ 52%]
+tests/pipeline/test_decomposer.py::TestDataclasses::test_decomposition_result_with_all_fields PASSED [ 53%]
+tests/pipeline/test_decomposer_unittest.py::TestExtractYamlBlockUnittest::test_fenced_yaml PASSED [ 55%]
+tests/pipeline/test_decomposer_unittest.py::TestExtractYamlBlockUnittest::test_raises_on_unknown_response PASSED [ 57%]
+tests/pipeline/test_decomposer_unittest.py::TestExtractYamlBlockUnittest::test_raw_yaml PASSED [ 58%]
+tests/pipeline/test_decomposer_unittest.py::TestParseResponseUnittest::test_core_tasks_parsed PASSED [ 60%]
+tests/pipeline/test_decomposer_unittest.py::TestParseResponseUnittest::test_empty_suggested_tasks PASSED [ 61%]
+tests/pipeline/test_decomposer_unittest.py::TestParseResponseUnittest::test_malformed_items_skipped PASSED [ 63%]
+tests/pipeline/test_decomposer_unittest.py::TestParseResponseUnittest::test_raises_on_no_yaml_block PASSED [ 65%]
+tests/pipeline/test_decomposer_unittest.py::TestParseResponseUnittest::test_reasoning_parsed PASSED [ 66%]
+tests/pipeline/test_decomposer_unittest.py::TestParseResponseUnittest::test_returns_decomposition_result PASSED [ 68%]
+tests/pipeline/test_decomposer_unittest.py::TestParseResponseUnittest::test_suggested_tasks_parsed PASSED [ 69%]
+tests/pipeline/test_decomposer_unittest.py::TestFailSafeUnittest::test_goal_in_description 
+-------------------------------- live log call ---------------------------------
+ERROR    bossbox.pipeline.decomposer:decomposer.py:162 Task decomposition fail-safe triggered: r
+PASSED                                                                   [ 71%]
+tests/pipeline/test_decomposer_unittest.py::TestFailSafeUnittest::test_reasoning_contains_reason 
+-------------------------------- live log call ---------------------------------
+ERROR    bossbox.pipeline.decomposer:decomposer.py:162 Task decomposition fail-safe triggered: net err
+PASSED                                                                   [ 73%]
+tests/pipeline/test_decomposer_unittest.py::TestFailSafeUnittest::test_returns_decomposition_result 
+-------------------------------- live log call ---------------------------------
+ERROR    bossbox.pipeline.decomposer:decomposer.py:162 Task decomposition fail-safe triggered: r
+PASSED                                                                   [ 74%]
+tests/pipeline/test_decomposer_unittest.py::TestFailSafeUnittest::test_single_core_task 
+-------------------------------- live log call ---------------------------------
+ERROR    bossbox.pipeline.decomposer:decomposer.py:162 Task decomposition fail-safe triggered: r
+PASSED                                                                   [ 76%]
+tests/pipeline/test_decomposer_unittest.py::TestFailSafeUnittest::test_suggested_empty 
+-------------------------------- live log call ---------------------------------
+ERROR    bossbox.pipeline.decomposer:decomposer.py:162 Task decomposition fail-safe triggered: r
+PASSED                                                                   [ 77%]
+tests/pipeline/test_decomposer_unittest.py::TestFailSafeUnittest::test_title_truncated 
+-------------------------------- live log call ---------------------------------
+ERROR    bossbox.pipeline.decomposer:decomposer.py:162 Task decomposition fail-safe triggered: r
+PASSED                                                                   [ 79%]
+tests/pipeline/test_decomposer_unittest.py::TestDecomposeAcceptanceUnittest::test_core_tasks_ordered PASSED [ 80%]
+tests/pipeline/test_decomposer_unittest.py::TestDecomposeAcceptanceUnittest::test_fail_safe_adds_reasoning_to_thought_stream 
+-------------------------------- live log call ---------------------------------
+ERROR    bossbox.pipeline.decomposer:decomposer.py:162 Task decomposition fail-safe triggered: Provider call failed: down
+PASSED                                                                   [ 82%]
+tests/pipeline/test_decomposer_unittest.py::TestDecomposeAcceptanceUnittest::test_model_override_forwarded PASSED [ 84%]
+tests/pipeline/test_decomposer_unittest.py::TestDecomposeAcceptanceUnittest::test_multi_part_goal_returns_at_least_two_core_tasks PASSED [ 85%]
+tests/pipeline/test_decomposer_unittest.py::TestDecomposeAcceptanceUnittest::test_output_is_dataclass PASSED [ 87%]
+tests/pipeline/test_decomposer_unittest.py::TestDecomposeAcceptanceUnittest::test_provider_failure_returns_fail_safe 
+-------------------------------- live log call ---------------------------------
+ERROR    bossbox.pipeline.decomposer:decomposer.py:162 Task decomposition fail-safe triggered: Provider call failed: down
+PASSED                                                                   [ 88%]
+tests/pipeline/test_decomposer_unittest.py::TestDecomposeAcceptanceUnittest::test_reasoning_in_thought_stream PASSED [ 90%]
+tests/pipeline/test_decomposer_unittest.py::TestDecomposeAcceptanceUnittest::test_suggested_tasks_separate PASSED [ 92%]
+tests/pipeline/test_decomposer_unittest.py::TestDecomposeAcceptanceUnittest::test_thought_stream_entry_has_timestamp PASSED [ 93%]
+tests/pipeline/test_decomposer_unittest.py::TestDecomposeAcceptanceUnittest::test_unparseable_response_returns_fail_safe 
+-------------------------------- live log call ---------------------------------
+ERROR    bossbox.pipeline.decomposer:decomposer.py:162 Task decomposition fail-safe triggered: No decomposition YAML block found in response. Preview: 'No idea what you want.'
+PASSED                                                                   [ 95%]
+tests/pipeline/test_decomposer_unittest.py::TestDataclassesUnittest::test_decomposition_result_all_fields PASSED [ 96%]
+tests/pipeline/test_decomposer_unittest.py::TestDataclassesUnittest::test_decomposition_result_defaults PASSED [ 98%]
+tests/pipeline/test_decomposer_unittest.py::TestDataclassesUnittest::test_subtask_fields PASSED [100%]
+
+============================== 63 passed in 0.21s ==============================
