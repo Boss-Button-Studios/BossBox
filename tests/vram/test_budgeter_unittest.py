@@ -15,11 +15,16 @@ import sys
 import unittest
 from unittest.mock import MagicMock, patch
 
+import httpx as _httpx
+
 from bossbox.vram.budgeter import (
     DEFAULT_VRAM_BYTES,
     EVICTION_ORDER,
+    MODEL_LAYER_ESTIMATES,
     MODEL_SIZE_ESTIMATES,
+    LoadStrategy,
     VRAMBudgeter,
+    _DEFAULT_LAYER_COUNT,
     _UNKNOWN_MODEL_ESTIMATE,
     _detect_vram_bytes,
     strip_provider,
@@ -145,17 +150,23 @@ class TestAllocation(unittest.TestCase):
 # ---------------------------------------------------------------------------
 
 class TestRequestLoad(unittest.TestCase):
-    def test_returns_true_when_fits(self):
+    def test_returns_gpu_strategy_when_fits(self):
         b = _budgeter(budget=2 * 1024**3)
-        self.assertTrue(b.request_load("smollm:360m"))
+        result = b.request_load("smollm:360m")
+        self.assertIsInstance(result, LoadStrategy)
+        self.assertEqual(result.mode, "gpu")
+        self.assertEqual(result.num_gpu, -1)
 
     def test_strips_provider_prefix(self):
         b = _budgeter(budget=2 * 1024**3)
-        self.assertTrue(b.request_load("ollama/smollm:360m"))
+        result = b.request_load("ollama/smollm:360m")
+        self.assertEqual(result.mode, "gpu")
 
-    def test_returns_false_when_nothing_to_evict(self):
+    def test_returns_offload_strategy_when_nothing_to_evict(self):
         b = _budgeter(budget=100.0)
-        self.assertFalse(b.request_load("deepseek-r1:7b"))
+        result = b.request_load("deepseek-r1:7b")
+        self.assertIsInstance(result, LoadStrategy)
+        self.assertIn(result.mode, ("cpu", "mixed"))
 
     def test_evicts_reasoner_to_make_room(self):
         budget = 6.0 * 1024**3
@@ -169,7 +180,7 @@ class TestRequestLoad(unittest.TestCase):
         with patch("bossbox.vram.budgeter.httpx.Client", return_value=mock_client):
             result = b.request_load("qwen2.5-coder:1.5b")
 
-        self.assertTrue(result)
+        self.assertEqual(result.mode, "gpu")
         self.assertNotIn("deepseek-r1:7b", b._loaded)
 
     def test_nano_never_evicted(self):
@@ -180,15 +191,16 @@ class TestRequestLoad(unittest.TestCase):
 
         result = b.request_load("deepseek-r1:7b")
 
-        self.assertFalse(result)
+        self.assertIn(result.mode, ("cpu", "mixed"))
         self.assertIn("smollm:360m", b._loaded)
         self.assertFalse(any("smollm:360m" in t for t in thoughts))
 
-    def test_does_not_evict_target_model_itself(self):
+    def test_already_loaded_returns_gpu_strategy(self):
         budget = 6.0 * 1024**3
         b = _budgeter(budget=budget, loaded={"deepseek-r1:7b": REASONER_SIZE})
         result = b.request_load("deepseek-r1:7b")
-        self.assertTrue(result)
+        self.assertEqual(result.mode, "gpu")
+        self.assertEqual(result.num_gpu, -1)
 
     def test_evicts_specialist_when_reasoner_absent(self):
         budget = 2.0 * 1024**3
@@ -202,7 +214,7 @@ class TestRequestLoad(unittest.TestCase):
         with patch("bossbox.vram.budgeter.httpx.Client", return_value=mock_client):
             result = b.request_load("smollm:1.7b")
 
-        self.assertTrue(result)
+        self.assertEqual(result.mode, "gpu")
         self.assertNotIn("qwen2.5-coder:1.5b", b._loaded)
 
 
@@ -271,7 +283,7 @@ class TestEviction(unittest.TestCase):
         mc = self._make_mock_client()
         with patch("bossbox.vram.budgeter.httpx.Client", return_value=mc):
             result = b.request_load("qwen2.5-coder:1.5b")
-        self.assertTrue(result)
+        self.assertEqual(result.mode, "gpu")
 
 
 # ---------------------------------------------------------------------------
@@ -317,7 +329,6 @@ class TestRefreshLoaded(unittest.TestCase):
         self.assertIn("smollm:360m", alloc)
 
     def test_refresh_silent_when_ollama_unreachable(self):
-        import httpx as _httpx
         b = _budgeter(loaded={"smollm:360m": NANO_SIZE})
         mc = MagicMock()
         mc.__enter__ = MagicMock(return_value=mc)
@@ -386,13 +397,13 @@ class TestEdgeCases(unittest.TestCase):
         b = _budgeter(loaded={"smollm:1.7b": live})
         self.assertEqual(b._size_for("smollm:1.7b"), live)
 
-    def test_request_load_returns_bool_with_empty_tier_map(self):
+    def test_request_load_returns_load_strategy_with_empty_tier_map(self):
         b = VRAMBudgeter(
             vram_budget_bytes=2 * 1024**3,
             tier_to_model={},
             auto_start=False,
         )
-        self.assertIsInstance(b.request_load("smollm:360m"), bool)
+        self.assertIsInstance(b.request_load("smollm:360m"), LoadStrategy)
 
     def test_no_thought_cb_does_not_raise(self):
         budget = 6.0 * 1024**3
@@ -405,7 +416,92 @@ class TestEdgeCases(unittest.TestCase):
 
         with patch("bossbox.vram.budgeter.httpx.Client", return_value=mc):
             result = b.request_load("qwen2.5-coder:1.5b")
-        self.assertTrue(result)
+        self.assertEqual(result.mode, "gpu")
+
+
+# ---------------------------------------------------------------------------
+# LoadStrategy
+# ---------------------------------------------------------------------------
+
+class TestLoadStrategy(unittest.TestCase):
+    def test_gpu_strategy(self):
+        s = LoadStrategy(model="smollm:360m", num_gpu=-1, mode="gpu")
+        self.assertEqual(s.mode, "gpu")
+        self.assertEqual(s.num_gpu, -1)
+
+    def test_cpu_strategy(self):
+        s = LoadStrategy(model="llama3.2:3b", num_gpu=0, mode="cpu")
+        self.assertEqual(s.mode, "cpu")
+        self.assertEqual(s.num_gpu, 0)
+
+    def test_mixed_strategy(self):
+        s = LoadStrategy(model="llama3.2:3b", num_gpu=10, mode="mixed")
+        self.assertEqual(s.mode, "mixed")
+        self.assertEqual(s.num_gpu, 10)
+
+
+# ---------------------------------------------------------------------------
+# FetchLayerCount
+# ---------------------------------------------------------------------------
+
+class TestFetchLayerCount(unittest.TestCase):
+    def test_known_model_uses_estimate(self):
+        b = _budgeter()
+        self.assertEqual(
+            b._fetch_layer_count("smollm:360m"),
+            MODEL_LAYER_ESTIMATES["smollm:360m"],
+        )
+
+    def test_result_is_cached(self):
+        b = _budgeter()
+        b._fetch_layer_count("smollm:1.7b")
+        self.assertIn("smollm:1.7b", b._layer_cache)
+
+    def test_unknown_model_queries_api_show(self):
+        b = _budgeter()
+        show_body = {"modelinfo": {"llama.block_count": 28}}
+        mc = MagicMock()
+        mc.__enter__ = MagicMock(return_value=mc)
+        mc.__exit__ = MagicMock(return_value=False)
+        mc.post.return_value = _mock_http_response(body=show_body)
+        with patch("bossbox.vram.budgeter.httpx.Client", return_value=mc):
+            count = b._fetch_layer_count("llama3.2:3b")
+        self.assertEqual(count, 28)
+
+    def test_fallback_on_http_error(self):
+        b = _budgeter()
+        mc = MagicMock()
+        mc.__enter__ = MagicMock(return_value=mc)
+        mc.__exit__ = MagicMock(return_value=False)
+        mc.post.side_effect = _httpx.ConnectError("refused")
+        with patch("bossbox.vram.budgeter.httpx.Client", return_value=mc):
+            count = b._fetch_layer_count("mystery:7b")
+        self.assertEqual(count, _DEFAULT_LAYER_COUNT)
+
+
+# ---------------------------------------------------------------------------
+# OffloadStrategy
+# ---------------------------------------------------------------------------
+
+class TestOffloadStrategy(unittest.TestCase):
+    def test_cpu_when_no_vram(self):
+        b = _budgeter(budget=100.0)
+        s = b._compute_offload_strategy("deepseek-r1:7b", REASONER_SIZE, 1.0)
+        self.assertEqual(s.mode, "cpu")
+        self.assertEqual(s.num_gpu, 0)
+
+    def test_mixed_when_some_vram(self):
+        b = _budgeter()
+        s = b._compute_offload_strategy(
+            "deepseek-r1:7b", REASONER_SIZE, 2.0 * 1024**3
+        )
+        self.assertEqual(s.mode, "mixed")
+        self.assertGreater(s.num_gpu, 0)
+        self.assertLess(s.num_gpu, 32)
+
+    def test_layer_estimates_cover_all_standard_models(self):
+        for model in MODEL_SIZE_ESTIMATES:
+            self.assertIn(model, MODEL_LAYER_ESTIMATES)
 
 
 if __name__ == "__main__":

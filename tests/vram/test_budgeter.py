@@ -23,7 +23,9 @@ import respx
 from bossbox.vram.budgeter import (
     DEFAULT_VRAM_BYTES,
     EVICTION_ORDER,
+    MODEL_LAYER_ESTIMATES,
     MODEL_SIZE_ESTIMATES,
+    LoadStrategy,
     VRAMBudgeter,
     strip_provider,
 )
@@ -144,18 +146,24 @@ class TestAllocation:
 # ---------------------------------------------------------------------------
 
 class TestRequestLoad:
-    def test_returns_true_when_model_fits_without_eviction(self):
+    def test_returns_gpu_strategy_when_model_fits(self):
         b = make_budgeter(budget=2 * 1024**3)
-        assert b.request_load("smollm:360m") is True
+        result = b.request_load("smollm:360m")
+        assert isinstance(result, LoadStrategy)
+        assert result.mode == "gpu"
+        assert result.num_gpu == -1
 
     def test_strips_provider_prefix(self):
         b = make_budgeter(budget=2 * 1024**3)
-        assert b.request_load("ollama/smollm:360m") is True
+        result = b.request_load("ollama/smollm:360m")
+        assert result.mode == "gpu"
 
-    def test_returns_false_when_nothing_to_evict_and_model_too_large(self):
-        # Budget of 100 bytes; no loaded models to evict.
+    def test_returns_cpu_strategy_when_model_cannot_fit(self):
+        # Budget of 100 bytes; no VRAM for any GPU layers.
         b = make_budgeter(budget=100.0)
-        assert b.request_load("deepseek-r1:7b") is False
+        result = b.request_load("deepseek-r1:7b")
+        assert isinstance(result, LoadStrategy)
+        assert result.mode in ("cpu", "mixed")
 
     def test_evicts_reasoner_first_to_make_room(self):
         # Budget: 6 GiB. Reasoner (5.5 GB) loaded. Request specialist (1.1 GB).
@@ -175,7 +183,7 @@ class TestRequestLoad:
             )
             result = b.request_load("qwen2.5-coder:1.5b")
 
-        assert result is True
+        assert result.mode == "gpu"
         assert "deepseek-r1:7b" not in b._loaded
         assert any("deepseek-r1:7b" in t for t in thoughts)
 
@@ -193,13 +201,13 @@ class TestRequestLoad:
             )
             result = b.request_load("smollm:1.7b")
 
-        assert result is True
+        assert result.mode == "gpu"
         assert "qwen2.5-coder:1.5b" not in b._loaded
 
-    def test_evicts_multiple_models_when_needed(self):
-        # Budget: 2.5 GiB. Reasoner (5.5 GB) not loaded; micro (1.2) + specialist (1.1) loaded.
-        # total loaded = 2.3 GB, free = 0.2 GB. Need to load reasoner (5.5 GB).
-        # Evict reasoner (not loaded), specialist (loaded), micro (loaded).
+    def test_mixed_strategy_when_model_partially_fits(self):
+        # Budget: 2.5 GiB. Micro + specialist loaded; request reasoner (5.5 GB).
+        # After evicting both, 2.5 GB free but reasoner needs 5.5 GB.
+        # Expected: mixed offload with layers_on_gpu = floor(2.5GB / (5.5GB/32)).
         budget = 2.5 * 1024**3
         b = make_budgeter(
             budget=budget,
@@ -214,13 +222,12 @@ class TestRequestLoad:
             )
             result = b.request_load("deepseek-r1:7b")
 
-        # 2.5 GB budget; after evicting both micro and specialist → 2.5 GB free
-        # but reasoner needs 5.5 GB — still doesn't fit.
-        assert result is False
+        assert result.mode in ("cpu", "mixed")
+        assert result.model == "deepseek-r1:7b"
 
     def test_nano_never_evicted(self):
         # Budget tiny. Only nano loaded. Request something big.
-        # The budgeter should NOT evict nano and should return False.
+        # The budgeter must NOT evict nano.
         budget = NANO_SIZE + 1.0  # just enough for nano
         b = make_budgeter(
             budget=budget,
@@ -231,21 +238,30 @@ class TestRequestLoad:
 
         result = b.request_load("deepseek-r1:7b")
 
-        assert result is False
+        assert result.mode in ("cpu", "mixed")
         assert "smollm:360m" in b._loaded, "Nano must not be evicted"
         assert not any("smollm:360m" in t for t in thoughts)
 
-    def test_does_not_evict_model_being_loaded(self):
-        # Edge case: reasoner is already loaded, and we request_load reasoner again.
-        # It should not try to evict itself.
+    def test_already_loaded_returns_gpu_strategy(self):
+        # Edge case: model already loaded — no additional VRAM needed.
         budget = 6.0 * 1024**3
         b = make_budgeter(
             budget=budget,
             loaded={"deepseek-r1:7b": REASONER_SIZE},
         )
-        # Budget is 6 GB, reasoner is 5.5 GB; fits already.
         result = b.request_load("deepseek-r1:7b")
-        assert result is True
+        assert result.mode == "gpu"
+        assert result.num_gpu == -1
+
+    def test_load_strategy_model_field(self):
+        b = make_budgeter(budget=2 * 1024**3)
+        result = b.request_load("smollm:360m")
+        assert result.model == "smollm:360m"
+
+    def test_load_strategy_model_field_strips_prefix(self):
+        b = make_budgeter(budget=2 * 1024**3)
+        result = b.request_load("ollama/smollm:360m")
+        assert result.model == "smollm:360m"
 
 
 # ---------------------------------------------------------------------------
@@ -318,7 +334,7 @@ class TestEviction:
             )
             result = b.request_load("qwen2.5-coder:1.5b")
 
-        assert result is True
+        assert result.mode == "gpu"
         assert "deepseek-r1:7b" not in b._loaded
 
     def test_thought_cb_exception_does_not_propagate(self):
@@ -337,7 +353,7 @@ class TestEviction:
             )
             # Should not raise even though thought_cb raises.
             result = b.request_load("qwen2.5-coder:1.5b")
-        assert result is True
+        assert result.mode == "gpu"
 
 
 # ---------------------------------------------------------------------------
@@ -484,14 +500,14 @@ class TestEdgeCases:
         b = make_budgeter(loaded={"smollm:1.7b": live_size})
         assert b._size_for("smollm:1.7b") == live_size
 
-    def test_request_load_with_empty_tier_map_still_returns_bool(self):
+    def test_request_load_with_empty_tier_map_returns_load_strategy(self):
         b = VRAMBudgeter(
             vram_budget_bytes=2 * 1024**3,
             tier_to_model={},
             auto_start=False,
         )
         result = b.request_load("smollm:360m")
-        assert isinstance(result, bool)
+        assert isinstance(result, LoadStrategy)
 
     def test_available_never_negative_when_loaded_exceeds_budget(self):
         # Edge case: refresh brings in more data than the tracked budget.
@@ -512,4 +528,98 @@ class TestEdgeCases:
                 return_value=httpx.Response(200, json={})
             )
             result = b.request_load("qwen2.5-coder:1.5b")
-        assert result is True
+        assert result.mode == "gpu"
+
+
+# ---------------------------------------------------------------------------
+# TestLoadStrategy
+# ---------------------------------------------------------------------------
+
+class TestLoadStrategy:
+    def test_gpu_strategy_fields(self):
+        s = LoadStrategy(model="smollm:360m", num_gpu=-1, mode="gpu")
+        assert s.model == "smollm:360m"
+        assert s.num_gpu == -1
+        assert s.mode == "gpu"
+
+    def test_cpu_strategy_fields(self):
+        s = LoadStrategy(model="llama3.2:3b", num_gpu=0, mode="cpu")
+        assert s.num_gpu == 0
+        assert s.mode == "cpu"
+
+    def test_mixed_strategy_fields(self):
+        s = LoadStrategy(model="llama3.2:3b", num_gpu=10, mode="mixed")
+        assert s.num_gpu == 10
+        assert s.mode == "mixed"
+
+
+# ---------------------------------------------------------------------------
+# TestFetchLayerCount
+# ---------------------------------------------------------------------------
+
+class TestFetchLayerCount:
+    def test_known_model_uses_estimate_no_http(self):
+        b = make_budgeter()
+        count = b._fetch_layer_count("smollm:360m")
+        assert count == MODEL_LAYER_ESTIMATES["smollm:360m"]
+
+    def test_fetch_layer_count_caches_result(self):
+        b = make_budgeter()
+        b._fetch_layer_count("smollm:1.7b")
+        b._fetch_layer_count("smollm:1.7b")
+        assert "smollm:1.7b" in b._layer_cache
+
+    def test_unknown_model_queries_api_show(self):
+        b = make_budgeter()
+        show_payload = {
+            "modelinfo": {"llama.block_count": 28, "llama.context_length": 131072}
+        }
+        with respx.mock:
+            respx.post("http://localhost:11434/api/show").mock(
+                return_value=httpx.Response(200, json=show_payload)
+            )
+            count = b._fetch_layer_count("llama3.2:3b")
+        assert count == 28
+
+    def test_unknown_model_fallback_on_http_error(self):
+        from bossbox.vram.budgeter import _DEFAULT_LAYER_COUNT
+        b = make_budgeter()
+        with respx.mock:
+            respx.post("http://localhost:11434/api/show").mock(
+                side_effect=httpx.ConnectError("refused")
+            )
+            count = b._fetch_layer_count("mystery:7b")
+        assert count == _DEFAULT_LAYER_COUNT
+
+    def test_unknown_model_fallback_when_block_count_missing(self):
+        from bossbox.vram.budgeter import _DEFAULT_LAYER_COUNT
+        b = make_budgeter()
+        with respx.mock:
+            respx.post("http://localhost:11434/api/show").mock(
+                return_value=httpx.Response(200, json={"modelinfo": {}})
+            )
+            count = b._fetch_layer_count("mystery:7b")
+        assert count == _DEFAULT_LAYER_COUNT
+
+
+# ---------------------------------------------------------------------------
+# TestOffloadStrategy
+# ---------------------------------------------------------------------------
+
+class TestOffloadStrategy:
+    def test_cpu_strategy_when_no_vram_available(self):
+        b = make_budgeter(budget=100.0)
+        strategy = b._compute_offload_strategy("deepseek-r1:7b", REASONER_SIZE, 1.0)
+        assert strategy.mode == "cpu"
+        assert strategy.num_gpu == 0
+
+    def test_mixed_strategy_when_some_vram_available(self):
+        b = make_budgeter()
+        avail = 2.0 * 1024**3
+        strategy = b._compute_offload_strategy("deepseek-r1:7b", REASONER_SIZE, avail)
+        assert strategy.mode == "mixed"
+        assert 0 < strategy.num_gpu < 32
+
+    def test_model_layer_estimates_covers_all_standard_models(self):
+        for model in MODEL_SIZE_ESTIMATES:
+            assert model in MODEL_LAYER_ESTIMATES, f"Missing layer estimate for {model}"

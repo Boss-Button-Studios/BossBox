@@ -227,16 +227,20 @@ class Supervisor:
         self._envelope.add_thought("progress", "Ingest complete.")
 
     async def _stage_decompose(self) -> None:
-        """Check VRAM then decompose the goal into subtasks."""
+        """Check VRAM budget, then decompose the goal into subtasks."""
         model = self._model
+        provider_kwargs: dict = {}
         if model and self._vram is not None:
-            self._vram.request_load(model)
+            strategy = self._vram.request_load(model)
+            if strategy.num_gpu != -1:
+                provider_kwargs["num_gpu"] = strategy.num_gpu
 
         self._decomposition = await decompose(
             self._envelope.original_input,
             self._provider,
             self._envelope,
             model=model,
+            **provider_kwargs,
         )
 
     async def _stage_human_checkpoint(self) -> None:
@@ -303,8 +307,11 @@ class Supervisor:
             return
 
         # VRAM check before model call.
+        provider_kwargs: dict = {}
         if self._model and self._vram is not None:
-            self._vram.request_load(self._model)
+            strategy = self._vram.request_load(self._model)
+            if strategy.num_gpu != -1:
+                provider_kwargs["num_gpu"] = strategy.num_gpu
 
         model_label = self._model or "model"
         self._envelope.add_thought("progress", f"Asking {model_label} to execute…")
@@ -330,6 +337,7 @@ class Supervisor:
         kwargs: dict = {}
         if self._model:
             kwargs["model"] = self._model
+        kwargs.update(provider_kwargs)
 
         try:
             result = await self._provider.complete(messages, **kwargs)

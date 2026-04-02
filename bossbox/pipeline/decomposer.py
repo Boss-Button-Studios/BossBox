@@ -171,6 +171,7 @@ async def decompose(
     provider: ModelProvider,
     envelope: TaskEnvelope,
     model: str | None = None,
+    **provider_kwargs,
 ) -> DecompositionResult:
     """
     Break *goal* into an ordered subtask list using the Micro model.
@@ -204,6 +205,7 @@ async def decompose(
     kwargs: dict = {}
     if model is not None:
         kwargs["model"] = model
+    kwargs.update(provider_kwargs)
 
     model_label = model or "model"
     envelope.add_thought("progress", f"Asking {model_label} to decompose goal…")

@@ -103,6 +103,12 @@ class OllamaProvider(ModelProvider):
         if "max_tokens" in kwargs:
             # Ollama uses num_predict for token budget
             options["num_predict"] = kwargs.pop("max_tokens")
+        if "num_gpu" in kwargs:
+            # Layer offload hint from the VRAM Budgeter.
+            # -1 means "all layers on GPU" (Ollama default); 0 means CPU only.
+            val = kwargs.pop("num_gpu")
+            if val != -1:
+                options["num_gpu"] = val
         if options:
             payload["options"] = options
 

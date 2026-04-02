@@ -20,6 +20,7 @@ bossbox/hypervisor/__init__.py
 bossbox/hypervisor/hypervisor.py
 bossbox/ingest/__init__.py
 bossbox/ingest/analyzer.py
+bossbox/ingest/exceptions.py
 bossbox/ingest/sanitizer.py
 bossbox/notify/__init__.py
 bossbox/notify/notifier.py
@@ -27,6 +28,7 @@ bossbox/pipeline/__init__.py
 bossbox/pipeline/backup.py
 bossbox/pipeline/decomposer.py
 bossbox/pipeline/envelope.py
+bossbox/pipeline/exceptions.py
 bossbox/pipeline/supervisor.py
 bossbox/providers/__init__.py
 bossbox/providers/anthropic.py
@@ -34,10 +36,16 @@ bossbox/providers/base.py
 bossbox/providers/ollama.py
 bossbox/providers/openai.py
 bossbox/providers/registry.py
+bossbox/secrets/__init__.py
+bossbox/secrets/exceptions.py
+bossbox/secrets/manager.py
 bossbox/skills/__init__.py
 bossbox/skills/elicitor.py
 bossbox/skills/loader.py
 bossbox/vram/__init__.py
 bossbox/vram/budgeter.py
+bossbox/vram/exceptions.py
 tests/test_audit_logger.py
+tests/test_cli.py
+tests/test_cli_unittest.py
 tests/test_step01_scaffold.py

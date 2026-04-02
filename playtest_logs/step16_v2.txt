@@ -1,0 +1,79 @@
+════════════════════════════════════════════════════════════
+  BossBox
+  Goal: write a todo list CLI app
+  Model: smollm:1.7b
+════════════════════════════════════════════════════════════
+
+[ingest    ]
+  → Ingest complete.
+[decompose ]
+  → Asking smollm:1.7b to decompose goal…
+  → Decomposition unavailable — proceeding as single task.
+[human_checkpoint]
+  → Waiting at human checkpoint…
+────────────────────────────────────────────────────────────
+  Decomposition Plan
+────────────────────────────────────────────────────────────
+  Core tasks:
+    1. write a todo list CLI app
+       write a todo list CLI app
+────────────────────────────────────────────────────────────
+  Proceed? [y]es / [n]o / [r]edirect >   → Redirected: skip the file I/O, just print to stdout
+  → Checkpoint approved.
+[execute   ]
+  → Asking smollm:1.7b to execute…
+  → Execution complete.
+[review    ]
+  → Review complete.
+[complete  ]
+  → Pipeline complete.
+
+════════════════════════════════════════════════════════════
+  Result
+════════════════════════════════════════════════════════════
+Here is an example of a simple TodoList CLI application:
+```
+# todo_list.py
+import os
+from typing import List
+
+class TodoList:
+    def __init__(self):
+        self.tasks = []
+
+    def add(self, task: str) -> None:
+        self.tasks.append(task)
+
+    def delete(self, index: int) -> None:
+        del self.tasks[index]
+
+    def list_tasks(self) -> List[str]:
+        return self.tasks
+
+def main():
+    todo_list = TodoList()
+
+    while True:
+        print("Todo List:")
+        todo_list.list_tasks()
+
+        command = input("> ")
+
+        if command == "add":
+            task = input("Enter a new task: ")
+            todo_list.add(task)
+        elif command == "delete":
+            index = int(input("Enter the index of the task to delete: "))
+            todo_list.delete(index)
+        elif command == "list":
+            print("Tasks:")
+            todo_list.list_tasks()
+        elif command == "quit":
+            break
+        else:
+            print("Invalid command. Try 'add', 'delete', or 'list'.")
+
+if __name__ == "__main__":
+    main()
+```
+

@@ -1,14 +1,34 @@
-# BossBox — Project Specification v4.3
+# BossBox — Project Specification v4.3.1
 
 **Studio:** Boss Button Studios  
 **Document Status:** Living Draft  
-**Version:** 4.3  
-**Last Updated:** 2026-03-31  
-**Supersedes:** v4.2
+**Version:** 4.3.1  
+**Last Updated:** 2026-04-02  
+**Supersedes:** v4.3
 
 ---
 
 ## Changelog
+
+**v4.3.1 (2026-04-02)**
+- Enhanced VRAM Budgeter (`vram/budgeter.py`): `request_load()` now returns a
+  `LoadStrategy` dataclass instead of `bool`.  When a model cannot fit in VRAM
+  even after eviction, the Budgeter computes a mixed CPU/GPU offload strategy
+  using Ollama's `num_gpu` option rather than refusing the load outright.  This
+  allows larger models (e.g. llama3.2:3b) to run on constrained hardware by
+  splitting transformer layers between GPU VRAM and system RAM, matching the
+  behaviour of llama.cpp-backed runtimes such as LM Studio.
+- Added `LoadStrategy` public dataclass with `model`, `num_gpu`, and `mode`
+  fields.  `mode` is `"gpu"` (all layers on GPU), `"mixed"` (split), or
+  `"cpu"` (CPU-only inference).
+- Added `MODEL_LAYER_ESTIMATES` dict and `_fetch_layer_count()` method.  Layer
+  counts for known models resolve from the estimate table; unknown models query
+  Ollama's `/api/show` endpoint and cache the result.
+- `OllamaProvider.complete()` now accepts `num_gpu` kwarg and forwards it to
+  Ollama's `options` dict.
+- `decompose()` accepts `**provider_kwargs` and forwards them to the provider.
+- Supervisor passes `LoadStrategy.num_gpu` through to both decomposition and
+  execution provider calls.
 
 **v4.3 (2026-03-31)**
 - Inserted **Step 7 — Secrets Manager** into the Atomic Implementation Steps sequence.
@@ -232,6 +252,7 @@ The VRAM Budgeter runs as a background thread and tracks the current memory allo
 - Maintains a real-time estimate of current VRAM usage per loaded model
 - When a tier invocation is requested, checks whether loading the model would exceed the available budget
 - If the budget would be exceeded, signals the lowest-priority loaded model to evict before proceeding
+- When a model still cannot fit after all eligible evictions, computes a mixed CPU/GPU offload strategy via Ollama's `num_gpu` option rather than refusing the load
 - Coordinates with Ollama's `OLLAMA_KEEP_ALIVE` settings but does not depend on them exclusively
 - Surfaces current VRAM allocation in the Model Manager tab
 
@@ -242,7 +263,17 @@ The VRAM Budgeter runs as a background thread and tracks the current memory allo
 3. Micro
 4. Nano (never evicted — always hot)
 
-**Visibility:** Current VRAM allocation is always visible in the Model Manager tab. When the Budgeter triggers an eviction, a brief notice appears in the thought stream: "Offloading [model] to free VRAM for [model]." The user is never surprised by a slow start caused by model loading they didn't anticipate.
+**Load Strategy:** `request_load(model)` returns a `LoadStrategy` dataclass:
+
+| `mode`    | `num_gpu` | Meaning |
+|-----------|-----------|---------|
+| `"gpu"`   | `-1`      | All layers on GPU (Ollama default) |
+| `"mixed"` | `N`       | N layers on GPU, remainder on CPU |
+| `"cpu"`   | `0`       | All layers on CPU (no GPU usage) |
+
+The strategy is computed by dividing available VRAM by the per-layer byte cost (`model_size / layer_count`).  Layer counts for standard models are resolved from a built-in estimate table; unknown models query Ollama's `/api/show` endpoint.
+
+**Visibility:** Current VRAM allocation is always visible in the Model Manager tab. When the Budgeter triggers an eviction, a brief notice appears in the thought stream: "Offloading [model] to free VRAM for [model]." When a mixed offload strategy is selected, the layer split is logged at INFO level. The user is never surprised by a slow start caused by model loading they didn't anticipate.
 
 ### 5.6 Model Lifecycle
 
@@ -1176,13 +1207,18 @@ Header is included as AES-GCM AAD — tampering with it is detected on decrypt. 
 
 ### Step 8 — VRAM Budgeter
 
-**Task:** Implement `vram/budgeter.py` as a background thread. Tracks current VRAM allocation per loaded model. Before any tier invocation, checks whether loading would exceed available budget. If so, signals lowest-priority loaded model to evict first. Surfaces allocation data for the Model Manager tab. Logs eviction events to the thought stream.
+**Task:** Implement `vram/budgeter.py` as a background thread. Tracks current VRAM allocation per loaded model. Before any tier invocation, checks whether loading would exceed available budget. If so, signals lowest-priority loaded model to evict first. When the model still cannot fit after eviction, computes a mixed CPU/GPU offload strategy rather than refusing the load. Surfaces allocation data for the Model Manager tab. Logs eviction events to the thought stream.
 
-**Input:** Ollama model metadata (model size estimates). Available VRAM from platform detection. Eviction priority order from Section 5.5.
+**Input:** Ollama model metadata (model size estimates, layer count estimates). Available VRAM from platform detection. Eviction priority order from Section 5.5.
 
-**Output:** `VRAMBudgeter` class with `request_load(model: str) -> bool` (returns True if safe to load, triggers eviction if needed), `current_allocation() -> dict[str, float]`, `available() -> float`.
+**Output:** `VRAMBudgeter` class with:
+- `request_load(model: str) -> LoadStrategy` — evicts if needed; returns load plan
+- `current_allocation() -> dict[str, float]`
+- `available() -> float`
 
-**Acceptance:** On a system where loading the Reasoner would exceed budget, `request_load()` evicts the next eviction-priority model before returning True. Nano model is never evicted. Eviction events appear in thought stream. `current_allocation()` returns accurate estimates.
+`LoadStrategy` dataclass: `model: str`, `num_gpu: int`, `mode: str` (`"gpu"` / `"mixed"` / `"cpu"`).
+
+**Acceptance:** On a system where loading the Reasoner would exceed budget, `request_load()` evicts the next eviction-priority model and returns a `gpu` strategy. When no eviction is possible and the model partially fits, returns a `mixed` strategy with a computed `num_gpu` layer count. When no VRAM is available at all, returns a `cpu` strategy. Nano model is never evicted. Eviction events appear in thought stream. `current_allocation()` returns accurate estimates.
 
 ---
 

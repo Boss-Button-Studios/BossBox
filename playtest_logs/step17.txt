@@ -1,0 +1,21 @@
+════════════════════════════════════════════════════════════
+  BossBox
+  Goal: Prepare an assessment of the advantages and disadvantages of the 529 education plan for a Massachusetts resident.
+  Model: llama3.2:3b
+════════════════════════════════════════════════════════════
+
+[ingest    ]
+  → Ingest complete.
+[decompose ]
+  → Asking llama3.2:3b to decompose goal…
+  → Decomposition unavailable — proceeding as single task.
+[human_checkpoint]
+  → Waiting at human checkpoint…
+────────────────────────────────────────────────────────────
+  Decomposition Plan
+────────────────────────────────────────────────────────────
+  Core tasks:
+    1. Prepare an assessment of the advantages and disadvantages of the 529 education plan for a Massachusetts resident.
+       Prepare an assessment of the advantages and disadvantages of the 529 education plan for a Massachusetts resident.
+────────────────────────────────────────────────────────────
+  Proceed? [y]es / [n]o / [r]edirect > 

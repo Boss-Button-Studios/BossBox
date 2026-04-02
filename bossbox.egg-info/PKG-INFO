@@ -1,56 +1,136 @@
 Metadata-Version: 2.4
 Name: bossbox
-Version: 0.1.0
-Summary: Local-first AI workbench — Boss Button Studios
+Version: 0.1.0.dev0
+Summary: Staffing agency for AI assistants — local, secure, free.
 License: Apache-2.0
 Requires-Python: >=3.11
 Description-Content-Type: text/markdown
 Requires-Dist: pyyaml>=6.0
 Requires-Dist: httpx>=0.27
-Provides-Extra: cloud
-Requires-Dist: anthropic>=0.40.0; extra == "cloud"
-Requires-Dist: openai>=1.50.0; extra == "cloud"
+Requires-Dist: cryptography>=42.0
+Requires-Dist: argon2-cffi>=23.0
+Requires-Dist: keyring>=25.0
+Requires-Dist: plyer>=2.1
+Requires-Dist: pymupdf>=1.23
+Requires-Dist: python-docx>=1.1
+Requires-Dist: beautifulsoup4>=4.12
+Requires-Dist: pytesseract>=0.3
+Requires-Dist: Pillow>=10.0
+Provides-Extra: token
+Requires-Dist: python-pkcs11>=0.7.0; extra == "token"
 Provides-Extra: dev
-Requires-Dist: pytest>=8.0; extra == "dev"
+Requires-Dist: pytest>=8.1; extra == "dev"
 Requires-Dist: pytest-asyncio>=0.23; extra == "dev"
-Requires-Dist: pytest-mock>=3.14; extra == "dev"
+Requires-Dist: pytest-cov>=5.0; extra == "dev"
 
 # BossBox
 
 **Local-first AI workbench — Boss Button Studios**
 
-BossBox manages a tiered fleet of small language models, orchestrates them into agentic pipelines, and provides a supervised human-in-the-loop interface for accomplishing complex tasks. It ships as a self-contained installable package that detects your hardware, recommends appropriate models, and is immediately useful without configuration.
+BossBox manages a tiered fleet of small language models, orchestrates them into
+agentic pipelines, and provides a supervised human-in-the-loop interface for
+accomplishing complex tasks. It runs entirely on your hardware — no cloud
+account, no telemetry, no paid tier.
 
-Free, open source, no telemetry, no paid tier.
+> **Development status:** Steps 1–9 of 24 are complete. The core infrastructure
+> is in place but the pipeline and GUI are not yet functional. The first
+> end-to-end usable milestone is Step 16 (CLI Runner). See
+> [docs/bossbox_spec_v4.3.md](docs/bossbox_spec_v4.3.md) for the full roadmap.
 
 ---
 
-## Quick Start
+## What's built so far
+
+| Step | Component | What it does |
+|------|-----------|-------------|
+| 1 | Project Scaffold | Package structure, entry points, config files |
+| 2 | Configuration Loader | YAML config with environment variable expansion |
+| 3 | Task Envelope | Central pipeline data structure |
+| 4 | Audit Logger | Append-only JSONL audit trail at `~/.bossbox/audit/` |
+| 5–6 | Provider Layer | Ollama, Anthropic, OpenAI via uniform interface; fallback chains |
+| 7 | Secrets Manager | AES-256-GCM encrypted secrets; password, keychain, or hardware token unlock |
+| 8 | VRAM Budgeter | Background thread; evicts lower-priority models before loading; Nano always hot |
+| 9 | Document Sanitizer | Strips hidden PDF layers, DOCX hidden runs, `display:none` HTML; OCR escalation via tesseract |
+
+---
+
+## Prerequisites
+
+- Python 3.12+
+- [Ollama](https://ollama.com) running locally with at least one model pulled
+- `tesseract-ocr` for deep-mode document sanitization (`sudo apt install tesseract-ocr`)
+
+Recommended models (matched to the development hardware tier):
 
 ```bash
-pip install -e ".[dev]"
-bossbox "Summarize the key points in this document" --file report.pdf
+ollama pull smollm:360m        # nano — always loaded
+ollama pull smollm:1.7b        # micro
+ollama pull qwen2.5-coder:1.5b # specialist
+ollama pull deepseek-r1:7b     # reasoner
 ```
+
+---
+
+## Setup
+
+```bash
+git clone https://github.com/Boss-Button-Studios/BossBox
+cd BossBox
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -e ".[dev]"
+```
+
+---
 
 ## Development
 
 ```bash
-# Install in editable mode with dev dependencies
-pip install -e ".[dev]"
+# Activate the venv first
+source .venv/bin/activate
 
-# Run full regression test suite
-pytest tests/ -v --tb=short
+# Run the full regression suite
+pytest --tb=short -v
 
 # Run with coverage
-pytest tests/ --cov=bossbox --cov-report=term-missing
+pytest --cov=bossbox --cov-report=term-missing
+
+# Run a single step's tests
+pytest tests/vram/ -v
 ```
+
+The test suite has 612 passing tests across all completed steps.
+Every step ships two test files: `test_<name>.py` (pytest) and
+`test_<name>_unittest.py` (stdlib unittest, no network required).
+
+---
 
 ## Architecture
 
-See `bossbox_spec_v4.md` for the full specification.
+BossBox is built as a staffing agency for AI assistants. The supervisor
+orchestrates a tiered fleet of models:
+
+| Tier | Role | Default model |
+|------|------|---------------|
+| Nano | Always-on responder | smollm:360m |
+| Micro | Decomposition, analysis | smollm:1.7b |
+| Specialist | Domain-specific tasks | qwen2.5-coder:1.5b |
+| Reasoner | Complex reasoning | deepseek-r1:7b |
+
+Every external document passes through the physical sanitizer before any
+model sees it. All model calls go through the Provider Abstraction Layer.
+Every action is logged to an append-only audit trail. The human is always
+in the loop.
+
+See [docs/bossbox_spec_v4.3.md](docs/bossbox_spec_v4.3.md) for the full
+specification including the complete step sequence, security model, and
+hardware guidance.
+
+---
 
 ## License
 
 Apache License 2.0 — see `LICENSE`.
 
-The hypervisor-isolated self-audit mechanism is intentionally contributed to the public domain of ideas. No patent protection sought.
+The hypervisor-isolated self-audit mechanism is intentionally contributed
+to the public domain of ideas. No patent protection sought.

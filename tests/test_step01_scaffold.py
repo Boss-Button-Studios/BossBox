@@ -76,6 +76,6 @@ def test_sanitize_implemented():
 
 
 def test_vram_budgeter_implemented():
-    from bossbox.vram.budgeter import VRAMBudgeter
+    from bossbox.vram.budgeter import LoadStrategy, VRAMBudgeter
     b = VRAMBudgeter(vram_budget_bytes=2 * 1024**3, auto_start=False)
-    assert isinstance(b.request_load("smollm:360m"), bool)
+    assert isinstance(b.request_load("smollm:360m"), LoadStrategy)
