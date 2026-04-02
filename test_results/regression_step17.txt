@@ -1,0 +1,1481 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.3, pytest-9.0.2, pluggy-1.6.0 -- /home/jarrod/Projects/BBS/BossBox/.venv/bin/python3
+cachedir: .pytest_cache
+rootdir: /home/jarrod/Projects/BBS/BossBox
+configfile: pyproject.toml
+testpaths: tests
+plugins: cov-7.1.0, asyncio-1.3.0, mock-3.15.1, respx-0.22.0, anyio-4.13.0
+asyncio: mode=Mode.AUTO, debug=False, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
+collecting ... 
+----------------------------- live log collection ------------------------------
+INFO     httpx:_client.py:1025 HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+collected 1172 items
+
+tests/config/test_loader.py::TestExpandValue::test_plain_string_unchanged PASSED [  0%]
+tests/config/test_loader.py::TestExpandValue::test_integer_passthrough PASSED [  0%]
+tests/config/test_loader.py::TestExpandValue::test_float_passthrough PASSED [  0%]
+tests/config/test_loader.py::TestExpandValue::test_bool_passthrough PASSED [  0%]
+tests/config/test_loader.py::TestExpandValue::test_none_passthrough PASSED [  0%]
+tests/config/test_loader.py::TestExpandValue::test_single_ref_present PASSED [  0%]
+tests/config/test_loader.py::TestExpandValue::test_single_ref_missing_returns_none PASSED [  0%]
+tests/config/test_loader.py::TestExpandValue::test_single_ref_empty_string_var PASSED [  0%]
+tests/config/test_loader.py::TestExpandValue::test_embedded_ref_present PASSED [  0%]
+tests/config/test_loader.py::TestExpandValue::test_embedded_ref_missing_replaced_with_empty PASSED [  0%]
+tests/config/test_loader.py::TestExpandValue::test_two_embedded_refs PASSED [  0%]
+tests/config/test_loader.py::TestExpandValue::test_dict_recursion PASSED [  1%]
+tests/config/test_loader.py::TestExpandValue::test_list_recursion PASSED [  1%]
+tests/config/test_loader.py::TestExpandValue::test_nested_dict_in_list PASSED [  1%]
+tests/config/test_loader.py::TestExpandValue::test_nested_structure PASSED [  1%]
+tests/config/test_loader.py::TestExpandValue::test_absent_nested_var PASSED [  1%]
+tests/config/test_loader.py::TestLoadProviders::test_full_config_with_env_vars_present PASSED [  1%]
+tests/config/test_loader.py::TestLoadProviders::test_missing_api_keys_resolve_to_none PASSED [  1%]
+tests/config/test_loader.py::TestLoadProviders::test_ollama_only_no_cloud_sections PASSED [  1%]
+tests/config/test_loader.py::TestLoadProviders::test_ollama_default_base_url_when_key_absent PASSED [  1%]
+tests/config/test_loader.py::TestLoadProviders::test_custom_ollama_base_url PASSED [  1%]
+tests/config/test_loader.py::TestLoadProviders::test_empty_providers_section_returns_defaults PASSED [  1%]
+tests/config/test_loader.py::TestLoadProviders::test_anthropic_without_model_key PASSED [  1%]
+tests/config/test_loader.py::TestLoadProviders::test_path_argument_as_path_object PASSED [  2%]
+tests/config/test_loader.py::TestLoadTiers::test_full_five_tier_config PASSED [  2%]
+tests/config/test_loader.py::TestLoadTiers::test_absent_tiers_resolve_to_none PASSED [  2%]
+tests/config/test_loader.py::TestLoadTiers::test_empty_tiers_section PASSED [  2%]
+tests/config/test_loader.py::TestLoadTiers::test_fallback_scalar_coerced_to_list PASSED [  2%]
+tests/config/test_loader.py::TestLoadTiers::test_tier_config_type PASSED [  2%]
+tests/config/test_loader.py::TestLoadTiers::test_path_argument_as_path_object PASSED [  2%]
+tests/config/test_loader.py::TestLoadConfig::test_both_files_present PASSED [  2%]
+tests/config/test_loader.py::TestLoadConfig::test_missing_providers_file_returns_defaults PASSED [  2%]
+tests/config/test_loader.py::TestLoadConfig::test_missing_tiers_file_returns_defaults PASSED [  2%]
+tests/config/test_loader.py::TestLoadConfig::test_empty_directory_returns_full_defaults PASSED [  2%]
+tests/config/test_loader.py::TestLoadConfig::test_config_dir_as_string PASSED [  2%]
+tests/config/test_loader.py::TestLoadConfig::test_config_dir_as_none_uses_default PASSED [  3%]
+tests/config/test_loader.py::TestLoadConfig::test_env_vars_isolated_between_tests PASSED [  3%]
+tests/ingest/test_analyzer.py::TestExtractYamlBlock::test_raw_yaml_without_fence PASSED [  3%]
+tests/ingest/test_analyzer.py::TestExtractYamlBlock::test_fenced_yaml_block PASSED [  3%]
+tests/ingest/test_analyzer.py::TestExtractYamlBlock::test_fenced_block_without_language_tag PASSED [  3%]
+tests/ingest/test_analyzer.py::TestExtractYamlBlock::test_raises_on_unrecognised_response PASSED [  3%]
+tests/ingest/test_analyzer.py::TestParseResponse::test_clean_invoice_parses_correctly PASSED [  3%]
+tests/ingest/test_analyzer.py::TestParseResponse::test_type_match_false_preserved PASSED [  3%]
+tests/ingest/test_analyzer.py::TestParseResponse::test_injection_warn_preserved PASSED [  3%]
+tests/ingest/test_analyzer.py::TestParseResponse::test_unknown_verdict_defaults_to_block 
+-------------------------------- live log call ---------------------------------
+WARNING  bossbox.ingest.analyzer:analyzer.py:182 Unrecognised injection_verdict 'maybe' — defaulting to block
+WARNING  bossbox.ingest.analyzer:analyzer.py:189 Unrecognised overall_verdict 'maybe' — defaulting to block
+PASSED                                                                   [  3%]
+tests/ingest/test_analyzer.py::TestParseResponse::test_coherence_score_clamped_to_range PASSED [  3%]
+tests/ingest/test_analyzer.py::TestParseResponse::test_missing_flagged_passages_defaults_to_empty_list PASSED [  4%]
+tests/ingest/test_analyzer.py::TestParseResponse::test_raises_on_totally_invalid_yaml PASSED [  4%]
+tests/ingest/test_analyzer.py::TestParseResponse::test_raises_when_no_yaml_block PASSED [  4%]
+tests/ingest/test_analyzer.py::TestFailSafe::test_returns_block_verdict 
+-------------------------------- live log call ---------------------------------
+ERROR    bossbox.ingest.analyzer:analyzer.py:205 Linguistic analysis fail-safe triggered: test reason
+PASSED                                                                   [  4%]
+tests/ingest/test_analyzer.py::TestFailSafe::test_type_match_is_false 
+-------------------------------- live log call ---------------------------------
+ERROR    bossbox.ingest.analyzer:analyzer.py:205 Linguistic analysis fail-safe triggered: test
+PASSED                                                                   [  4%]
+tests/ingest/test_analyzer.py::TestFailSafe::test_coherence_score_is_zero 
+-------------------------------- live log call ---------------------------------
+ERROR    bossbox.ingest.analyzer:analyzer.py:205 Linguistic analysis fail-safe triggered: test
+PASSED                                                                   [  4%]
+tests/ingest/test_analyzer.py::TestFailSafe::test_declared_type_preserved 
+-------------------------------- live log call ---------------------------------
+ERROR    bossbox.ingest.analyzer:analyzer.py:205 Linguistic analysis fail-safe triggered: test
+PASSED                                                                   [  4%]
+tests/ingest/test_analyzer.py::TestAnalyzeAcceptanceCriteria::test_clean_invoice_returns_pass PASSED [  4%]
+tests/ingest/test_analyzer.py::TestAnalyzeAcceptanceCriteria::test_invoice_with_injection_returns_warn_or_block PASSED [  4%]
+tests/ingest/test_analyzer.py::TestAnalyzeAcceptanceCriteria::test_python_script_declared_as_invoice_returns_type_match_false PASSED [  4%]
+tests/ingest/test_analyzer.py::TestAnalyzeAcceptanceCriteria::test_provider_failure_returns_fail_safe_block 
+-------------------------------- live log call ---------------------------------
+ERROR    bossbox.ingest.analyzer:analyzer.py:205 Linguistic analysis fail-safe triggered: Provider call failed: down
+PASSED                                                                   [  4%]
+tests/ingest/test_analyzer.py::TestAnalyzeAcceptanceCriteria::test_unparseable_model_response_returns_fail_safe_block 
+-------------------------------- live log call ---------------------------------
+ERROR    bossbox.ingest.analyzer:analyzer.py:205 Linguistic analysis fail-safe triggered: Model response did not contain a recognisable YAML block. Response preview: "I don't know what this document is."
+PASSED                                                                   [  4%]
+tests/ingest/test_analyzer.py::TestAnalyzeAcceptanceCriteria::test_model_override_passed_to_provider PASSED [  5%]
+tests/ingest/test_analyzer.py::TestAnalyzeAcceptanceCriteria::test_result_is_document_analysis_dataclass PASSED [  5%]
+tests/ingest/test_analyzer.py::TestAnalyzeAcceptanceCriteria::test_block_invoice_has_populated_flagged_passages PASSED [  5%]
+tests/ingest/test_analyzer.py::TestDocumentAnalysisDataclass::test_default_verdict_is_block PASSED [  5%]
+tests/ingest/test_analyzer.py::TestDocumentAnalysisDataclass::test_flagged_passages_defaults_to_empty_list PASSED [  5%]
+tests/ingest/test_analyzer.py::TestDocumentAnalysisDataclass::test_flagged_passage_fields PASSED [  5%]
+tests/ingest/test_analyzer_unittest.py::TestExtractYamlBlockUnittest::test_fenced_yaml PASSED [  5%]
+tests/ingest/test_analyzer_unittest.py::TestExtractYamlBlockUnittest::test_raises_on_unrecognised_response PASSED [  5%]
+tests/ingest/test_analyzer_unittest.py::TestExtractYamlBlockUnittest::test_raw_yaml PASSED [  5%]
+tests/ingest/test_analyzer_unittest.py::TestParseResponseUnittest::test_clean_invoice PASSED [  5%]
+tests/ingest/test_analyzer_unittest.py::TestParseResponseUnittest::test_injection_warn PASSED [  5%]
+tests/ingest/test_analyzer_unittest.py::TestParseResponseUnittest::test_raises_on_invalid_yaml PASSED [  5%]
+tests/ingest/test_analyzer_unittest.py::TestParseResponseUnittest::test_raises_when_no_yaml_block PASSED [  6%]
+tests/ingest/test_analyzer_unittest.py::TestParseResponseUnittest::test_type_match_false PASSED [  6%]
+tests/ingest/test_analyzer_unittest.py::TestParseResponseUnittest::test_unknown_verdict_defaults_to_block 
+-------------------------------- live log call ---------------------------------
+WARNING  bossbox.ingest.analyzer:analyzer.py:182 Unrecognised injection_verdict 'maybe' — defaulting to block
+WARNING  bossbox.ingest.analyzer:analyzer.py:189 Unrecognised overall_verdict 'maybe' — defaulting to block
+PASSED                                                                   [  6%]
+tests/ingest/test_analyzer_unittest.py::TestFailSafeUnittest::test_coherence_zero 
+-------------------------------- live log call ---------------------------------
+ERROR    bossbox.ingest.analyzer:analyzer.py:205 Linguistic analysis fail-safe triggered: r
+PASSED                                                                   [  6%]
+tests/ingest/test_analyzer_unittest.py::TestFailSafeUnittest::test_declared_type_preserved 
+-------------------------------- live log call ---------------------------------
+ERROR    bossbox.ingest.analyzer:analyzer.py:205 Linguistic analysis fail-safe triggered: r
+PASSED                                                                   [  6%]
+tests/ingest/test_analyzer_unittest.py::TestFailSafeUnittest::test_returns_block 
+-------------------------------- live log call ---------------------------------
+ERROR    bossbox.ingest.analyzer:analyzer.py:205 Linguistic analysis fail-safe triggered: reason
+PASSED                                                                   [  6%]
+tests/ingest/test_analyzer_unittest.py::TestFailSafeUnittest::test_type_match_false 
+-------------------------------- live log call ---------------------------------
+ERROR    bossbox.ingest.analyzer:analyzer.py:205 Linguistic analysis fail-safe triggered: r
+PASSED                                                                   [  6%]
+tests/ingest/test_analyzer_unittest.py::TestAnalyzeAcceptanceUnittest::test_block_result_has_flagged_passages PASSED [  6%]
+tests/ingest/test_analyzer_unittest.py::TestAnalyzeAcceptanceUnittest::test_clean_invoice_returns_pass PASSED [  6%]
+tests/ingest/test_analyzer_unittest.py::TestAnalyzeAcceptanceUnittest::test_invoice_with_injection_returns_warn_or_block PASSED [  6%]
+tests/ingest/test_analyzer_unittest.py::TestAnalyzeAcceptanceUnittest::test_model_override_forwarded PASSED [  6%]
+tests/ingest/test_analyzer_unittest.py::TestAnalyzeAcceptanceUnittest::test_provider_failure_returns_block 
+-------------------------------- live log call ---------------------------------
+ERROR    bossbox.ingest.analyzer:analyzer.py:205 Linguistic analysis fail-safe triggered: Provider call failed: down
+PASSED                                                                   [  6%]
+tests/ingest/test_analyzer_unittest.py::TestAnalyzeAcceptanceUnittest::test_python_script_declared_as_invoice_returns_type_match_false PASSED [  7%]
+tests/ingest/test_analyzer_unittest.py::TestAnalyzeAcceptanceUnittest::test_result_is_document_analysis PASSED [  7%]
+tests/ingest/test_analyzer_unittest.py::TestAnalyzeAcceptanceUnittest::test_unparseable_response_returns_block 
+-------------------------------- live log call ---------------------------------
+ERROR    bossbox.ingest.analyzer:analyzer.py:205 Linguistic analysis fail-safe triggered: Model response did not contain a recognisable YAML block. Response preview: "I don't know what this document is."
+PASSED                                                                   [  7%]
+tests/ingest/test_analyzer_unittest.py::TestDocumentAnalysisDataclassUnittest::test_default_overall_verdict_is_block PASSED [  7%]
+tests/ingest/test_analyzer_unittest.py::TestDocumentAnalysisDataclassUnittest::test_flagged_passage_fields PASSED [  7%]
+tests/ingest/test_analyzer_unittest.py::TestDocumentAnalysisDataclassUnittest::test_flagged_passages_defaults_empty PASSED [  7%]
+tests/ingest/test_sanitizer.py::TestSanitizedDocument::test_fields_present PASSED [  7%]
+tests/ingest/test_sanitizer.py::TestSanitizedDocument::test_escalated_default_false PASSED [  7%]
+tests/ingest/test_sanitizer.py::TestSanitizedDocument::test_log_default_empty_list PASSED [  7%]
+tests/ingest/test_sanitizer.py::TestSanitizedDocument::test_log_is_mutable PASSED [  7%]
+tests/ingest/test_sanitizer.py::TestFormatDetection::test_pdf_by_extension PASSED [  7%]
+tests/ingest/test_sanitizer.py::TestFormatDetection::test_pdf_by_magic PASSED [  8%]
+tests/ingest/test_sanitizer.py::TestFormatDetection::test_docx_by_extension PASSED [  8%]
+tests/ingest/test_sanitizer.py::TestFormatDetection::test_html_by_extension PASSED [  8%]
+tests/ingest/test_sanitizer.py::TestFormatDetection::test_htm_by_extension PASSED [  8%]
+tests/ingest/test_sanitizer.py::TestFormatDetection::test_text_by_extension PASSED [  8%]
+tests/ingest/test_sanitizer.py::TestFormatDetection::test_markdown_by_extension PASSED [  8%]
+tests/ingest/test_sanitizer.py::TestFormatDetection::test_unknown_extension_defaults_to_text PASSED [  8%]
+tests/ingest/test_sanitizer.py::TestFormatDetection::test_zip_magic_without_extension_returns_docx PASSED [  8%]
+tests/ingest/test_sanitizer.py::TestZeroWidthStripping::test_strips_zero_width_space PASSED [  8%]
+tests/ingest/test_sanitizer.py::TestZeroWidthStripping::test_strips_bom PASSED [  8%]
+tests/ingest/test_sanitizer.py::TestZeroWidthStripping::test_strips_multiple_types PASSED [  8%]
+tests/ingest/test_sanitizer.py::TestZeroWidthStripping::test_clean_text_unchanged PASSED [  8%]
+tests/ingest/test_sanitizer.py::TestZeroWidthStripping::test_strips_non_printable_controls PASSED [  9%]
+tests/ingest/test_sanitizer.py::TestZeroWidthStripping::test_preserves_newline_and_tab PASSED [  9%]
+tests/ingest/test_sanitizer.py::TestTextSanitizer::test_plain_text_passthrough PASSED [  9%]
+tests/ingest/test_sanitizer.py::TestTextSanitizer::test_strips_zero_width_chars PASSED [  9%]
+tests/ingest/test_sanitizer.py::TestTextSanitizer::test_escalates_when_zero_width_found PASSED [  9%]
+tests/ingest/test_sanitizer.py::TestTextSanitizer::test_log_entry_when_stripped PASSED [  9%]
+tests/ingest/test_sanitizer.py::TestTextSanitizer::test_no_escalation_clean_text PASSED [  9%]
+tests/ingest/test_sanitizer.py::TestTextSanitizer::test_accepts_path_source PASSED [  9%]
+tests/ingest/test_sanitizer.py::TestTextSanitizer::test_accepts_str_path PASSED [  9%]
+tests/ingest/test_sanitizer.py::TestHTMLSanitizer::test_visible_text_preserved PASSED [  9%]
+tests/ingest/test_sanitizer.py::TestHTMLSanitizer::test_strips_display_none PASSED [  9%]
+tests/ingest/test_sanitizer.py::TestHTMLSanitizer::test_strips_visibility_hidden PASSED [  9%]
+tests/ingest/test_sanitizer.py::TestHTMLSanitizer::test_strips_opacity_zero PASSED [ 10%]
+tests/ingest/test_sanitizer.py::TestHTMLSanitizer::test_strips_hidden_attribute PASSED [ 10%]
+tests/ingest/test_sanitizer.py::TestHTMLSanitizer::test_strips_script_tags PASSED [ 10%]
+tests/ingest/test_sanitizer.py::TestHTMLSanitizer::test_strips_style_tags PASSED [ 10%]
+tests/ingest/test_sanitizer.py::TestHTMLSanitizer::test_log_entry_for_hidden_element PASSED [ 10%]
+tests/ingest/test_sanitizer.py::TestHTMLSanitizer::test_html_format_detected PASSED [ 10%]
+tests/ingest/test_sanitizer.py::TestHTMLSanitizer::test_zero_width_in_html_triggers_escalation PASSED [ 10%]
+tests/ingest/test_sanitizer.py::TestDOCXSanitizer::test_visible_text_preserved PASSED [ 10%]
+tests/ingest/test_sanitizer.py::TestDOCXSanitizer::test_hidden_text_stripped PASSED [ 10%]
+tests/ingest/test_sanitizer.py::TestDOCXSanitizer::test_escalated_when_hidden_text_found PASSED [ 10%]
+tests/ingest/test_sanitizer.py::TestDOCXSanitizer::test_no_escalation_clean_docx PASSED [ 10%]
+tests/ingest/test_sanitizer.py::TestDOCXSanitizer::test_log_entry_for_hidden_run PASSED [ 11%]
+tests/ingest/test_sanitizer.py::TestDOCXSanitizer::test_docx_format_detected PASSED [ 11%]
+tests/ingest/test_sanitizer.py::TestDOCXSanitizer::test_zero_width_in_docx_triggers_escalation PASSED [ 11%]
+tests/ingest/test_sanitizer.py::TestPDFSanitizer::test_visible_text_extracted PASSED [ 11%]
+tests/ingest/test_sanitizer.py::TestPDFSanitizer::test_white_text_stripped PASSED [ 11%]
+tests/ingest/test_sanitizer.py::TestPDFSanitizer::test_white_text_logs_entry PASSED [ 11%]
+tests/ingest/test_sanitizer.py::TestPDFSanitizer::test_pdf_format_detected PASSED [ 11%]
+tests/ingest/test_sanitizer.py::TestPDFSanitizer::test_clean_pdf_no_escalation PASSED [ 11%]
+tests/ingest/test_sanitizer.py::TestPDFSanitizer::test_invalid_pdf_raises_format_error PASSED [ 11%]
+tests/ingest/test_sanitizer.py::TestPDFSanitizer::test_pdf_magic_bytes_detected PASSED [ 11%]
+tests/ingest/test_sanitizer.py::TestDeepMode::test_deep_text_same_as_standard PASSED [ 11%]
+tests/ingest/test_sanitizer.py::TestDeepMode::test_forensic_posture_sets_flag PASSED [ 11%]
+tests/ingest/test_sanitizer.py::TestDeepMode::test_deep_html_strips_hidden PASSED [ 12%]
+tests/ingest/test_sanitizer.py::TestDeepMode::test_deep_docx_strips_hidden PASSED [ 12%]
+tests/ingest/test_sanitizer.py::TestDeepMode::test_deep_pdf_raises_without_tesseract PASSED [ 12%]
+tests/ingest/test_sanitizer.py::TestDeepMode::test_deep_pdf_with_mocked_tesseract PASSED [ 12%]
+tests/ingest/test_sanitizer.py::TestDeepMode::test_deep_log_includes_mode_notice PASSED [ 12%]
+tests/ingest/test_sanitizer.py::TestEscalation::test_escalated_flag_true_when_suspicious PASSED [ 12%]
+tests/ingest/test_sanitizer.py::TestEscalation::test_escalated_flag_false_when_clean PASSED [ 12%]
+tests/ingest/test_sanitizer.py::TestEscalation::test_pdf_escalation_skips_deep_when_no_tesseract PASSED [ 12%]
+tests/ingest/test_sanitizer.py::TestEscalation::test_pdf_escalation_runs_deep_when_tesseract_present PASSED [ 12%]
+tests/ingest/test_sanitizer.py::TestEscalation::test_html_escalation_no_deep_needed PASSED [ 12%]
+tests/ingest/test_sanitizer.py::TestEscalation::test_escalation_log_mentions_suspicious_detection PASSED [ 12%]
+tests/ingest/test_sanitizer.py::TestPublicAPI::test_returns_sanitized_document_instance PASSED [ 12%]
+tests/ingest/test_sanitizer.py::TestPublicAPI::test_accepts_bytes PASSED [ 13%]
+tests/ingest/test_sanitizer.py::TestPublicAPI::test_accepts_path_object PASSED [ 13%]
+tests/ingest/test_sanitizer.py::TestPublicAPI::test_accepts_string_path PASSED [ 13%]
+tests/ingest/test_sanitizer.py::TestPublicAPI::test_default_posture_is_standard PASSED [ 13%]
+tests/ingest/test_sanitizer.py::TestPublicAPI::test_sanitization_log_is_list PASSED [ 13%]
+tests/ingest/test_sanitizer.py::TestPublicAPI::test_clean_text_is_str PASSED [ 13%]
+tests/ingest/test_sanitizer.py::TestPublicAPI::test_original_format_is_str PASSED [ 13%]
+tests/ingest/test_sanitizer_unittest.py::TestSanitizedDocument::test_defaults PASSED [ 13%]
+tests/ingest/test_sanitizer_unittest.py::TestSanitizedDocument::test_fields PASSED [ 13%]
+tests/ingest/test_sanitizer_unittest.py::TestFormatDetection::test_docx_ext PASSED [ 13%]
+tests/ingest/test_sanitizer_unittest.py::TestFormatDetection::test_htm_ext PASSED [ 13%]
+tests/ingest/test_sanitizer_unittest.py::TestFormatDetection::test_html_ext PASSED [ 13%]
+tests/ingest/test_sanitizer_unittest.py::TestFormatDetection::test_md_ext PASSED [ 14%]
+tests/ingest/test_sanitizer_unittest.py::TestFormatDetection::test_pdf_ext PASSED [ 14%]
+tests/ingest/test_sanitizer_unittest.py::TestFormatDetection::test_pdf_magic PASSED [ 14%]
+tests/ingest/test_sanitizer_unittest.py::TestFormatDetection::test_text_ext PASSED [ 14%]
+tests/ingest/test_sanitizer_unittest.py::TestFormatDetection::test_unknown_defaults_text PASSED [ 14%]
+tests/ingest/test_sanitizer_unittest.py::TestFormatDetection::test_zip_magic_docx PASSED [ 14%]
+tests/ingest/test_sanitizer_unittest.py::TestZeroWidthStripping::test_clean_unchanged PASSED [ 14%]
+tests/ingest/test_sanitizer_unittest.py::TestZeroWidthStripping::test_preserves_newline_tab PASSED [ 14%]
+tests/ingest/test_sanitizer_unittest.py::TestZeroWidthStripping::test_strips_bom PASSED [ 14%]
+tests/ingest/test_sanitizer_unittest.py::TestZeroWidthStripping::test_strips_control_chars PASSED [ 14%]
+tests/ingest/test_sanitizer_unittest.py::TestZeroWidthStripping::test_strips_zwsp PASSED [ 14%]
+tests/ingest/test_sanitizer_unittest.py::TestTextSanitizer::test_log_entry_on_strip PASSED [ 15%]
+tests/ingest/test_sanitizer_unittest.py::TestTextSanitizer::test_no_escalation_clean PASSED [ 15%]
+tests/ingest/test_sanitizer_unittest.py::TestTextSanitizer::test_passthrough PASSED [ 15%]
+tests/ingest/test_sanitizer_unittest.py::TestTextSanitizer::test_path_source PASSED [ 15%]
+tests/ingest/test_sanitizer_unittest.py::TestTextSanitizer::test_strips_zero_width PASSED [ 15%]
+tests/ingest/test_sanitizer_unittest.py::TestHTMLSanitizer::test_display_none_stripped PASSED [ 15%]
+tests/ingest/test_sanitizer_unittest.py::TestHTMLSanitizer::test_format_is_html PASSED [ 15%]
+tests/ingest/test_sanitizer_unittest.py::TestHTMLSanitizer::test_log_entry_for_hidden PASSED [ 15%]
+tests/ingest/test_sanitizer_unittest.py::TestHTMLSanitizer::test_strips_scripts PASSED [ 15%]
+tests/ingest/test_sanitizer_unittest.py::TestHTMLSanitizer::test_visibility_hidden_stripped PASSED [ 15%]
+tests/ingest/test_sanitizer_unittest.py::TestHTMLSanitizer::test_visible_preserved PASSED [ 15%]
+tests/ingest/test_sanitizer_unittest.py::TestDOCXSanitizer::test_escalated_when_hidden PASSED [ 15%]
+tests/ingest/test_sanitizer_unittest.py::TestDOCXSanitizer::test_format_is_docx PASSED [ 16%]
+tests/ingest/test_sanitizer_unittest.py::TestDOCXSanitizer::test_hidden_stripped PASSED [ 16%]
+tests/ingest/test_sanitizer_unittest.py::TestDOCXSanitizer::test_log_entry_for_hidden_run PASSED [ 16%]
+tests/ingest/test_sanitizer_unittest.py::TestDOCXSanitizer::test_no_escalation_clean_docx PASSED [ 16%]
+tests/ingest/test_sanitizer_unittest.py::TestDOCXSanitizer::test_visible_preserved PASSED [ 16%]
+tests/ingest/test_sanitizer_unittest.py::TestPDFSanitizer::test_clean_pdf_no_escalation PASSED [ 16%]
+tests/ingest/test_sanitizer_unittest.py::TestPDFSanitizer::test_format_is_pdf PASSED [ 16%]
+tests/ingest/test_sanitizer_unittest.py::TestPDFSanitizer::test_invalid_pdf_raises PASSED [ 16%]
+tests/ingest/test_sanitizer_unittest.py::TestPDFSanitizer::test_text_extracted PASSED [ 16%]
+tests/ingest/test_sanitizer_unittest.py::TestPDFSanitizer::test_white_text_stripped PASSED [ 16%]
+tests/ingest/test_sanitizer_unittest.py::TestDeepMode::test_deep_html_strips_hidden PASSED [ 16%]
+tests/ingest/test_sanitizer_unittest.py::TestDeepMode::test_deep_log_has_mode_notice PASSED [ 16%]
+tests/ingest/test_sanitizer_unittest.py::TestDeepMode::test_deep_pdf_raises_without_tesseract PASSED [ 17%]
+tests/ingest/test_sanitizer_unittest.py::TestDeepMode::test_deep_pdf_with_mocked_tesseract PASSED [ 17%]
+tests/ingest/test_sanitizer_unittest.py::TestDeepMode::test_deep_text PASSED [ 17%]
+tests/ingest/test_sanitizer_unittest.py::TestDeepMode::test_forensic_posture PASSED [ 17%]
+tests/ingest/test_sanitizer_unittest.py::TestEscalation::test_escalation_log_mentions_suspicious PASSED [ 17%]
+tests/ingest/test_sanitizer_unittest.py::TestEscalation::test_flag_false_on_clean PASSED [ 17%]
+tests/ingest/test_sanitizer_unittest.py::TestEscalation::test_flag_true_on_suspicious PASSED [ 17%]
+tests/ingest/test_sanitizer_unittest.py::TestEscalation::test_pdf_escalation_runs_deep_with_tesseract PASSED [ 17%]
+tests/ingest/test_sanitizer_unittest.py::TestEscalation::test_pdf_escalation_skips_deep_no_tesseract PASSED [ 17%]
+tests/ingest/test_sanitizer_unittest.py::TestPublicAPI::test_clean_text_is_str PASSED [ 17%]
+tests/ingest/test_sanitizer_unittest.py::TestPublicAPI::test_default_posture_standard PASSED [ 17%]
+tests/ingest/test_sanitizer_unittest.py::TestPublicAPI::test_log_is_list PASSED [ 18%]
+tests/ingest/test_sanitizer_unittest.py::TestPublicAPI::test_original_format_is_str PASSED [ 18%]
+tests/ingest/test_sanitizer_unittest.py::TestPublicAPI::test_returns_sanitized_document PASSED [ 18%]
+tests/notify/test_notifier.py::test_queue_appended_on_send PASSED        [ 18%]
+tests/notify/test_notifier.py::test_queue_returns_copy PASSED            [ 18%]
+tests/notify/test_notifier.py::test_queue_accumulates_multiple_events PASSED [ 18%]
+tests/notify/test_notifier.py::test_queue_updated_even_when_all_channels_disabled PASSED [ 18%]
+tests/notify/test_notifier.py::test_os_native_calls_plyer PASSED         [ 18%]
+tests/notify/test_notifier.py::test_os_native_disabled_does_not_call_plyer PASSED [ 18%]
+tests/notify/test_notifier.py::test_os_native_import_error_does_not_raise 
+-------------------------------- live log call ---------------------------------
+WARNING  bossbox.notify.notifier:notifier.py:152 OS notification unavailable: import of plyer halted; None in sys.modules
+PASSED                                                                   [ 18%]
+tests/notify/test_notifier.py::test_os_native_notify_error_does_not_raise 
+-------------------------------- live log call ---------------------------------
+WARNING  bossbox.notify.notifier:notifier.py:152 OS notification unavailable: no display
+PASSED                                                                   [ 18%]
+tests/notify/test_notifier.py::test_ntfy_posts_to_correct_url 
+-------------------------------- live log call ---------------------------------
+INFO     httpx:_client.py:1740 HTTP Request: POST https://ntfy.sh/my-topic "HTTP/1.1 200 OK"
+PASSED                                                                   [ 18%]
+tests/notify/test_notifier.py::test_ntfy_uses_custom_base_url 
+-------------------------------- live log call ---------------------------------
+INFO     httpx:_client.py:1740 HTTP Request: POST https://ntfy.myserver.com/bossbox "HTTP/1.1 200 OK"
+PASSED                                                                   [ 19%]
+tests/notify/test_notifier.py::test_ntfy_sends_title_header 
+-------------------------------- live log call ---------------------------------
+INFO     httpx:_client.py:1740 HTTP Request: POST https://ntfy.sh/test-topic "HTTP/1.1 200 OK"
+PASSED                                                                   [ 19%]
+tests/notify/test_notifier.py::test_ntfy_disabled_no_request PASSED      [ 19%]
+tests/notify/test_notifier.py::test_ntfy_http_error_does_not_raise 
+-------------------------------- live log call ---------------------------------
+WARNING  bossbox.notify.notifier:notifier.py:166 ntfy notification failed: refused
+PASSED                                                                   [ 19%]
+tests/notify/test_notifier.py::test_ntfy_no_topic_no_request PASSED      [ 19%]
+tests/notify/test_notifier.py::test_ntfy_priority_urgent_for_injection_block PASSED [ 19%]
+tests/notify/test_notifier.py::test_ntfy_priority_urgent_for_privilege_escalation PASSED [ 19%]
+tests/notify/test_notifier.py::test_ntfy_priority_high_for_checkpoint PASSED [ 19%]
+tests/notify/test_notifier.py::test_ntfy_priority_default_for_task_complete PASSED [ 19%]
+tests/notify/test_notifier.py::test_smtp_called_for_task_complete PASSED [ 19%]
+tests/notify/test_notifier.py::test_smtp_called_for_task_failed PASSED   [ 19%]
+tests/notify/test_notifier.py::test_smtp_not_called_for_injection_warn PASSED [ 19%]
+tests/notify/test_notifier.py::test_smtp_not_called_for_anomaly PASSED   [ 20%]
+tests/notify/test_notifier.py::test_smtp_checkpoint_off_by_default PASSED [ 20%]
+tests/notify/test_notifier.py::test_smtp_checkpoint_when_enabled PASSED  [ 20%]
+tests/notify/test_notifier.py::test_smtp_subject_contains_bossbox_prefix PASSED [ 20%]
+tests/notify/test_notifier.py::test_smtp_body_contains_event_type_not_credentials PASSED [ 20%]
+tests/notify/test_notifier.py::test_smtp_no_tls_path PASSED              [ 20%]
+tests/notify/test_notifier.py::test_smtp_failure_does_not_raise 
+-------------------------------- live log call ---------------------------------
+WARNING  bossbox.notify.notifier:notifier.py:175 SMTP notification failed: conn refused
+PASSED                                                                   [ 20%]
+tests/notify/test_notifier.py::test_smtp_disabled_no_call PASSED         [ 20%]
+tests/notify/test_notifier.py::test_audit_log_contains_event_type PASSED [ 20%]
+tests/notify/test_notifier.py::test_audit_log_never_contains_smtp_password PASSED [ 20%]
+tests/notify/test_notifier.py::test_notify_config_loads_from_yaml PASSED [ 20%]
+tests/notify/test_notifier.py::test_notify_config_defaults_when_file_absent PASSED [ 20%]
+tests/notify/test_notifier.py::test_notify_config_smtp_section_loads PASSED [ 21%]
+tests/notify/test_notifier.py::test_load_config_includes_notify PASSED   [ 21%]
+tests/notify/test_notifier.py::test_event_type_values PASSED             [ 21%]
+tests/notify/test_notifier.py::test_all_event_types_have_eight_members PASSED [ 21%]
+tests/notify/test_notifier_unittest.py::TestQueue::test_queue_accumulates PASSED [ 21%]
+tests/notify/test_notifier_unittest.py::TestQueue::test_queue_appended_on_send PASSED [ 21%]
+tests/notify/test_notifier_unittest.py::TestQueue::test_queue_returns_copy PASSED [ 21%]
+tests/notify/test_notifier_unittest.py::TestQueue::test_queue_updated_with_no_channels PASSED [ 21%]
+tests/notify/test_notifier_unittest.py::TestOsNative::test_os_native_calls_plyer PASSED [ 21%]
+tests/notify/test_notifier_unittest.py::TestOsNative::test_os_native_disabled_no_plyer PASSED [ 21%]
+tests/notify/test_notifier_unittest.py::TestOsNative::test_os_native_import_error_no_raise 
+-------------------------------- live log call ---------------------------------
+WARNING  bossbox.notify.notifier:notifier.py:152 OS notification unavailable: import of plyer halted; None in sys.modules
+PASSED                                                                   [ 21%]
+tests/notify/test_notifier_unittest.py::TestOsNative::test_os_native_notify_error_no_raise 
+-------------------------------- live log call ---------------------------------
+WARNING  bossbox.notify.notifier:notifier.py:152 OS notification unavailable: no display
+PASSED                                                                   [ 22%]
+tests/notify/test_notifier_unittest.py::TestNtfyPriority::test_checkpoint_is_high PASSED [ 22%]
+tests/notify/test_notifier_unittest.py::TestNtfyPriority::test_injection_block_is_urgent PASSED [ 22%]
+tests/notify/test_notifier_unittest.py::TestNtfyPriority::test_privilege_escalation_is_urgent PASSED [ 22%]
+tests/notify/test_notifier_unittest.py::TestNtfyPriority::test_task_complete_is_default PASSED [ 22%]
+tests/notify/test_notifier_unittest.py::TestNtfy::test_ntfy_custom_base_url 
+-------------------------------- live log call ---------------------------------
+INFO     httpx:_client.py:1740 HTTP Request: POST https://push.internal/bb "HTTP/1.1 200 OK"
+PASSED                                                                   [ 22%]
+tests/notify/test_notifier_unittest.py::TestNtfy::test_ntfy_disabled_no_request PASSED [ 22%]
+tests/notify/test_notifier_unittest.py::TestNtfy::test_ntfy_failure_does_not_raise 
+-------------------------------- live log call ---------------------------------
+WARNING  bossbox.notify.notifier:notifier.py:166 ntfy notification failed: refused
+PASSED                                                                   [ 22%]
+tests/notify/test_notifier_unittest.py::TestNtfy::test_ntfy_posts_correct_url 
+-------------------------------- live log call ---------------------------------
+INFO     httpx:_client.py:1740 HTTP Request: POST https://ntfy.sh/mybox "HTTP/1.1 200 OK"
+PASSED                                                                   [ 22%]
+tests/notify/test_notifier_unittest.py::TestSmtp::test_smtp_checkpoint_off_by_default PASSED [ 22%]
+tests/notify/test_notifier_unittest.py::TestSmtp::test_smtp_checkpoint_when_enabled PASSED [ 22%]
+tests/notify/test_notifier_unittest.py::TestSmtp::test_smtp_disabled_no_call PASSED [ 22%]
+tests/notify/test_notifier_unittest.py::TestSmtp::test_smtp_failure_does_not_raise 
+-------------------------------- live log call ---------------------------------
+WARNING  bossbox.notify.notifier:notifier.py:175 SMTP notification failed: err
+PASSED                                                                   [ 23%]
+tests/notify/test_notifier_unittest.py::TestSmtp::test_smtp_no_tls_skips_starttls PASSED [ 23%]
+tests/notify/test_notifier_unittest.py::TestSmtp::test_smtp_not_called_for_injection_warn PASSED [ 23%]
+tests/notify/test_notifier_unittest.py::TestSmtp::test_smtp_subject_prefix PASSED [ 23%]
+tests/notify/test_notifier_unittest.py::TestSmtp::test_smtp_task_complete PASSED [ 23%]
+tests/notify/test_notifier_unittest.py::TestSmtp::test_smtp_task_failed PASSED [ 23%]
+tests/notify/test_notifier_unittest.py::TestAuditLog::test_audit_contains_event_type PASSED [ 23%]
+tests/notify/test_notifier_unittest.py::TestAuditLog::test_audit_never_contains_smtp_password PASSED [ 23%]
+tests/notify/test_notifier_unittest.py::TestEventType::test_event_type_count PASSED [ 23%]
+tests/notify/test_notifier_unittest.py::TestEventType::test_event_type_string_values PASSED [ 23%]
+tests/pipeline/test_backup.py::TestBackupCreation::test_backup_creates_a_file PASSED [ 23%]
+tests/pipeline/test_backup.py::TestBackupCreation::test_backup_returns_path_inside_backup_dir PASSED [ 23%]
+tests/pipeline/test_backup.py::TestBackupCreation::test_backup_preserves_content PASSED [ 24%]
+tests/pipeline/test_backup.py::TestBackupCreation::test_backup_preserves_suffix PASSED [ 24%]
+tests/pipeline/test_backup.py::TestBackupCreation::test_backup_filename_contains_stem PASSED [ 24%]
+tests/pipeline/test_backup.py::TestBackupCreation::test_backup_dir_created_automatically PASSED [ 24%]
+tests/pipeline/test_backup.py::TestBackupCreation::test_backup_accepts_string_path PASSED [ 24%]
+tests/pipeline/test_backup.py::TestDistinctCopies::test_two_calls_produce_two_files PASSED [ 24%]
+tests/pipeline/test_backup.py::TestDistinctCopies::test_two_files_both_exist PASSED [ 24%]
+tests/pipeline/test_backup.py::TestDistinctCopies::test_rapid_succession_still_unique PASSED [ 24%]
+tests/pipeline/test_backup.py::TestDistinctCopies::test_backup_filenames_include_timestamp PASSED [ 24%]
+tests/pipeline/test_backup.py::TestWorkAreaEnforcement::test_path_outside_work_area_raises PASSED [ 24%]
+tests/pipeline/test_backup.py::TestWorkAreaEnforcement::test_absolute_path_outside_raises PASSED [ 24%]
+tests/pipeline/test_backup.py::TestWorkAreaEnforcement::test_path_inside_work_area_does_not_raise PASSED [ 25%]
+tests/pipeline/test_backup.py::TestWorkAreaEnforcement::test_error_message_includes_path PASSED [ 25%]
+tests/pipeline/test_backup.py::TestWorkAreaEnforcement::test_error_message_includes_work_area PASSED [ 25%]
+tests/pipeline/test_backup.py::TestWorkAreaEnforcement::test_symlink_traversal_blocked PASSED [ 25%]
+tests/pipeline/test_backup.py::TestErrorCases::test_missing_source_raises_file_not_found PASSED [ 25%]
+tests/pipeline/test_backup.py::TestErrorCases::test_backup_dir_is_never_deleted PASSED [ 25%]
+tests/pipeline/test_backup.py::TestBackupManagerConstruction::test_work_area_stored PASSED [ 25%]
+tests/pipeline/test_backup.py::TestBackupManagerConstruction::test_backup_dir_is_backups_subdir PASSED [ 25%]
+tests/pipeline/test_backup.py::TestBackupManagerConstruction::test_default_work_area_is_home_bossbox PASSED [ 25%]
+tests/pipeline/test_backup.py::TestBackupManagerConstruction::test_string_work_area_accepted PASSED [ 25%]
+tests/pipeline/test_backup_unittest.py::TestBackupCreationUnittest::test_backup_accepts_string_path PASSED [ 25%]
+tests/pipeline/test_backup_unittest.py::TestBackupCreationUnittest::test_backup_creates_a_file PASSED [ 25%]
+tests/pipeline/test_backup_unittest.py::TestBackupCreationUnittest::test_backup_dir_created_automatically PASSED [ 26%]
+tests/pipeline/test_backup_unittest.py::TestBackupCreationUnittest::test_backup_filename_contains_stem PASSED [ 26%]
+tests/pipeline/test_backup_unittest.py::TestBackupCreationUnittest::test_backup_inside_backup_dir PASSED [ 26%]
+tests/pipeline/test_backup_unittest.py::TestBackupCreationUnittest::test_backup_preserves_content PASSED [ 26%]
+tests/pipeline/test_backup_unittest.py::TestBackupCreationUnittest::test_backup_preserves_suffix PASSED [ 26%]
+tests/pipeline/test_backup_unittest.py::TestDistinctCopiesUnittest::test_filenames_include_timestamp PASSED [ 26%]
+tests/pipeline/test_backup_unittest.py::TestDistinctCopiesUnittest::test_rapid_succession_unique PASSED [ 26%]
+tests/pipeline/test_backup_unittest.py::TestDistinctCopiesUnittest::test_two_calls_produce_two_files PASSED [ 26%]
+tests/pipeline/test_backup_unittest.py::TestDistinctCopiesUnittest::test_two_files_both_exist PASSED [ 26%]
+tests/pipeline/test_backup_unittest.py::TestWorkAreaEnforcementUnittest::test_absolute_outside_raises PASSED [ 26%]
+tests/pipeline/test_backup_unittest.py::TestWorkAreaEnforcementUnittest::test_error_message_includes_path PASSED [ 26%]
+tests/pipeline/test_backup_unittest.py::TestWorkAreaEnforcementUnittest::test_inside_does_not_raise PASSED [ 26%]
+tests/pipeline/test_backup_unittest.py::TestWorkAreaEnforcementUnittest::test_path_outside_raises PASSED [ 27%]
+tests/pipeline/test_backup_unittest.py::TestWorkAreaEnforcementUnittest::test_symlink_traversal_blocked PASSED [ 27%]
+tests/pipeline/test_backup_unittest.py::TestErrorCasesUnittest::test_backup_dir_never_deleted PASSED [ 27%]
+tests/pipeline/test_backup_unittest.py::TestErrorCasesUnittest::test_missing_source_raises_file_not_found PASSED [ 27%]
+tests/pipeline/test_backup_unittest.py::TestBackupManagerConstructionUnittest::test_backup_dir_is_backups_subdir PASSED [ 27%]
+tests/pipeline/test_backup_unittest.py::TestBackupManagerConstructionUnittest::test_default_work_area_is_home_bossbox PASSED [ 27%]
+tests/pipeline/test_backup_unittest.py::TestBackupManagerConstructionUnittest::test_string_work_area_accepted PASSED [ 27%]
+tests/pipeline/test_backup_unittest.py::TestBackupManagerConstructionUnittest::test_work_area_stored PASSED [ 27%]
+tests/pipeline/test_decomposer.py::TestExtractYamlBlock::test_raw_yaml PASSED [ 27%]
+tests/pipeline/test_decomposer.py::TestExtractYamlBlock::test_fenced_yaml PASSED [ 27%]
+tests/pipeline/test_decomposer.py::TestExtractYamlBlock::test_fenced_no_language_tag PASSED [ 27%]
+tests/pipeline/test_decomposer.py::TestExtractYamlBlock::test_raises_on_unrecognised_response PASSED [ 27%]
+tests/pipeline/test_decomposer.py::TestParseResponse::test_returns_decomposition_result PASSED [ 28%]
+tests/pipeline/test_decomposer.py::TestParseResponse::test_core_tasks_parsed PASSED [ 28%]
+tests/pipeline/test_decomposer.py::TestParseResponse::test_suggested_tasks_parsed PASSED [ 28%]
+tests/pipeline/test_decomposer.py::TestParseResponse::test_reasoning_parsed PASSED [ 28%]
+tests/pipeline/test_decomposer.py::TestParseResponse::test_empty_suggested_tasks_allowed PASSED [ 28%]
+tests/pipeline/test_decomposer.py::TestParseResponse::test_subtask_has_title_and_description PASSED [ 28%]
+tests/pipeline/test_decomposer.py::TestParseResponse::test_raises_on_invalid_yaml PASSED [ 28%]
+tests/pipeline/test_decomposer.py::TestParseResponse::test_raises_on_no_yaml_block PASSED [ 28%]
+tests/pipeline/test_decomposer.py::TestParseResponse::test_malformed_task_items_skipped PASSED [ 28%]
+tests/pipeline/test_decomposer.py::TestFailSafe::test_returns_decomposition_result 
+-------------------------------- live log call ---------------------------------
+WARNING  bossbox.pipeline.decomposer:decomposer.py:156 Decomposition fall-back (treating goal as single task): reason
+PASSED                                                                   [ 28%]
+tests/pipeline/test_decomposer.py::TestFailSafe::test_single_core_task 
+-------------------------------- live log call ---------------------------------
+WARNING  bossbox.pipeline.decomposer:decomposer.py:156 Decomposition fall-back (treating goal as single task): reason
+PASSED                                                                   [ 28%]
+tests/pipeline/test_decomposer.py::TestFailSafe::test_core_task_contains_goal 
+-------------------------------- live log call ---------------------------------
+WARNING  bossbox.pipeline.decomposer:decomposer.py:156 Decomposition fall-back (treating goal as single task): reason
+PASSED                                                                   [ 29%]
+tests/pipeline/test_decomposer.py::TestFailSafe::test_suggested_tasks_empty 
+-------------------------------- live log call ---------------------------------
+WARNING  bossbox.pipeline.decomposer:decomposer.py:156 Decomposition fall-back (treating goal as single task): reason
+PASSED                                                                   [ 29%]
+tests/pipeline/test_decomposer.py::TestFailSafe::test_reasoning_empty_on_fail_safe 
+-------------------------------- live log call ---------------------------------
+WARNING  bossbox.pipeline.decomposer:decomposer.py:156 Decomposition fall-back (treating goal as single task): network error
+PASSED                                                                   [ 29%]
+tests/pipeline/test_decomposer.py::TestFailSafe::test_long_goal_title_truncated 
+-------------------------------- live log call ---------------------------------
+WARNING  bossbox.pipeline.decomposer:decomposer.py:156 Decomposition fall-back (treating goal as single task): r
+PASSED                                                                   [ 29%]
+tests/pipeline/test_decomposer.py::TestDecomposeAcceptanceCriteria::test_multi_part_goal_returns_at_least_two_core_tasks PASSED [ 29%]
+tests/pipeline/test_decomposer.py::TestDecomposeAcceptanceCriteria::test_suggested_tasks_are_separate PASSED [ 29%]
+tests/pipeline/test_decomposer.py::TestDecomposeAcceptanceCriteria::test_reasoning_appended_to_thought_stream PASSED [ 29%]
+tests/pipeline/test_decomposer.py::TestDecomposeAcceptanceCriteria::test_output_is_decomposition_result_dataclass PASSED [ 29%]
+tests/pipeline/test_decomposer.py::TestDecomposeAcceptanceCriteria::test_provider_failure_returns_fail_safe 
+-------------------------------- live log call ---------------------------------
+WARNING  bossbox.pipeline.decomposer:decomposer.py:156 Decomposition fall-back (treating goal as single task): Provider call failed: down
+PASSED                                                                   [ 29%]
+tests/pipeline/test_decomposer.py::TestDecomposeAcceptanceCriteria::test_fail_safe_adds_progress_thought_to_stream 
+-------------------------------- live log call ---------------------------------
+WARNING  bossbox.pipeline.decomposer:decomposer.py:156 Decomposition fall-back (treating goal as single task): Provider call failed: down
+PASSED                                                                   [ 29%]
+tests/pipeline/test_decomposer.py::TestDecomposeAcceptanceCriteria::test_unparseable_response_returns_fail_safe 
+-------------------------------- live log call ---------------------------------
+WARNING  bossbox.pipeline.decomposer:decomposer.py:156 Decomposition fall-back (treating goal as single task): No decomposition YAML block found in response. Preview: 'I have no idea what you want.'
+PASSED                                                                   [ 29%]
+tests/pipeline/test_decomposer.py::TestDecomposeAcceptanceCriteria::test_model_override_forwarded_to_provider PASSED [ 29%]
+tests/pipeline/test_decomposer.py::TestDecomposeAcceptanceCriteria::test_subtasks_have_title_and_description PASSED [ 30%]
+tests/pipeline/test_decomposer.py::TestDecomposeAcceptanceCriteria::test_core_tasks_ordered PASSED [ 30%]
+tests/pipeline/test_decomposer.py::TestDecomposeAcceptanceCriteria::test_thought_stream_entry_has_timestamp PASSED [ 30%]
+tests/pipeline/test_decomposer.py::TestDecomposeAcceptanceCriteria::test_no_reasoning_in_response_still_adds_progress_thought PASSED [ 30%]
+tests/pipeline/test_decomposer.py::TestDataclasses::test_subtask_fields PASSED [ 30%]
+tests/pipeline/test_decomposer.py::TestDataclasses::test_decomposition_result_defaults PASSED [ 30%]
+tests/pipeline/test_decomposer.py::TestDataclasses::test_decomposition_result_with_all_fields PASSED [ 30%]
+tests/pipeline/test_decomposer_unittest.py::TestExtractYamlBlockUnittest::test_fenced_yaml PASSED [ 30%]
+tests/pipeline/test_decomposer_unittest.py::TestExtractYamlBlockUnittest::test_raises_on_unknown_response PASSED [ 30%]
+tests/pipeline/test_decomposer_unittest.py::TestExtractYamlBlockUnittest::test_raw_yaml PASSED [ 30%]
+tests/pipeline/test_decomposer_unittest.py::TestParseResponseUnittest::test_core_tasks_parsed PASSED [ 30%]
+tests/pipeline/test_decomposer_unittest.py::TestParseResponseUnittest::test_empty_suggested_tasks PASSED [ 30%]
+tests/pipeline/test_decomposer_unittest.py::TestParseResponseUnittest::test_malformed_items_skipped PASSED [ 31%]
+tests/pipeline/test_decomposer_unittest.py::TestParseResponseUnittest::test_raises_on_no_yaml_block PASSED [ 31%]
+tests/pipeline/test_decomposer_unittest.py::TestParseResponseUnittest::test_reasoning_parsed PASSED [ 31%]
+tests/pipeline/test_decomposer_unittest.py::TestParseResponseUnittest::test_returns_decomposition_result PASSED [ 31%]
+tests/pipeline/test_decomposer_unittest.py::TestParseResponseUnittest::test_suggested_tasks_parsed PASSED [ 31%]
+tests/pipeline/test_decomposer_unittest.py::TestFailSafeUnittest::test_goal_in_description 
+-------------------------------- live log call ---------------------------------
+WARNING  bossbox.pipeline.decomposer:decomposer.py:156 Decomposition fall-back (treating goal as single task): r
+PASSED                                                                   [ 31%]
+tests/pipeline/test_decomposer_unittest.py::TestFailSafeUnittest::test_reasoning_empty_on_fail_safe 
+-------------------------------- live log call ---------------------------------
+WARNING  bossbox.pipeline.decomposer:decomposer.py:156 Decomposition fall-back (treating goal as single task): net err
+PASSED                                                                   [ 31%]
+tests/pipeline/test_decomposer_unittest.py::TestFailSafeUnittest::test_returns_decomposition_result 
+-------------------------------- live log call ---------------------------------
+WARNING  bossbox.pipeline.decomposer:decomposer.py:156 Decomposition fall-back (treating goal as single task): r
+PASSED                                                                   [ 31%]
+tests/pipeline/test_decomposer_unittest.py::TestFailSafeUnittest::test_single_core_task 
+-------------------------------- live log call ---------------------------------
+WARNING  bossbox.pipeline.decomposer:decomposer.py:156 Decomposition fall-back (treating goal as single task): r
+PASSED                                                                   [ 31%]
+tests/pipeline/test_decomposer_unittest.py::TestFailSafeUnittest::test_suggested_empty 
+-------------------------------- live log call ---------------------------------
+WARNING  bossbox.pipeline.decomposer:decomposer.py:156 Decomposition fall-back (treating goal as single task): r
+PASSED                                                                   [ 31%]
+tests/pipeline/test_decomposer_unittest.py::TestFailSafeUnittest::test_title_truncated 
+-------------------------------- live log call ---------------------------------
+WARNING  bossbox.pipeline.decomposer:decomposer.py:156 Decomposition fall-back (treating goal as single task): r
+PASSED                                                                   [ 31%]
+tests/pipeline/test_decomposer_unittest.py::TestDecomposeAcceptanceUnittest::test_core_tasks_ordered PASSED [ 31%]
+tests/pipeline/test_decomposer_unittest.py::TestDecomposeAcceptanceUnittest::test_fail_safe_adds_progress_thought_to_stream 
+-------------------------------- live log call ---------------------------------
+WARNING  bossbox.pipeline.decomposer:decomposer.py:156 Decomposition fall-back (treating goal as single task): Provider call failed: down
+PASSED                                                                   [ 32%]
+tests/pipeline/test_decomposer_unittest.py::TestDecomposeAcceptanceUnittest::test_model_override_forwarded PASSED [ 32%]
+tests/pipeline/test_decomposer_unittest.py::TestDecomposeAcceptanceUnittest::test_multi_part_goal_returns_at_least_two_core_tasks PASSED [ 32%]
+tests/pipeline/test_decomposer_unittest.py::TestDecomposeAcceptanceUnittest::test_output_is_dataclass PASSED [ 32%]
+tests/pipeline/test_decomposer_unittest.py::TestDecomposeAcceptanceUnittest::test_provider_failure_returns_fail_safe 
+-------------------------------- live log call ---------------------------------
+WARNING  bossbox.pipeline.decomposer:decomposer.py:156 Decomposition fall-back (treating goal as single task): Provider call failed: down
+PASSED                                                                   [ 32%]
+tests/pipeline/test_decomposer_unittest.py::TestDecomposeAcceptanceUnittest::test_reasoning_in_thought_stream PASSED [ 32%]
+tests/pipeline/test_decomposer_unittest.py::TestDecomposeAcceptanceUnittest::test_suggested_tasks_separate PASSED [ 32%]
+tests/pipeline/test_decomposer_unittest.py::TestDecomposeAcceptanceUnittest::test_thought_stream_entry_has_timestamp PASSED [ 32%]
+tests/pipeline/test_decomposer_unittest.py::TestDecomposeAcceptanceUnittest::test_unparseable_response_returns_fail_safe 
+-------------------------------- live log call ---------------------------------
+WARNING  bossbox.pipeline.decomposer:decomposer.py:156 Decomposition fall-back (treating goal as single task): No decomposition YAML block found in response. Preview: 'No idea what you want.'
+PASSED                                                                   [ 32%]
+tests/pipeline/test_decomposer_unittest.py::TestDataclassesUnittest::test_decomposition_result_all_fields PASSED [ 32%]
+tests/pipeline/test_decomposer_unittest.py::TestDataclassesUnittest::test_decomposition_result_defaults PASSED [ 32%]
+tests/pipeline/test_decomposer_unittest.py::TestDataclassesUnittest::test_subtask_fields PASSED [ 33%]
+tests/pipeline/test_envelope.py::TestCreateEnvelope::test_returns_task_envelope PASSED [ 33%]
+tests/pipeline/test_envelope.py::TestCreateEnvelope::test_task_id_is_uuid PASSED [ 33%]
+tests/pipeline/test_envelope.py::TestCreateEnvelope::test_task_id_override PASSED [ 33%]
+tests/pipeline/test_envelope.py::TestCreateEnvelope::test_created_at_is_utc_datetime PASSED [ 33%]
+tests/pipeline/test_envelope.py::TestCreateEnvelope::test_original_input_stored PASSED [ 33%]
+tests/pipeline/test_envelope.py::TestCreateEnvelope::test_default_status_is_pending PASSED [ 33%]
+tests/pipeline/test_envelope.py::TestCreateEnvelope::test_default_privilege_level_is_zero PASSED [ 33%]
+tests/pipeline/test_envelope.py::TestCreateEnvelope::test_default_human_initiated_is_true PASSED [ 33%]
+tests/pipeline/test_envelope.py::TestCreateEnvelope::test_human_initiated_false PASSED [ 33%]
+tests/pipeline/test_envelope.py::TestCreateEnvelope::test_default_auto_approve_is_false PASSED [ 33%]
+tests/pipeline/test_envelope.py::TestCreateEnvelope::test_auto_approve_true PASSED [ 33%]
+tests/pipeline/test_envelope.py::TestCreateEnvelope::test_declared_document_type_none_by_default PASSED [ 34%]
+tests/pipeline/test_envelope.py::TestCreateEnvelope::test_declared_document_type_set PASSED [ 34%]
+tests/pipeline/test_envelope.py::TestCreateEnvelope::test_lists_are_empty_on_creation PASSED [ 34%]
+tests/pipeline/test_envelope.py::TestCreateEnvelope::test_factory_logs_creation_event PASSED [ 34%]
+tests/pipeline/test_envelope.py::TestCreateEnvelope::test_result_is_none_on_creation PASSED [ 34%]
+tests/pipeline/test_envelope.py::TestCreateEnvelope::test_hostile_content_acknowledged_is_false PASSED [ 34%]
+tests/pipeline/test_envelope.py::TestCreateEnvelope::test_routing_decision_is_empty_string PASSED [ 34%]
+tests/pipeline/test_envelope.py::TestOriginalInputWriteOnce::test_cannot_reassign_original_input PASSED [ 34%]
+tests/pipeline/test_envelope.py::TestOriginalInputWriteOnce::test_original_input_unchanged_after_attempted_write PASSED [ 34%]
+tests/pipeline/test_envelope.py::TestOriginalInputWriteOnce::test_other_fields_remain_mutable PASSED [ 34%]
+tests/pipeline/test_envelope.py::TestPrivilegeLevelValidation::test_valid_levels_accepted_at_construction[0] PASSED [ 34%]
+tests/pipeline/test_envelope.py::TestPrivilegeLevelValidation::test_valid_levels_accepted_at_construction[1] PASSED [ 34%]
+tests/pipeline/test_envelope.py::TestPrivilegeLevelValidation::test_valid_levels_accepted_at_construction[2] PASSED [ 35%]
+tests/pipeline/test_envelope.py::TestPrivilegeLevelValidation::test_valid_levels_accepted_at_construction[3] PASSED [ 35%]
+tests/pipeline/test_envelope.py::TestPrivilegeLevelValidation::test_valid_levels_accepted_at_construction[4] PASSED [ 35%]
+tests/pipeline/test_envelope.py::TestPrivilegeLevelValidation::test_invalid_levels_rejected_at_construction[-1] PASSED [ 35%]
+tests/pipeline/test_envelope.py::TestPrivilegeLevelValidation::test_invalid_levels_rejected_at_construction[5] PASSED [ 35%]
+tests/pipeline/test_envelope.py::TestPrivilegeLevelValidation::test_invalid_levels_rejected_at_construction[10] PASSED [ 35%]
+tests/pipeline/test_envelope.py::TestPrivilegeLevelValidation::test_invalid_levels_rejected_at_construction[100] PASSED [ 35%]
+tests/pipeline/test_envelope.py::TestPrivilegeLevelValidation::test_invalid_levels_rejected_at_construction[2] PASSED [ 35%]
+tests/pipeline/test_envelope.py::TestPrivilegeLevelValidation::test_invalid_levels_rejected_at_construction[2.5] PASSED [ 35%]
+tests/pipeline/test_envelope.py::TestPrivilegeLevelValidation::test_invalid_levels_rejected_at_construction[None] PASSED [ 35%]
+tests/pipeline/test_envelope.py::TestPrivilegeLevelValidation::test_invalid_levels_rejected_on_assignment[-1] PASSED [ 35%]
+tests/pipeline/test_envelope.py::TestPrivilegeLevelValidation::test_invalid_levels_rejected_on_assignment[5] PASSED [ 36%]
+tests/pipeline/test_envelope.py::TestPrivilegeLevelValidation::test_invalid_levels_rejected_on_assignment[999] PASSED [ 36%]
+tests/pipeline/test_envelope.py::TestPrivilegeLevelValidation::test_privilege_level_escalation_valid PASSED [ 36%]
+tests/pipeline/test_envelope.py::TestPrivilegeLevelValidation::test_privilege_level_not_float PASSED [ 36%]
+tests/pipeline/test_envelope.py::TestStatusValidation::test_valid_statuses_accepted[running] PASSED [ 36%]
+tests/pipeline/test_envelope.py::TestStatusValidation::test_valid_statuses_accepted[failed] PASSED [ 36%]
+tests/pipeline/test_envelope.py::TestStatusValidation::test_valid_statuses_accepted[paused] PASSED [ 36%]
+tests/pipeline/test_envelope.py::TestStatusValidation::test_valid_statuses_accepted[pending] PASSED [ 36%]
+tests/pipeline/test_envelope.py::TestStatusValidation::test_valid_statuses_accepted[complete] PASSED [ 36%]
+tests/pipeline/test_envelope.py::TestStatusValidation::test_invalid_statuses_rejected_on_assignment[done] PASSED [ 36%]
+tests/pipeline/test_envelope.py::TestStatusValidation::test_invalid_statuses_rejected_on_assignment[error] PASSED [ 36%]
+tests/pipeline/test_envelope.py::TestStatusValidation::test_invalid_statuses_rejected_on_assignment[RUNNING] PASSED [ 36%]
+tests/pipeline/test_envelope.py::TestStatusValidation::test_invalid_statuses_rejected_on_assignment[] PASSED [ 37%]
+tests/pipeline/test_envelope.py::TestStatusValidation::test_invalid_statuses_rejected_on_assignment[complete ] PASSED [ 37%]
+tests/pipeline/test_envelope.py::TestStatusValidation::test_invalid_status_rejected_at_construction PASSED [ 37%]
+tests/pipeline/test_envelope.py::TestLogEvent::test_appends_to_events PASSED [ 37%]
+tests/pipeline/test_envelope.py::TestLogEvent::test_event_has_required_keys PASSED [ 37%]
+tests/pipeline/test_envelope.py::TestLogEvent::test_event_type_preserved PASSED [ 37%]
+tests/pipeline/test_envelope.py::TestLogEvent::test_detail_preserved PASSED [ 37%]
+tests/pipeline/test_envelope.py::TestLogEvent::test_task_id_matches_envelope PASSED [ 37%]
+tests/pipeline/test_envelope.py::TestLogEvent::test_ts_is_string PASSED  [ 37%]
+tests/pipeline/test_envelope.py::TestLogEvent::test_extra_included_when_provided PASSED [ 37%]
+tests/pipeline/test_envelope.py::TestLogEvent::test_extra_absent_when_not_provided PASSED [ 37%]
+tests/pipeline/test_envelope.py::TestLogEvent::test_multiple_events_ordered PASSED [ 37%]
+tests/pipeline/test_envelope.py::TestAddThought::test_appends_to_thought_stream PASSED [ 38%]
+tests/pipeline/test_envelope.py::TestAddThought::test_thought_has_required_keys PASSED [ 38%]
+tests/pipeline/test_envelope.py::TestAddThought::test_source_preserved PASSED [ 38%]
+tests/pipeline/test_envelope.py::TestAddThought::test_content_preserved PASSED [ 38%]
+tests/pipeline/test_envelope.py::TestAddThought::test_ts_is_string PASSED [ 38%]
+tests/pipeline/test_envelope.py::TestAddThought::test_multiple_thoughts_ordered PASSED [ 38%]
+tests/pipeline/test_envelope.py::TestAddThought::test_thought_stream_independent_of_events PASSED [ 38%]
+tests/pipeline/test_envelope.py::TestToDict::test_returns_dict PASSED    [ 38%]
+tests/pipeline/test_envelope.py::TestToDict::test_all_public_fields_present PASSED [ 38%]
+tests/pipeline/test_envelope.py::TestToDict::test_private_input_locked_not_in_dict PASSED [ 38%]
+tests/pipeline/test_envelope.py::TestToDict::test_created_at_is_string_not_datetime PASSED [ 38%]
+tests/pipeline/test_envelope.py::TestToDict::test_created_at_is_iso_format PASSED [ 38%]
+tests/pipeline/test_envelope.py::TestToDict::test_json_serialisable PASSED [ 39%]
+tests/pipeline/test_envelope.py::TestToDict::test_round_trip_preserves_original_input PASSED [ 39%]
+tests/pipeline/test_envelope.py::TestToDict::test_round_trip_preserves_task_id PASSED [ 39%]
+tests/pipeline/test_envelope.py::TestToDict::test_result_none_by_default PASSED [ 39%]
+tests/pipeline/test_envelope.py::TestToDict::test_result_string_serialises PASSED [ 39%]
+tests/pipeline/test_envelope.py::TestToDict::test_thought_stream_in_dict PASSED [ 39%]
+tests/pipeline/test_envelope.py::TestToDict::test_events_in_dict PASSED  [ 39%]
+tests/pipeline/test_envelope.py::TestToDict::test_naive_datetime_gets_utc_in_dict PASSED [ 39%]
+tests/pipeline/test_envelope.py::TestEdgeCases::test_two_envelopes_have_distinct_task_ids PASSED [ 39%]
+tests/pipeline/test_envelope.py::TestEdgeCases::test_events_list_is_not_shared_between_instances PASSED [ 39%]
+tests/pipeline/test_envelope.py::TestEdgeCases::test_thought_stream_not_shared_between_instances PASSED [ 39%]
+tests/pipeline/test_envelope.py::TestEdgeCases::test_complete_lifecycle_state_machine PASSED [ 40%]
+tests/pipeline/test_supervisor.py::TestAllStagesTraversed::test_run_returns_envelope PASSED [ 40%]
+tests/pipeline/test_supervisor.py::TestAllStagesTraversed::test_status_complete_after_run PASSED [ 40%]
+tests/pipeline/test_supervisor.py::TestAllStagesTraversed::test_final_stage_is_complete PASSED [ 40%]
+tests/pipeline/test_supervisor.py::TestAllStagesTraversed::test_result_populated_after_run PASSED [ 40%]
+tests/pipeline/test_supervisor.py::TestAllStagesTraversed::test_thought_stream_has_entries PASSED [ 40%]
+tests/pipeline/test_supervisor.py::TestAuditLog::test_all_stage_transitions_logged PASSED [ 40%]
+tests/pipeline/test_supervisor.py::TestAuditLog::test_audit_entries_carry_task_id PASSED [ 40%]
+tests/pipeline/test_supervisor.py::TestAuditLog::test_security_shield_events_logged PASSED [ 40%]
+tests/pipeline/test_supervisor.py::TestCheckpoint::test_checkpoint_pauses_envelope PASSED [ 40%]
+tests/pipeline/test_supervisor.py::TestCheckpoint::test_checkpoint_resumes_after_approve PASSED [ 40%]
+tests/pipeline/test_supervisor.py::TestCheckpoint::test_checkpoint_event_in_envelope_events PASSED [ 40%]
+tests/pipeline/test_supervisor.py::TestAutoApprove::test_auto_approve_completes_without_waiting PASSED [ 41%]
+tests/pipeline/test_supervisor.py::TestAutoApprove::test_checkpoint_skipped_event_logged PASSED [ 41%]
+tests/pipeline/test_supervisor.py::TestAutoApprove::test_checkpoint_skip_in_audit_log PASSED [ 41%]
+tests/pipeline/test_supervisor.py::TestRedirect::test_redirect_resumes_from_checkpoint PASSED [ 41%]
+tests/pipeline/test_supervisor.py::TestRedirect::test_redirect_appends_to_context PASSED [ 41%]
+tests/pipeline/test_supervisor.py::TestRedirect::test_redirect_adds_thought_stream_entry PASSED [ 41%]
+tests/pipeline/test_supervisor.py::TestRedirect::test_redirect_does_not_restart_pipeline PASSED [ 41%]
+tests/pipeline/test_supervisor.py::TestRedirect::test_redirect_logged_in_audit PASSED [ 41%]
+tests/pipeline/test_supervisor.py::TestSecurityCheckpoints::test_input_shield_called_every_run PASSED [ 41%]
+tests/pipeline/test_supervisor.py::TestSecurityCheckpoints::test_action_shield_called_at_execute_and_review PASSED [ 41%]
+tests/pipeline/test_supervisor.py::TestSecurityCheckpoints::test_input_shield_block_aborts_pipeline PASSED [ 41%]
+tests/pipeline/test_supervisor.py::TestSecurityCheckpoints::test_input_shield_block_logs_security_block PASSED [ 41%]
+tests/pipeline/test_supervisor.py::TestSecurityCheckpoints::test_action_shield_block_at_execute_aborts PASSED [ 42%]
+tests/pipeline/test_supervisor.py::TestSecurityCheckpoints::test_passthrough_shield_always_passes PASSED [ 42%]
+tests/pipeline/test_supervisor.py::TestSecurityCheckpoints::test_security_shield_events_in_audit_log PASSED [ 42%]
+tests/pipeline/test_supervisor.py::TestAbort::test_abort_before_run_sets_failed PASSED [ 42%]
+tests/pipeline/test_supervisor.py::TestAbort::test_abort_during_checkpoint_unblocks_run PASSED [ 42%]
+tests/pipeline/test_supervisor.py::TestAbort::test_abort_event_logged PASSED [ 42%]
+tests/pipeline/test_supervisor.py::TestPause::test_pause_marks_envelope_paused PASSED [ 42%]
+tests/pipeline/test_supervisor.py::TestPause::test_pause_event_logged PASSED [ 42%]
+tests/pipeline/test_supervisor.py::TestVRAMBudgeter::test_vram_budgeter_consulted_before_model_calls PASSED [ 42%]
+tests/pipeline/test_supervisor.py::TestVRAMBudgeter::test_run_succeeds_without_vram_budgeter PASSED [ 42%]
+tests/pipeline/test_supervisor.py::TestPassthroughShield::test_evaluate_input_always_true PASSED [ 42%]
+tests/pipeline/test_supervisor.py::TestPassthroughShield::test_evaluate_action_always_true PASSED [ 43%]
+tests/pipeline/test_supervisor_unittest.py::TestAllStagesUnittest::test_result_populated PASSED [ 43%]
+tests/pipeline/test_supervisor_unittest.py::TestAllStagesUnittest::test_status_complete PASSED [ 43%]
+tests/pipeline/test_supervisor_unittest.py::TestAllStagesUnittest::test_thought_stream_has_entries PASSED [ 43%]
+tests/pipeline/test_supervisor_unittest.py::TestAuditLogUnittest::test_all_stage_transitions_logged PASSED [ 43%]
+tests/pipeline/test_supervisor_unittest.py::TestAuditLogUnittest::test_audit_entries_carry_task_id PASSED [ 43%]
+tests/pipeline/test_supervisor_unittest.py::TestAuditLogUnittest::test_shield_events_in_audit PASSED [ 43%]
+tests/pipeline/test_supervisor_unittest.py::TestCheckpointUnittest::test_checkpoint_events_logged PASSED [ 43%]
+tests/pipeline/test_supervisor_unittest.py::TestCheckpointUnittest::test_checkpoint_pauses_then_resumes PASSED [ 43%]
+tests/pipeline/test_supervisor_unittest.py::TestAutoApproveUnittest::test_auto_approve_completes PASSED [ 43%]
+tests/pipeline/test_supervisor_unittest.py::TestAutoApproveUnittest::test_checkpoint_skipped_event PASSED [ 43%]
+tests/pipeline/test_supervisor_unittest.py::TestRedirectUnittest::test_redirect_appends_to_context PASSED [ 43%]
+tests/pipeline/test_supervisor_unittest.py::TestRedirectUnittest::test_redirect_no_stage_repeated PASSED [ 44%]
+tests/pipeline/test_supervisor_unittest.py::TestRedirectUnittest::test_redirect_resumes_and_completes PASSED [ 44%]
+tests/pipeline/test_supervisor_unittest.py::TestSecurityUnittest::test_action_shield_block_fails_pipeline PASSED [ 44%]
+tests/pipeline/test_supervisor_unittest.py::TestSecurityUnittest::test_action_shield_called_at_least_twice PASSED [ 44%]
+tests/pipeline/test_supervisor_unittest.py::TestSecurityUnittest::test_input_shield_block_fails_pipeline PASSED [ 44%]
+tests/pipeline/test_supervisor_unittest.py::TestAbortPauseUnittest::test_abort_during_checkpoint PASSED [ 44%]
+tests/pipeline/test_supervisor_unittest.py::TestAbortPauseUnittest::test_abort_sets_failed PASSED [ 44%]
+tests/pipeline/test_supervisor_unittest.py::TestAbortPauseUnittest::test_pause_sets_paused PASSED [ 44%]
+tests/pipeline/test_supervisor_unittest.py::TestVRAMUnittest::test_run_without_vram PASSED [ 44%]
+tests/pipeline/test_supervisor_unittest.py::TestVRAMUnittest::test_vram_consulted PASSED [ 44%]
+tests/pipeline/test_supervisor_unittest.py::TestPassthroughUnittest::test_action_always_true PASSED [ 44%]
+tests/pipeline/test_supervisor_unittest.py::TestPassthroughUnittest::test_input_always_true PASSED [ 44%]
+tests/providers/test_anthropic.py::TestSDKAvailability::test_raises_when_sdk_not_installed PASSED [ 45%]
+tests/providers/test_anthropic.py::TestConstruction::test_raises_on_empty_api_key PASSED [ 45%]
+tests/providers/test_anthropic.py::TestConstruction::test_raises_on_none_api_key PASSED [ 45%]
+tests/providers/test_anthropic.py::TestConstruction::test_uses_provided_default_model PASSED [ 45%]
+tests/providers/test_anthropic.py::TestConstruction::test_falls_back_to_default_model_when_none_given PASSED [ 45%]
+tests/providers/test_anthropic.py::TestComplete::test_returns_assistant_text PASSED [ 45%]
+tests/providers/test_anthropic.py::TestComplete::test_system_message_extracted_and_sent_separately PASSED [ 45%]
+tests/providers/test_anthropic.py::TestComplete::test_no_system_message_no_system_kwarg PASSED [ 45%]
+tests/providers/test_anthropic.py::TestComplete::test_explicit_model_overrides_default PASSED [ 45%]
+tests/providers/test_anthropic.py::TestComplete::test_max_tokens_forwarded PASSED [ 45%]
+tests/providers/test_anthropic.py::TestComplete::test_temperature_forwarded_when_present PASSED [ 45%]
+tests/providers/test_anthropic.py::TestComplete::test_temperature_absent_when_not_supplied PASSED [ 45%]
+tests/providers/test_anthropic.py::TestSplitSystem::test_extracts_leading_system_message PASSED [ 46%]
+tests/providers/test_anthropic.py::TestSplitSystem::test_no_system_message_returns_none PASSED [ 46%]
+tests/providers/test_anthropic.py::TestSplitSystem::test_empty_messages_list PASSED [ 46%]
+tests/providers/test_base.py::TestExceptionHierarchy::test_provider_unavailable_is_provider_error PASSED [ 46%]
+tests/providers/test_base.py::TestExceptionHierarchy::test_model_not_found_is_provider_error PASSED [ 46%]
+tests/providers/test_base.py::TestExceptionHierarchy::test_model_not_found_stores_model_and_provider PASSED [ 46%]
+tests/providers/test_base.py::TestExceptionHierarchy::test_model_not_found_message_contains_model_name PASSED [ 46%]
+tests/providers/test_base.py::TestExceptionHierarchy::test_model_not_found_message_contains_provider_name PASSED [ 46%]
+tests/providers/test_base.py::TestExceptionHierarchy::test_model_not_found_includes_detail_when_provided PASSED [ 46%]
+tests/providers/test_base.py::TestExceptionHierarchy::test_model_not_found_omits_detail_section_when_empty PASSED [ 46%]
+tests/providers/test_base.py::TestExceptionHierarchy::test_provider_unavailable_preserves_message PASSED [ 46%]
+tests/providers/test_base.py::TestModelProviderAbstract::test_cannot_instantiate_directly PASSED [ 47%]
+tests/providers/test_base.py::TestModelProviderAbstract::test_concrete_without_complete_raises PASSED [ 47%]
+tests/providers/test_base.py::TestModelProviderAbstract::test_concrete_without_is_available_raises PASSED [ 47%]
+tests/providers/test_base.py::TestModelProviderAbstract::test_fully_concrete_subclass_instantiates PASSED [ 47%]
+tests/providers/test_base.py::TestModelProviderAbstract::test_provider_name_default_on_base PASSED [ 47%]
+tests/providers/test_ollama.py::TestConstruction::test_default_base_url PASSED [ 47%]
+tests/providers/test_ollama.py::TestConstruction::test_trailing_slash_stripped PASSED [ 47%]
+tests/providers/test_ollama.py::TestConstruction::test_default_model PASSED [ 47%]
+tests/providers/test_ollama.py::TestConstruction::test_custom_model PASSED [ 47%]
+tests/providers/test_ollama.py::TestConstruction::test_provider_name PASSED [ 47%]
+tests/providers/test_ollama.py::TestConstruction::test_custom_timeout PASSED [ 47%]
+tests/providers/test_ollama.py::TestCompleteSuccess::test_returns_assistant_content 
+-------------------------------- live log call ---------------------------------
+INFO     httpx:_client.py:1740 HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 200 OK"
+PASSED                                                                   [ 47%]
+tests/providers/test_ollama.py::TestCompleteSuccess::test_result_is_non_empty_string 
+-------------------------------- live log call ---------------------------------
+INFO     httpx:_client.py:1740 HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 200 OK"
+PASSED                                                                   [ 48%]
+tests/providers/test_ollama.py::TestCompleteSuccess::test_strips_leading_trailing_whitespace 
+-------------------------------- live log call ---------------------------------
+INFO     httpx:_client.py:1740 HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 200 OK"
+PASSED                                                                   [ 48%]
+tests/providers/test_ollama.py::TestCompleteSuccess::test_model_kwarg_overrides_default 
+-------------------------------- live log call ---------------------------------
+INFO     httpx:_client.py:1740 HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 200 OK"
+PASSED                                                                   [ 48%]
+tests/providers/test_ollama.py::TestCompleteSuccess::test_temperature_forwarded_as_option 
+-------------------------------- live log call ---------------------------------
+INFO     httpx:_client.py:1740 HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 200 OK"
+PASSED                                                                   [ 48%]
+tests/providers/test_ollama.py::TestCompleteSuccess::test_max_tokens_forwarded_as_num_predict 
+-------------------------------- live log call ---------------------------------
+INFO     httpx:_client.py:1740 HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 200 OK"
+PASSED                                                                   [ 48%]
+tests/providers/test_ollama.py::TestCompleteSuccess::test_stream_always_false_in_payload 
+-------------------------------- live log call ---------------------------------
+INFO     httpx:_client.py:1740 HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 200 OK"
+PASSED                                                                   [ 48%]
+tests/providers/test_ollama.py::TestCompleteSuccess::test_fallback_generate_response_shape 
+-------------------------------- live log call ---------------------------------
+INFO     httpx:_client.py:1740 HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 200 OK"
+PASSED                                                                   [ 48%]
+tests/providers/test_ollama.py::TestCompleteErrors::test_connect_error_raises_provider_unavailable PASSED [ 48%]
+tests/providers/test_ollama.py::TestCompleteErrors::test_timeout_raises_provider_unavailable PASSED [ 48%]
+tests/providers/test_ollama.py::TestCompleteErrors::test_http_404_raises_model_not_found 
+-------------------------------- live log call ---------------------------------
+INFO     httpx:_client.py:1740 HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 404 Not Found"
+PASSED                                                                   [ 48%]
+tests/providers/test_ollama.py::TestCompleteErrors::test_model_not_found_includes_ollama_detail 
+-------------------------------- live log call ---------------------------------
+INFO     httpx:_client.py:1740 HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 404 Not Found"
+PASSED                                                                   [ 48%]
+tests/providers/test_ollama.py::TestCompleteErrors::test_http_500_raises_provider_unavailable 
+-------------------------------- live log call ---------------------------------
+INFO     httpx:_client.py:1740 HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 500 Internal Server Error"
+PASSED                                                                   [ 48%]
+tests/providers/test_ollama.py::TestCompleteErrors::test_non_json_body_raises_provider_unavailable 
+-------------------------------- live log call ---------------------------------
+INFO     httpx:_client.py:1740 HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 200 OK"
+PASSED                                                                   [ 49%]
+tests/providers/test_ollama.py::TestCompleteErrors::test_unexpected_response_shape_raises_provider_unavailable 
+-------------------------------- live log call ---------------------------------
+INFO     httpx:_client.py:1740 HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 200 OK"
+PASSED                                                                   [ 49%]
+tests/providers/test_ollama.py::TestCompleteErrors::test_http_error_raises_provider_unavailable PASSED [ 49%]
+tests/providers/test_ollama.py::TestIsAvailable::test_returns_true_when_tags_200 
+-------------------------------- live log call ---------------------------------
+INFO     httpx:_client.py:1740 HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+PASSED                                                                   [ 49%]
+tests/providers/test_ollama.py::TestIsAvailable::test_returns_false_when_connect_error PASSED [ 49%]
+tests/providers/test_ollama.py::TestIsAvailable::test_returns_false_when_timeout PASSED [ 49%]
+tests/providers/test_ollama.py::TestIsAvailable::test_returns_false_on_non_200_status 
+-------------------------------- live log call ---------------------------------
+INFO     httpx:_client.py:1740 HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 503 Service Unavailable"
+PASSED                                                                   [ 49%]
+tests/providers/test_ollama.py::TestIsAvailable::test_does_not_raise_on_any_network_failure PASSED [ 49%]
+tests/providers/test_ollama.py::TestOllamaIntegration::test_complete_returns_non_empty_string 
+-------------------------------- live log call ---------------------------------
+INFO     httpx:_client.py:1740 HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 200 OK"
+PASSED                                                                   [ 49%]
+tests/providers/test_ollama.py::TestOllamaIntegration::test_is_available_returns_true 
+-------------------------------- live log call ---------------------------------
+INFO     httpx:_client.py:1740 HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+PASSED                                                                   [ 49%]
+tests/providers/test_ollama.py::TestOllamaIntegration::test_model_not_found_for_nonexistent_model 
+-------------------------------- live log call ---------------------------------
+INFO     httpx:_client.py:1740 HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 404 Not Found"
+PASSED                                                                   [ 49%]
+tests/providers/test_openai.py::TestSDKAvailability::test_raises_when_sdk_not_installed PASSED [ 50%]
+tests/providers/test_openai.py::TestConstruction::test_raises_on_empty_api_key PASSED [ 50%]
+tests/providers/test_openai.py::TestConstruction::test_raises_on_none_api_key PASSED [ 50%]
+tests/providers/test_openai.py::TestConstruction::test_uses_provided_default_model PASSED [ 50%]
+tests/providers/test_openai.py::TestConstruction::test_falls_back_to_default_model_when_none_given PASSED [ 50%]
+tests/providers/test_openai.py::TestComplete::test_returns_assistant_text PASSED [ 50%]
+tests/providers/test_openai.py::TestComplete::test_messages_passed_through_unmodified PASSED [ 50%]
+tests/providers/test_openai.py::TestComplete::test_explicit_model_overrides_default PASSED [ 50%]
+tests/providers/test_openai.py::TestComplete::test_max_tokens_forwarded PASSED [ 50%]
+tests/providers/test_openai.py::TestComplete::test_temperature_forwarded_when_present PASSED [ 50%]
+tests/providers/test_openai.py::TestComplete::test_top_p_forwarded_when_present PASSED [ 50%]
+tests/providers/test_openai.py::TestComplete::test_temperature_absent_when_not_supplied PASSED [ 50%]
+tests/providers/test_openai.py::TestComplete::test_empty_content_returns_empty_string PASSED [ 51%]
+tests/providers/test_registry.py::TestOllamaOnly::test_ollama_is_available PASSED [ 51%]
+tests/providers/test_registry.py::TestOllamaOnly::test_anthropic_is_none_when_key_missing PASSED [ 51%]
+tests/providers/test_registry.py::TestOllamaOnly::test_openai_is_none_when_key_missing PASSED [ 51%]
+tests/providers/test_registry.py::TestOllamaOnly::test_no_exception_raised_for_missing_cloud_keys PASSED [ 51%]
+tests/providers/test_registry.py::TestOllamaOnly::test_available_list_contains_only_ollama PASSED [ 51%]
+tests/providers/test_registry.py::TestOllamaOnly::test_unavailable_list_contains_cloud_providers PASSED [ 51%]
+tests/providers/test_registry.py::TestFullConfig::test_all_three_providers_available PASSED [ 51%]
+tests/providers/test_registry.py::TestFullConfig::test_available_returns_all_three PASSED [ 51%]
+tests/providers/test_registry.py::TestFullConfig::test_unavailable_is_empty PASSED [ 51%]
+tests/providers/test_registry.py::TestNoOllamaSection::test_ollama_none_when_section_absent PASSED [ 51%]
+tests/providers/test_registry.py::TestResolve::test_resolve_ollama_model_string PASSED [ 51%]
+tests/providers/test_registry.py::TestResolve::test_resolve_unavailable_provider_returns_none PASSED [ 52%]
+tests/providers/test_registry.py::TestResolve::test_resolve_string_without_slash_returns_none PASSED [ 52%]
+tests/providers/test_registry.py::TestResolve::test_resolve_unknown_provider_name_returns_none PASSED [ 52%]
+tests/providers/test_registry.py::TestResolve::test_resolve_anthropic_when_available PASSED [ 52%]
+tests/providers/test_registry.py::TestResolveWithFallback::test_primary_used_when_available PASSED [ 52%]
+tests/providers/test_registry.py::TestResolveWithFallback::test_falls_back_when_primary_unavailable PASSED [ 52%]
+tests/providers/test_registry.py::TestResolveWithFallback::test_returns_none_when_entire_chain_unavailable PASSED [ 52%]
+tests/providers/test_registry.py::TestResolveWithFallback::test_second_fallback_used_when_first_unavailable PASSED [ 52%]
+tests/providers/test_registry.py::TestResolveWithFallback::test_empty_fallbacks_list PASSED [ 52%]
+tests/providers/test_registry.py::TestEdgeCases::test_empty_api_key_string_registers_as_none PASSED [ 52%]
+tests/providers/test_registry.py::TestEdgeCases::test_whitespace_only_api_key_registers_as_none PASSED [ 52%]
+tests/providers/test_registry.py::TestEdgeCases::test_repr_does_not_raise PASSED [ 52%]
+tests/providers/test_registry.py::TestEdgeCases::test_get_unknown_key_returns_none PASSED [ 53%]
+tests/secrets/test_manager.py::TestPasswordUnlock::test_first_run_creates_file PASSED [ 53%]
+tests/secrets/test_manager.py::TestPasswordUnlock::test_returns_true_on_correct_password PASSED [ 53%]
+tests/secrets/test_manager.py::TestPasswordUnlock::test_returns_false_on_wrong_password PASSED [ 53%]
+tests/secrets/test_manager.py::TestPasswordUnlock::test_is_unlocked_false_before_unlock PASSED [ 53%]
+tests/secrets/test_manager.py::TestPasswordUnlock::test_is_unlocked_true_after_unlock PASSED [ 53%]
+tests/secrets/test_manager.py::TestPasswordUnlock::test_is_unlocked_false_after_lock PASSED [ 53%]
+tests/secrets/test_manager.py::TestPasswordUnlock::test_get_raises_when_locked PASSED [ 53%]
+tests/secrets/test_manager.py::TestPasswordUnlock::test_set_raises_when_locked PASSED [ 53%]
+tests/secrets/test_manager.py::TestPasswordUnlock::test_set_and_get_round_trip PASSED [ 53%]
+tests/secrets/test_manager.py::TestPasswordUnlock::test_set_persists_across_instances PASSED [ 53%]
+tests/secrets/test_manager.py::TestPasswordUnlock::test_multiple_secrets_persist PASSED [ 54%]
+tests/secrets/test_manager.py::TestPasswordUnlock::test_smtp_credentials_round_trip PASSED [ 54%]
+tests/secrets/test_manager.py::TestPasswordUnlock::test_api_key_round_trip PASSED [ 54%]
+tests/secrets/test_manager.py::TestPasswordUnlock::test_missing_password_arg_raises_value_error PASSED [ 54%]
+tests/secrets/test_manager.py::TestPasswordUnlock::test_unknown_method_raises_value_error PASSED [ 54%]
+tests/secrets/test_manager.py::TestPasswordUnlock::test_wrong_password_leaves_store_locked PASSED [ 54%]
+tests/secrets/test_manager.py::TestKeychainUnlock::test_first_run_generates_and_stores_key PASSED [ 54%]
+tests/secrets/test_manager.py::TestKeychainUnlock::test_second_unlock_reuses_stored_key PASSED [ 54%]
+tests/secrets/test_manager.py::TestKeychainUnlock::test_missing_keychain_entry_raises_decrypt_error PASSED [ 54%]
+tests/secrets/test_manager.py::TestKeychainUnlock::test_keyring_import_failure_raises_method_error PASSED [ 54%]
+tests/secrets/test_manager.py::TestKeychainUnlock::test_keychain_set_get_round_trip PASSED [ 54%]
+tests/secrets/test_manager.py::TestKeychainUnlock::test_keychain_persists_across_instances PASSED [ 54%]
+tests/secrets/test_manager.py::TestLockAndMemory::test_lock_clears_session_key PASSED [ 55%]
+tests/secrets/test_manager.py::TestLockAndMemory::test_lock_clears_secrets_dict PASSED [ 55%]
+tests/secrets/test_manager.py::TestLockAndMemory::test_lock_clears_method PASSED [ 55%]
+tests/secrets/test_manager.py::TestLockAndMemory::test_get_after_lock_raises PASSED [ 55%]
+tests/secrets/test_manager.py::TestLockAndMemory::test_set_after_lock_raises PASSED [ 55%]
+tests/secrets/test_manager.py::TestLockAndMemory::test_re_unlock_after_lock PASSED [ 55%]
+tests/secrets/test_manager.py::TestLockAndMemory::test_multiple_lock_calls_are_idempotent PASSED [ 55%]
+tests/secrets/test_manager.py::TestLockAndMemory::test_session_key_not_written_to_disk PASSED [ 55%]
+tests/secrets/test_manager.py::TestPersistence::test_file_does_not_contain_secret_in_plaintext PASSED [ 55%]
+tests/secrets/test_manager.py::TestPersistence::test_file_is_not_json_parseable PASSED [ 55%]
+tests/secrets/test_manager.py::TestPersistence::test_magic_bytes_present PASSED [ 55%]
+tests/secrets/test_manager.py::TestPersistence::test_version_byte_correct PASSED [ 55%]
+tests/secrets/test_manager.py::TestPersistence::test_file_size_grows_with_secrets PASSED [ 56%]
+tests/secrets/test_manager.py::TestPersistence::test_file_permissions_unix PASSED [ 56%]
+tests/secrets/test_manager.py::TestPersistence::test_ciphertext_byte_flip_detected PASSED [ 56%]
+tests/secrets/test_manager.py::TestPersistence::test_aad_tampering_detected PASSED [ 56%]
+tests/secrets/test_manager.py::TestPersistence::test_bad_magic_returns_false PASSED [ 56%]
+tests/secrets/test_manager.py::TestPersistence::test_salt_reused_across_saves PASSED [ 56%]
+tests/secrets/test_manager.py::TestPersistence::test_nonce_changes_on_each_save PASSED [ 56%]
+tests/secrets/test_manager.py::TestPersistence::test_parent_directory_created_automatically PASSED [ 56%]
+tests/secrets/test_manager.py::TestEdgeCases::test_get_missing_key_raises_key_error PASSED [ 56%]
+tests/secrets/test_manager.py::TestEdgeCases::test_delete_missing_key_raises_key_error PASSED [ 56%]
+tests/secrets/test_manager.py::TestEdgeCases::test_overwrite_existing_key PASSED [ 56%]
+tests/secrets/test_manager.py::TestEdgeCases::test_empty_string_value PASSED [ 56%]
+tests/secrets/test_manager.py::TestEdgeCases::test_unicode_value_round_trip PASSED [ 57%]
+tests/secrets/test_manager.py::TestEdgeCases::test_long_value_round_trip PASSED [ 57%]
+tests/secrets/test_manager.py::TestEdgeCases::test_truncated_file_returns_false PASSED [ 57%]
+tests/secrets/test_manager.py::TestEdgeCases::test_token_missing_pkcs11_lib_raises PASSED [ 57%]
+tests/secrets/test_manager.py::TestEdgeCases::test_token_missing_pin_raises PASSED [ 57%]
+tests/secrets/test_manager.py::TestEdgeCases::test_token_import_failure_raises_method_error PASSED [ 57%]
+tests/secrets/test_manager.py::TestEdgeCases::test_empty_secrets_on_first_run PASSED [ 57%]
+tests/secrets/test_manager.py::TestEdgeCases::test_delete_persists_across_instances PASSED [ 57%]
+tests/secrets/test_manager.py::TestReprAndHelpers::test_repr_shows_locked PASSED [ 57%]
+tests/secrets/test_manager.py::TestReprAndHelpers::test_repr_shows_unlocked PASSED [ 57%]
+tests/secrets/test_manager.py::TestReprAndHelpers::test_list_keys_returns_correct_names PASSED [ 57%]
+tests/secrets/test_manager.py::TestReprAndHelpers::test_list_keys_raises_when_locked PASSED [ 58%]
+tests/secrets/test_manager.py::TestReprAndHelpers::test_delete_raises_when_locked PASSED [ 58%]
+tests/secrets/test_manager.py::TestReprAndHelpers::test_header_size_constant_is_correct PASSED [ 58%]
+tests/secrets/test_manager_unittest.py::TestPasswordUnlock::test_api_key_round_trip PASSED [ 58%]
+tests/secrets/test_manager_unittest.py::TestPasswordUnlock::test_correct_password_returns_true PASSED [ 58%]
+tests/secrets/test_manager_unittest.py::TestPasswordUnlock::test_first_run_creates_file PASSED [ 58%]
+tests/secrets/test_manager_unittest.py::TestPasswordUnlock::test_get_raises_when_locked PASSED [ 58%]
+tests/secrets/test_manager_unittest.py::TestPasswordUnlock::test_is_unlocked_false_after_lock PASSED [ 58%]
+tests/secrets/test_manager_unittest.py::TestPasswordUnlock::test_is_unlocked_false_initially PASSED [ 58%]
+tests/secrets/test_manager_unittest.py::TestPasswordUnlock::test_is_unlocked_true_after_unlock PASSED [ 58%]
+tests/secrets/test_manager_unittest.py::TestPasswordUnlock::test_missing_password_arg_raises PASSED [ 58%]
+tests/secrets/test_manager_unittest.py::TestPasswordUnlock::test_multiple_secrets_persist PASSED [ 58%]
+tests/secrets/test_manager_unittest.py::TestPasswordUnlock::test_set_and_get_round_trip PASSED [ 59%]
+tests/secrets/test_manager_unittest.py::TestPasswordUnlock::test_set_persists_across_instances PASSED [ 59%]
+tests/secrets/test_manager_unittest.py::TestPasswordUnlock::test_set_raises_when_locked PASSED [ 59%]
+tests/secrets/test_manager_unittest.py::TestPasswordUnlock::test_smtp_credentials_round_trip PASSED [ 59%]
+tests/secrets/test_manager_unittest.py::TestPasswordUnlock::test_unknown_method_raises PASSED [ 59%]
+tests/secrets/test_manager_unittest.py::TestPasswordUnlock::test_wrong_password_leaves_store_locked PASSED [ 59%]
+tests/secrets/test_manager_unittest.py::TestPasswordUnlock::test_wrong_password_returns_false PASSED [ 59%]
+tests/secrets/test_manager_unittest.py::TestKeychainUnlock::test_first_run_generates_and_stores_key PASSED [ 59%]
+tests/secrets/test_manager_unittest.py::TestKeychainUnlock::test_keychain_persists_across_instances PASSED [ 59%]
+tests/secrets/test_manager_unittest.py::TestKeychainUnlock::test_keychain_set_get_round_trip PASSED [ 59%]
+tests/secrets/test_manager_unittest.py::TestKeychainUnlock::test_keyring_import_failure_raises_method_error PASSED [ 59%]
+tests/secrets/test_manager_unittest.py::TestKeychainUnlock::test_missing_keychain_entry_raises_decrypt_error PASSED [ 59%]
+tests/secrets/test_manager_unittest.py::TestKeychainUnlock::test_second_unlock_reuses_stored_key PASSED [ 60%]
+tests/secrets/test_manager_unittest.py::TestLockAndMemory::test_get_after_lock_raises PASSED [ 60%]
+tests/secrets/test_manager_unittest.py::TestLockAndMemory::test_lock_clears_method PASSED [ 60%]
+tests/secrets/test_manager_unittest.py::TestLockAndMemory::test_lock_clears_secrets_dict PASSED [ 60%]
+tests/secrets/test_manager_unittest.py::TestLockAndMemory::test_lock_clears_session_key PASSED [ 60%]
+tests/secrets/test_manager_unittest.py::TestLockAndMemory::test_multiple_lock_calls_idempotent PASSED [ 60%]
+tests/secrets/test_manager_unittest.py::TestLockAndMemory::test_re_unlock_after_lock PASSED [ 60%]
+tests/secrets/test_manager_unittest.py::TestLockAndMemory::test_session_key_not_written_to_disk PASSED [ 60%]
+tests/secrets/test_manager_unittest.py::TestLockAndMemory::test_set_after_lock_raises PASSED [ 60%]
+tests/secrets/test_manager_unittest.py::TestPersistence::test_aad_tampering_detected PASSED [ 60%]
+tests/secrets/test_manager_unittest.py::TestPersistence::test_bad_magic_returns_false PASSED [ 60%]
+tests/secrets/test_manager_unittest.py::TestPersistence::test_ciphertext_byte_flip_detected PASSED [ 61%]
+tests/secrets/test_manager_unittest.py::TestPersistence::test_file_does_not_contain_secret_in_plaintext PASSED [ 61%]
+tests/secrets/test_manager_unittest.py::TestPersistence::test_file_is_not_json_parseable PASSED [ 61%]
+tests/secrets/test_manager_unittest.py::TestPersistence::test_file_permissions_unix PASSED [ 61%]
+tests/secrets/test_manager_unittest.py::TestPersistence::test_file_size_grows_with_secrets PASSED [ 61%]
+tests/secrets/test_manager_unittest.py::TestPersistence::test_magic_bytes_present PASSED [ 61%]
+tests/secrets/test_manager_unittest.py::TestPersistence::test_nonce_changes_on_each_save PASSED [ 61%]
+tests/secrets/test_manager_unittest.py::TestPersistence::test_parent_directory_created_automatically PASSED [ 61%]
+tests/secrets/test_manager_unittest.py::TestPersistence::test_salt_reused_across_saves PASSED [ 61%]
+tests/secrets/test_manager_unittest.py::TestPersistence::test_version_byte_correct PASSED [ 61%]
+tests/secrets/test_manager_unittest.py::TestEdgeCases::test_delete_missing_key_raises_key_error PASSED [ 61%]
+tests/secrets/test_manager_unittest.py::TestEdgeCases::test_delete_persists_across_instances PASSED [ 61%]
+tests/secrets/test_manager_unittest.py::TestEdgeCases::test_empty_secrets_on_first_run PASSED [ 62%]
+tests/secrets/test_manager_unittest.py::TestEdgeCases::test_empty_string_value PASSED [ 62%]
+tests/secrets/test_manager_unittest.py::TestEdgeCases::test_get_missing_key_raises_key_error PASSED [ 62%]
+tests/secrets/test_manager_unittest.py::TestEdgeCases::test_long_value_round_trip PASSED [ 62%]
+tests/secrets/test_manager_unittest.py::TestEdgeCases::test_overwrite_existing_key PASSED [ 62%]
+tests/secrets/test_manager_unittest.py::TestEdgeCases::test_token_import_failure_raises_method_error PASSED [ 62%]
+tests/secrets/test_manager_unittest.py::TestEdgeCases::test_token_missing_pin_raises PASSED [ 62%]
+tests/secrets/test_manager_unittest.py::TestEdgeCases::test_token_missing_pkcs11_lib_raises PASSED [ 62%]
+tests/secrets/test_manager_unittest.py::TestEdgeCases::test_truncated_file_returns_false PASSED [ 62%]
+tests/secrets/test_manager_unittest.py::TestEdgeCases::test_unicode_value_round_trip PASSED [ 62%]
+tests/secrets/test_manager_unittest.py::TestReprAndHelpers::test_delete_raises_when_locked PASSED [ 62%]
+tests/secrets/test_manager_unittest.py::TestReprAndHelpers::test_header_size_constant_is_correct PASSED [ 62%]
+tests/secrets/test_manager_unittest.py::TestReprAndHelpers::test_list_keys_raises_when_locked PASSED [ 63%]
+tests/secrets/test_manager_unittest.py::TestReprAndHelpers::test_list_keys_returns_correct_names PASSED [ 63%]
+tests/secrets/test_manager_unittest.py::TestReprAndHelpers::test_repr_shows_locked PASSED [ 63%]
+tests/secrets/test_manager_unittest.py::TestReprAndHelpers::test_repr_shows_unlocked PASSED [ 63%]
+tests/skills/test_coherence_profiles.py::TestCoherenceProfileStructure::test_file_exists[invoice] PASSED [ 63%]
+tests/skills/test_coherence_profiles.py::TestCoherenceProfileStructure::test_file_exists[contract] PASSED [ 63%]
+tests/skills/test_coherence_profiles.py::TestCoherenceProfileStructure::test_file_exists[code_file] PASSED [ 63%]
+tests/skills/test_coherence_profiles.py::TestCoherenceProfileStructure::test_file_exists[email] PASSED [ 63%]
+tests/skills/test_coherence_profiles.py::TestCoherenceProfileStructure::test_file_exists[report] PASSED [ 63%]
+tests/skills/test_coherence_profiles.py::TestCoherenceProfileStructure::test_parses_as_valid_yaml[invoice] PASSED [ 63%]
+tests/skills/test_coherence_profiles.py::TestCoherenceProfileStructure::test_parses_as_valid_yaml[contract] PASSED [ 63%]
+tests/skills/test_coherence_profiles.py::TestCoherenceProfileStructure::test_parses_as_valid_yaml[code_file] PASSED [ 63%]
+tests/skills/test_coherence_profiles.py::TestCoherenceProfileStructure::test_parses_as_valid_yaml[email] PASSED [ 64%]
+tests/skills/test_coherence_profiles.py::TestCoherenceProfileStructure::test_parses_as_valid_yaml[report] PASSED [ 64%]
+tests/skills/test_coherence_profiles.py::TestCoherenceProfileStructure::test_required_top_level_keys[invoice] PASSED [ 64%]
+tests/skills/test_coherence_profiles.py::TestCoherenceProfileStructure::test_required_top_level_keys[contract] PASSED [ 64%]
+tests/skills/test_coherence_profiles.py::TestCoherenceProfileStructure::test_required_top_level_keys[code_file] PASSED [ 64%]
+tests/skills/test_coherence_profiles.py::TestCoherenceProfileStructure::test_required_top_level_keys[email] PASSED [ 64%]
+tests/skills/test_coherence_profiles.py::TestCoherenceProfileStructure::test_required_top_level_keys[report] PASSED [ 64%]
+tests/skills/test_coherence_profiles.py::TestCoherenceProfileStructure::test_document_type_matches_filename[invoice] PASSED [ 64%]
+tests/skills/test_coherence_profiles.py::TestCoherenceProfileStructure::test_document_type_matches_filename[contract] PASSED [ 64%]
+tests/skills/test_coherence_profiles.py::TestCoherenceProfileStructure::test_document_type_matches_filename[code_file] PASSED [ 64%]
+tests/skills/test_coherence_profiles.py::TestCoherenceProfileStructure::test_document_type_matches_filename[email] PASSED [ 64%]
+tests/skills/test_coherence_profiles.py::TestCoherenceProfileStructure::test_document_type_matches_filename[report] PASSED [ 65%]
+tests/skills/test_coherence_profiles.py::TestCoherenceProfileStructure::test_expected_elements_is_list[invoice] PASSED [ 65%]
+tests/skills/test_coherence_profiles.py::TestCoherenceProfileStructure::test_expected_elements_is_list[contract] PASSED [ 65%]
+tests/skills/test_coherence_profiles.py::TestCoherenceProfileStructure::test_expected_elements_is_list[code_file] PASSED [ 65%]
+tests/skills/test_coherence_profiles.py::TestCoherenceProfileStructure::test_expected_elements_is_list[email] PASSED [ 65%]
+tests/skills/test_coherence_profiles.py::TestCoherenceProfileStructure::test_expected_elements_is_list[report] PASSED [ 65%]
+tests/skills/test_coherence_profiles.py::TestCoherenceProfileStructure::test_at_least_five_expected_elements[invoice] PASSED [ 65%]
+tests/skills/test_coherence_profiles.py::TestCoherenceProfileStructure::test_at_least_five_expected_elements[contract] PASSED [ 65%]
+tests/skills/test_coherence_profiles.py::TestCoherenceProfileStructure::test_at_least_five_expected_elements[code_file] PASSED [ 65%]
+tests/skills/test_coherence_profiles.py::TestCoherenceProfileStructure::test_at_least_five_expected_elements[email] PASSED [ 65%]
+tests/skills/test_coherence_profiles.py::TestCoherenceProfileStructure::test_at_least_five_expected_elements[report] PASSED [ 65%]
+tests/skills/test_coherence_profiles.py::TestCoherenceProfileStructure::test_expected_elements_are_non_empty_strings[invoice] PASSED [ 65%]
+tests/skills/test_coherence_profiles.py::TestCoherenceProfileStructure::test_expected_elements_are_non_empty_strings[contract] PASSED [ 66%]
+tests/skills/test_coherence_profiles.py::TestCoherenceProfileStructure::test_expected_elements_are_non_empty_strings[code_file] PASSED [ 66%]
+tests/skills/test_coherence_profiles.py::TestCoherenceProfileStructure::test_expected_elements_are_non_empty_strings[email] PASSED [ 66%]
+tests/skills/test_coherence_profiles.py::TestCoherenceProfileStructure::test_expected_elements_are_non_empty_strings[report] PASSED [ 66%]
+tests/skills/test_coherence_profiles.py::TestCoherenceProfileStructure::test_suspicious_if_present_is_list[invoice] PASSED [ 66%]
+tests/skills/test_coherence_profiles.py::TestCoherenceProfileStructure::test_suspicious_if_present_is_list[contract] PASSED [ 66%]
+tests/skills/test_coherence_profiles.py::TestCoherenceProfileStructure::test_suspicious_if_present_is_list[code_file] PASSED [ 66%]
+tests/skills/test_coherence_profiles.py::TestCoherenceProfileStructure::test_suspicious_if_present_is_list[email] PASSED [ 66%]
+tests/skills/test_coherence_profiles.py::TestCoherenceProfileStructure::test_suspicious_if_present_is_list[report] PASSED [ 66%]
+tests/skills/test_coherence_profiles.py::TestCoherenceProfileStructure::test_at_least_three_suspicious_patterns[invoice] PASSED [ 66%]
+tests/skills/test_coherence_profiles.py::TestCoherenceProfileStructure::test_at_least_three_suspicious_patterns[contract] PASSED [ 66%]
+tests/skills/test_coherence_profiles.py::TestCoherenceProfileStructure::test_at_least_three_suspicious_patterns[code_file] PASSED [ 66%]
+tests/skills/test_coherence_profiles.py::TestCoherenceProfileStructure::test_at_least_three_suspicious_patterns[email] PASSED [ 67%]
+tests/skills/test_coherence_profiles.py::TestCoherenceProfileStructure::test_at_least_three_suspicious_patterns[report] PASSED [ 67%]
+tests/skills/test_coherence_profiles.py::TestCoherenceProfileStructure::test_suspicious_patterns_are_non_empty_strings[invoice] PASSED [ 67%]
+tests/skills/test_coherence_profiles.py::TestCoherenceProfileStructure::test_suspicious_patterns_are_non_empty_strings[contract] PASSED [ 67%]
+tests/skills/test_coherence_profiles.py::TestCoherenceProfileStructure::test_suspicious_patterns_are_non_empty_strings[code_file] PASSED [ 67%]
+tests/skills/test_coherence_profiles.py::TestCoherenceProfileStructure::test_suspicious_patterns_are_non_empty_strings[email] PASSED [ 67%]
+tests/skills/test_coherence_profiles.py::TestCoherenceProfileStructure::test_suspicious_patterns_are_non_empty_strings[report] PASSED [ 67%]
+tests/skills/test_coherence_profiles.py::TestCoherenceProfileStructure::test_coherence_threshold_is_float_in_range[invoice] PASSED [ 67%]
+tests/skills/test_coherence_profiles.py::TestCoherenceProfileStructure::test_coherence_threshold_is_float_in_range[contract] PASSED [ 67%]
+tests/skills/test_coherence_profiles.py::TestCoherenceProfileStructure::test_coherence_threshold_is_float_in_range[code_file] PASSED [ 67%]
+tests/skills/test_coherence_profiles.py::TestCoherenceProfileStructure::test_coherence_threshold_is_float_in_range[email] PASSED [ 67%]
+tests/skills/test_coherence_profiles.py::TestCoherenceProfileStructure::test_coherence_threshold_is_float_in_range[report] PASSED [ 68%]
+tests/skills/test_coherence_profiles.py::TestCoherenceProfileStructure::test_version_is_string[invoice] PASSED [ 68%]
+tests/skills/test_coherence_profiles.py::TestCoherenceProfileStructure::test_version_is_string[contract] PASSED [ 68%]
+tests/skills/test_coherence_profiles.py::TestCoherenceProfileStructure::test_version_is_string[code_file] PASSED [ 68%]
+tests/skills/test_coherence_profiles.py::TestCoherenceProfileStructure::test_version_is_string[email] PASSED [ 68%]
+tests/skills/test_coherence_profiles.py::TestCoherenceProfileStructure::test_version_is_string[report] PASSED [ 68%]
+tests/skills/test_coherence_profiles.py::TestCoherenceProfileStructure::test_description_is_non_empty_string[invoice] PASSED [ 68%]
+tests/skills/test_coherence_profiles.py::TestCoherenceProfileStructure::test_description_is_non_empty_string[contract] PASSED [ 68%]
+tests/skills/test_coherence_profiles.py::TestCoherenceProfileStructure::test_description_is_non_empty_string[code_file] PASSED [ 68%]
+tests/skills/test_coherence_profiles.py::TestCoherenceProfileStructure::test_description_is_non_empty_string[email] PASSED [ 68%]
+tests/skills/test_coherence_profiles.py::TestCoherenceProfileStructure::test_description_is_non_empty_string[report] PASSED [ 68%]
+tests/skills/test_coherence_profiles.py::TestCoherenceProfileStructure::test_no_duplicate_expected_elements[invoice] PASSED [ 68%]
+tests/skills/test_coherence_profiles.py::TestCoherenceProfileStructure::test_no_duplicate_expected_elements[contract] PASSED [ 69%]
+tests/skills/test_coherence_profiles.py::TestCoherenceProfileStructure::test_no_duplicate_expected_elements[code_file] PASSED [ 69%]
+tests/skills/test_coherence_profiles.py::TestCoherenceProfileStructure::test_no_duplicate_expected_elements[email] PASSED [ 69%]
+tests/skills/test_coherence_profiles.py::TestCoherenceProfileStructure::test_no_duplicate_expected_elements[report] PASSED [ 69%]
+tests/skills/test_coherence_profiles.py::TestCoherenceProfileStructure::test_no_duplicate_suspicious_patterns[invoice] PASSED [ 69%]
+tests/skills/test_coherence_profiles.py::TestCoherenceProfileStructure::test_no_duplicate_suspicious_patterns[contract] PASSED [ 69%]
+tests/skills/test_coherence_profiles.py::TestCoherenceProfileStructure::test_no_duplicate_suspicious_patterns[code_file] PASSED [ 69%]
+tests/skills/test_coherence_profiles.py::TestCoherenceProfileStructure::test_no_duplicate_suspicious_patterns[email] PASSED [ 69%]
+tests/skills/test_coherence_profiles.py::TestCoherenceProfileStructure::test_no_duplicate_suspicious_patterns[report] PASSED [ 69%]
+tests/skills/test_coherence_profiles.py::TestCoherenceProfileStructure::test_suspicious_patterns_include_ai_instruction_signal[invoice] PASSED [ 69%]
+tests/skills/test_coherence_profiles.py::TestCoherenceProfileStructure::test_suspicious_patterns_include_ai_instruction_signal[contract] PASSED [ 69%]
+tests/skills/test_coherence_profiles.py::TestCoherenceProfileStructure::test_suspicious_patterns_include_ai_instruction_signal[code_file] PASSED [ 69%]
+tests/skills/test_coherence_profiles.py::TestCoherenceProfileStructure::test_suspicious_patterns_include_ai_instruction_signal[email] PASSED [ 70%]
+tests/skills/test_coherence_profiles.py::TestCoherenceProfileStructure::test_suspicious_patterns_include_ai_instruction_signal[report] PASSED [ 70%]
+tests/skills/test_coherence_profiles.py::TestCoherenceProfileSet::test_all_five_profiles_exist PASSED [ 70%]
+tests/skills/test_coherence_profiles.py::TestCoherenceProfileSet::test_all_document_types_are_unique PASSED [ 70%]
+tests/skills/test_coherence_profiles.py::TestCoherenceProfileSet::test_coherence_dir_contains_only_expected_files PASSED [ 70%]
+tests/skills/test_coherence_profiles_unittest.py::_cls::test_at_least_five_expected_elements PASSED [ 70%]
+tests/skills/test_coherence_profiles_unittest.py::_cls::test_at_least_three_suspicious_patterns PASSED [ 70%]
+tests/skills/test_coherence_profiles_unittest.py::_cls::test_coherence_threshold_is_float_in_range PASSED [ 70%]
+tests/skills/test_coherence_profiles_unittest.py::_cls::test_description_is_non_empty_string PASSED [ 70%]
+tests/skills/test_coherence_profiles_unittest.py::_cls::test_document_type_matches_filename PASSED [ 70%]
+tests/skills/test_coherence_profiles_unittest.py::_cls::test_expected_elements_are_non_empty_strings PASSED [ 70%]
+tests/skills/test_coherence_profiles_unittest.py::_cls::test_file_exists PASSED [ 70%]
+tests/skills/test_coherence_profiles_unittest.py::_cls::test_no_duplicate_expected_elements PASSED [ 71%]
+tests/skills/test_coherence_profiles_unittest.py::_cls::test_no_duplicate_suspicious_patterns PASSED [ 71%]
+tests/skills/test_coherence_profiles_unittest.py::_cls::test_parses_as_valid_yaml PASSED [ 71%]
+tests/skills/test_coherence_profiles_unittest.py::_cls::test_required_top_level_keys PASSED [ 71%]
+tests/skills/test_coherence_profiles_unittest.py::_cls::test_suspicious_patterns_are_non_empty_strings PASSED [ 71%]
+tests/skills/test_coherence_profiles_unittest.py::_cls::test_suspicious_patterns_include_ai_instruction_signal PASSED [ 71%]
+tests/skills/test_coherence_profiles_unittest.py::_cls::test_version_is_string PASSED [ 71%]
+tests/skills/test_coherence_profiles_unittest.py::TestInvoiceProfile::test_at_least_five_expected_elements PASSED [ 71%]
+tests/skills/test_coherence_profiles_unittest.py::TestInvoiceProfile::test_at_least_three_suspicious_patterns PASSED [ 71%]
+tests/skills/test_coherence_profiles_unittest.py::TestInvoiceProfile::test_coherence_threshold_is_float_in_range PASSED [ 71%]
+tests/skills/test_coherence_profiles_unittest.py::TestInvoiceProfile::test_description_is_non_empty_string PASSED [ 71%]
+tests/skills/test_coherence_profiles_unittest.py::TestInvoiceProfile::test_document_type_matches_filename PASSED [ 72%]
+tests/skills/test_coherence_profiles_unittest.py::TestInvoiceProfile::test_expected_elements_are_non_empty_strings PASSED [ 72%]
+tests/skills/test_coherence_profiles_unittest.py::TestInvoiceProfile::test_file_exists PASSED [ 72%]
+tests/skills/test_coherence_profiles_unittest.py::TestInvoiceProfile::test_no_duplicate_expected_elements PASSED [ 72%]
+tests/skills/test_coherence_profiles_unittest.py::TestInvoiceProfile::test_no_duplicate_suspicious_patterns PASSED [ 72%]
+tests/skills/test_coherence_profiles_unittest.py::TestInvoiceProfile::test_parses_as_valid_yaml PASSED [ 72%]
+tests/skills/test_coherence_profiles_unittest.py::TestInvoiceProfile::test_required_top_level_keys PASSED [ 72%]
+tests/skills/test_coherence_profiles_unittest.py::TestInvoiceProfile::test_suspicious_patterns_are_non_empty_strings PASSED [ 72%]
+tests/skills/test_coherence_profiles_unittest.py::TestInvoiceProfile::test_suspicious_patterns_include_ai_instruction_signal PASSED [ 72%]
+tests/skills/test_coherence_profiles_unittest.py::TestInvoiceProfile::test_version_is_string PASSED [ 72%]
+tests/skills/test_coherence_profiles_unittest.py::TestContractProfile::test_at_least_five_expected_elements PASSED [ 72%]
+tests/skills/test_coherence_profiles_unittest.py::TestContractProfile::test_at_least_three_suspicious_patterns PASSED [ 72%]
+tests/skills/test_coherence_profiles_unittest.py::TestContractProfile::test_coherence_threshold_is_float_in_range PASSED [ 73%]
+tests/skills/test_coherence_profiles_unittest.py::TestContractProfile::test_description_is_non_empty_string PASSED [ 73%]
+tests/skills/test_coherence_profiles_unittest.py::TestContractProfile::test_document_type_matches_filename PASSED [ 73%]
+tests/skills/test_coherence_profiles_unittest.py::TestContractProfile::test_expected_elements_are_non_empty_strings PASSED [ 73%]
+tests/skills/test_coherence_profiles_unittest.py::TestContractProfile::test_file_exists PASSED [ 73%]
+tests/skills/test_coherence_profiles_unittest.py::TestContractProfile::test_no_duplicate_expected_elements PASSED [ 73%]
+tests/skills/test_coherence_profiles_unittest.py::TestContractProfile::test_no_duplicate_suspicious_patterns PASSED [ 73%]
+tests/skills/test_coherence_profiles_unittest.py::TestContractProfile::test_parses_as_valid_yaml PASSED [ 73%]
+tests/skills/test_coherence_profiles_unittest.py::TestContractProfile::test_required_top_level_keys PASSED [ 73%]
+tests/skills/test_coherence_profiles_unittest.py::TestContractProfile::test_suspicious_patterns_are_non_empty_strings PASSED [ 73%]
+tests/skills/test_coherence_profiles_unittest.py::TestContractProfile::test_suspicious_patterns_include_ai_instruction_signal PASSED [ 73%]
+tests/skills/test_coherence_profiles_unittest.py::TestContractProfile::test_version_is_string PASSED [ 73%]
+tests/skills/test_coherence_profiles_unittest.py::TestCodeFileProfile::test_at_least_five_expected_elements PASSED [ 74%]
+tests/skills/test_coherence_profiles_unittest.py::TestCodeFileProfile::test_at_least_three_suspicious_patterns PASSED [ 74%]
+tests/skills/test_coherence_profiles_unittest.py::TestCodeFileProfile::test_coherence_threshold_is_float_in_range PASSED [ 74%]
+tests/skills/test_coherence_profiles_unittest.py::TestCodeFileProfile::test_description_is_non_empty_string PASSED [ 74%]
+tests/skills/test_coherence_profiles_unittest.py::TestCodeFileProfile::test_document_type_matches_filename PASSED [ 74%]
+tests/skills/test_coherence_profiles_unittest.py::TestCodeFileProfile::test_expected_elements_are_non_empty_strings PASSED [ 74%]
+tests/skills/test_coherence_profiles_unittest.py::TestCodeFileProfile::test_file_exists PASSED [ 74%]
+tests/skills/test_coherence_profiles_unittest.py::TestCodeFileProfile::test_no_duplicate_expected_elements PASSED [ 74%]
+tests/skills/test_coherence_profiles_unittest.py::TestCodeFileProfile::test_no_duplicate_suspicious_patterns PASSED [ 74%]
+tests/skills/test_coherence_profiles_unittest.py::TestCodeFileProfile::test_parses_as_valid_yaml PASSED [ 74%]
+tests/skills/test_coherence_profiles_unittest.py::TestCodeFileProfile::test_required_top_level_keys PASSED [ 74%]
+tests/skills/test_coherence_profiles_unittest.py::TestCodeFileProfile::test_suspicious_patterns_are_non_empty_strings PASSED [ 75%]
+tests/skills/test_coherence_profiles_unittest.py::TestCodeFileProfile::test_suspicious_patterns_include_ai_instruction_signal PASSED [ 75%]
+tests/skills/test_coherence_profiles_unittest.py::TestCodeFileProfile::test_version_is_string PASSED [ 75%]
+tests/skills/test_coherence_profiles_unittest.py::TestEmailProfile::test_at_least_five_expected_elements PASSED [ 75%]
+tests/skills/test_coherence_profiles_unittest.py::TestEmailProfile::test_at_least_three_suspicious_patterns PASSED [ 75%]
+tests/skills/test_coherence_profiles_unittest.py::TestEmailProfile::test_coherence_threshold_is_float_in_range PASSED [ 75%]
+tests/skills/test_coherence_profiles_unittest.py::TestEmailProfile::test_description_is_non_empty_string PASSED [ 75%]
+tests/skills/test_coherence_profiles_unittest.py::TestEmailProfile::test_document_type_matches_filename PASSED [ 75%]
+tests/skills/test_coherence_profiles_unittest.py::TestEmailProfile::test_expected_elements_are_non_empty_strings PASSED [ 75%]
+tests/skills/test_coherence_profiles_unittest.py::TestEmailProfile::test_file_exists PASSED [ 75%]
+tests/skills/test_coherence_profiles_unittest.py::TestEmailProfile::test_no_duplicate_expected_elements PASSED [ 75%]
+tests/skills/test_coherence_profiles_unittest.py::TestEmailProfile::test_no_duplicate_suspicious_patterns PASSED [ 75%]
+tests/skills/test_coherence_profiles_unittest.py::TestEmailProfile::test_parses_as_valid_yaml PASSED [ 76%]
+tests/skills/test_coherence_profiles_unittest.py::TestEmailProfile::test_required_top_level_keys PASSED [ 76%]
+tests/skills/test_coherence_profiles_unittest.py::TestEmailProfile::test_suspicious_patterns_are_non_empty_strings PASSED [ 76%]
+tests/skills/test_coherence_profiles_unittest.py::TestEmailProfile::test_suspicious_patterns_include_ai_instruction_signal PASSED [ 76%]
+tests/skills/test_coherence_profiles_unittest.py::TestEmailProfile::test_version_is_string PASSED [ 76%]
+tests/skills/test_coherence_profiles_unittest.py::TestReportProfile::test_at_least_five_expected_elements PASSED [ 76%]
+tests/skills/test_coherence_profiles_unittest.py::TestReportProfile::test_at_least_three_suspicious_patterns PASSED [ 76%]
+tests/skills/test_coherence_profiles_unittest.py::TestReportProfile::test_coherence_threshold_is_float_in_range PASSED [ 76%]
+tests/skills/test_coherence_profiles_unittest.py::TestReportProfile::test_description_is_non_empty_string PASSED [ 76%]
+tests/skills/test_coherence_profiles_unittest.py::TestReportProfile::test_document_type_matches_filename PASSED [ 76%]
+tests/skills/test_coherence_profiles_unittest.py::TestReportProfile::test_expected_elements_are_non_empty_strings PASSED [ 76%]
+tests/skills/test_coherence_profiles_unittest.py::TestReportProfile::test_file_exists PASSED [ 76%]
+tests/skills/test_coherence_profiles_unittest.py::TestReportProfile::test_no_duplicate_expected_elements PASSED [ 77%]
+tests/skills/test_coherence_profiles_unittest.py::TestReportProfile::test_no_duplicate_suspicious_patterns PASSED [ 77%]
+tests/skills/test_coherence_profiles_unittest.py::TestReportProfile::test_parses_as_valid_yaml PASSED [ 77%]
+tests/skills/test_coherence_profiles_unittest.py::TestReportProfile::test_required_top_level_keys PASSED [ 77%]
+tests/skills/test_coherence_profiles_unittest.py::TestReportProfile::test_suspicious_patterns_are_non_empty_strings PASSED [ 77%]
+tests/skills/test_coherence_profiles_unittest.py::TestReportProfile::test_suspicious_patterns_include_ai_instruction_signal PASSED [ 77%]
+tests/skills/test_coherence_profiles_unittest.py::TestReportProfile::test_version_is_string PASSED [ 77%]
+tests/skills/test_coherence_profiles_unittest.py::TestCoherenceProfileSetUnittest::test_all_document_types_are_unique PASSED [ 77%]
+tests/skills/test_coherence_profiles_unittest.py::TestCoherenceProfileSetUnittest::test_all_five_profiles_exist PASSED [ 77%]
+tests/skills/test_coherence_profiles_unittest.py::TestCoherenceProfileSetUnittest::test_coherence_dir_contains_only_expected_files PASSED [ 77%]
+tests/skills/test_injection_detector_profile.py::TestInjectionDetectorProfile::test_file_exists PASSED [ 77%]
+tests/skills/test_injection_detector_profile.py::TestInjectionDetectorProfile::test_parses_as_valid_yaml PASSED [ 77%]
+tests/skills/test_injection_detector_profile.py::TestInjectionDetectorProfile::test_required_top_level_keys PASSED [ 78%]
+tests/skills/test_injection_detector_profile.py::TestInjectionDetectorProfile::test_name_is_injection_detector PASSED [ 78%]
+tests/skills/test_injection_detector_profile.py::TestInjectionDetectorProfile::test_tier_is_micro PASSED [ 78%]
+tests/skills/test_injection_detector_profile.py::TestInjectionDetectorProfile::test_output_schema_points_to_document_analysis PASSED [ 78%]
+tests/skills/test_injection_detector_profile.py::TestInjectionDetectorProfile::test_system_prompt_is_non_empty_string PASSED [ 78%]
+tests/skills/test_injection_detector_profile.py::TestInjectionDetectorProfile::test_system_prompt_mentions_injection PASSED [ 78%]
+tests/skills/test_injection_detector_profile.py::TestInjectionDetectorProfile::test_system_prompt_is_human_readable PASSED [ 78%]
+tests/skills/test_injection_detector_profile.py::TestInjectionDetectorProfile::test_all_five_injection_categories_present PASSED [ 78%]
+tests/skills/test_injection_detector_profile.py::TestInjectionDetectorProfile::test_coherence_threshold_is_float_between_0_and_1 PASSED [ 78%]
+tests/skills/test_injection_detector_profile.py::TestInjectionDetectorProfile::test_version_is_string PASSED [ 78%]
+tests/skills/test_injection_detector_profile.py::TestDocumentAnalysisSchema::test_file_exists PASSED [ 78%]
+tests/skills/test_injection_detector_profile.py::TestDocumentAnalysisSchema::test_parses_as_valid_yaml PASSED [ 79%]
+tests/skills/test_injection_detector_profile.py::TestDocumentAnalysisSchema::test_required_top_level_keys PASSED [ 79%]
+tests/skills/test_injection_detector_profile.py::TestDocumentAnalysisSchema::test_schema_name PASSED [ 79%]
+tests/skills/test_injection_detector_profile.py::TestDocumentAnalysisSchema::test_document_analysis_wrapper_present PASSED [ 79%]
+tests/skills/test_injection_detector_profile.py::TestDocumentAnalysisSchema::test_declared_type_field_present PASSED [ 79%]
+tests/skills/test_injection_detector_profile.py::TestDocumentAnalysisSchema::test_assessed_type_field_present PASSED [ 79%]
+tests/skills/test_injection_detector_profile.py::TestDocumentAnalysisSchema::test_type_match_field_present PASSED [ 79%]
+tests/skills/test_injection_detector_profile.py::TestDocumentAnalysisSchema::test_coherence_score_field_present PASSED [ 79%]
+tests/skills/test_injection_detector_profile.py::TestDocumentAnalysisSchema::test_injection_verdict_field_present PASSED [ 79%]
+tests/skills/test_injection_detector_profile.py::TestDocumentAnalysisSchema::test_flagged_passages_field_present PASSED [ 79%]
+tests/skills/test_injection_detector_profile.py::TestDocumentAnalysisSchema::test_overall_verdict_field_present PASSED [ 79%]
+tests/skills/test_injection_detector_profile.py::TestDocumentAnalysisSchema::test_all_section_9_2_output_fields_present PASSED [ 79%]
+tests/skills/test_injection_detector_profile.py::TestDocumentAnalysisSchema::test_injection_verdict_enum_values PASSED [ 80%]
+tests/skills/test_injection_detector_profile.py::TestDocumentAnalysisSchema::test_overall_verdict_enum_values PASSED [ 80%]
+tests/skills/test_injection_detector_profile.py::TestDocumentAnalysisSchema::test_coherence_score_has_min_max PASSED [ 80%]
+tests/skills/test_injection_detector_profile.py::TestDocumentAnalysisSchema::test_flagged_passages_is_array PASSED [ 80%]
+tests/skills/test_injection_detector_profile.py::TestDocumentAnalysisSchema::test_flagged_passage_items_have_required_fields PASSED [ 80%]
+tests/skills/test_injection_detector_profile.py::TestDocumentAnalysisSchema::test_flagged_passage_category_enum_matches_profile PASSED [ 80%]
+tests/skills/test_injection_detector_profile.py::TestDocumentAnalysisSchema::test_all_required_fields_marked_required PASSED [ 80%]
+tests/skills/test_injection_detector_profile.py::TestDocumentAnalysisSchema::test_decision_rules_present PASSED [ 80%]
+tests/skills/test_injection_detector_profile_unittest.py::TestInjectionDetectorProfileUnittest::test_profile_coherence_threshold PASSED [ 80%]
+tests/skills/test_injection_detector_profile_unittest.py::TestInjectionDetectorProfileUnittest::test_profile_file_exists PASSED [ 80%]
+tests/skills/test_injection_detector_profile_unittest.py::TestInjectionDetectorProfileUnittest::test_profile_five_injection_categories PASSED [ 80%]
+tests/skills/test_injection_detector_profile_unittest.py::TestInjectionDetectorProfileUnittest::test_profile_name PASSED [ 80%]
+tests/skills/test_injection_detector_profile_unittest.py::TestInjectionDetectorProfileUnittest::test_profile_output_schema_reference PASSED [ 81%]
+tests/skills/test_injection_detector_profile_unittest.py::TestInjectionDetectorProfileUnittest::test_profile_parses_as_valid_yaml PASSED [ 81%]
+tests/skills/test_injection_detector_profile_unittest.py::TestInjectionDetectorProfileUnittest::test_profile_required_top_level_keys PASSED [ 81%]
+tests/skills/test_injection_detector_profile_unittest.py::TestInjectionDetectorProfileUnittest::test_profile_system_prompt_human_readable PASSED [ 81%]
+tests/skills/test_injection_detector_profile_unittest.py::TestInjectionDetectorProfileUnittest::test_profile_system_prompt_mentions_injection PASSED [ 81%]
+tests/skills/test_injection_detector_profile_unittest.py::TestInjectionDetectorProfileUnittest::test_profile_system_prompt_non_empty PASSED [ 81%]
+tests/skills/test_injection_detector_profile_unittest.py::TestInjectionDetectorProfileUnittest::test_profile_tier_is_micro PASSED [ 81%]
+tests/skills/test_injection_detector_profile_unittest.py::TestDocumentAnalysisSchemaUnittest::test_all_required_fields_marked_required PASSED [ 81%]
+tests/skills/test_injection_detector_profile_unittest.py::TestDocumentAnalysisSchemaUnittest::test_all_section_9_2_fields_present PASSED [ 81%]
+tests/skills/test_injection_detector_profile_unittest.py::TestDocumentAnalysisSchemaUnittest::test_category_enum_matches_profile_categories PASSED [ 81%]
+tests/skills/test_injection_detector_profile_unittest.py::TestDocumentAnalysisSchemaUnittest::test_coherence_score_bounds PASSED [ 81%]
+tests/skills/test_injection_detector_profile_unittest.py::TestDocumentAnalysisSchemaUnittest::test_decision_rules_present PASSED [ 81%]
+tests/skills/test_injection_detector_profile_unittest.py::TestDocumentAnalysisSchemaUnittest::test_document_analysis_wrapper PASSED [ 82%]
+tests/skills/test_injection_detector_profile_unittest.py::TestDocumentAnalysisSchemaUnittest::test_flagged_passage_items_fields PASSED [ 82%]
+tests/skills/test_injection_detector_profile_unittest.py::TestDocumentAnalysisSchemaUnittest::test_flagged_passages_is_array PASSED [ 82%]
+tests/skills/test_injection_detector_profile_unittest.py::TestDocumentAnalysisSchemaUnittest::test_injection_verdict_enum PASSED [ 82%]
+tests/skills/test_injection_detector_profile_unittest.py::TestDocumentAnalysisSchemaUnittest::test_overall_verdict_enum PASSED [ 82%]
+tests/skills/test_injection_detector_profile_unittest.py::TestDocumentAnalysisSchemaUnittest::test_schema_file_exists PASSED [ 82%]
+tests/skills/test_injection_detector_profile_unittest.py::TestDocumentAnalysisSchemaUnittest::test_schema_name PASSED [ 82%]
+tests/skills/test_injection_detector_profile_unittest.py::TestDocumentAnalysisSchemaUnittest::test_schema_parses_as_valid_yaml PASSED [ 82%]
+tests/skills/test_injection_detector_profile_unittest.py::TestDocumentAnalysisSchemaUnittest::test_schema_required_top_level_keys PASSED [ 82%]
+tests/test_audit_logger.py::TestAppendBehaviour::test_ten_calls_produce_ten_lines PASSED [ 82%]
+tests/test_audit_logger.py::TestAppendBehaviour::test_each_line_is_valid_json PASSED [ 82%]
+tests/test_audit_logger.py::TestAppendBehaviour::test_restart_appends_not_overwrites PASSED [ 83%]
+tests/test_audit_logger.py::TestAppendBehaviour::test_file_never_truncated_between_instances PASSED [ 83%]
+tests/test_audit_logger.py::TestRecordStructure::test_required_fields_present PASSED [ 83%]
+tests/test_audit_logger.py::TestRecordStructure::test_event_type_stored_verbatim PASSED [ 83%]
+tests/test_audit_logger.py::TestRecordStructure::test_task_id_stored_when_provided PASSED [ 83%]
+tests/test_audit_logger.py::TestRecordStructure::test_task_id_is_none_when_omitted PASSED [ 83%]
+tests/test_audit_logger.py::TestRecordStructure::test_data_payload_round_trips PASSED [ 83%]
+tests/test_audit_logger.py::TestRecordStructure::test_empty_data_defaults_to_empty_dict PASSED [ 83%]
+tests/test_audit_logger.py::TestRecordStructure::test_timestamp_is_utc_iso8601 PASSED [ 83%]
+tests/test_audit_logger.py::TestRecordStructure::test_non_serialisable_values_coerced_to_string PASSED [ 83%]
+tests/test_audit_logger.py::TestFileSystem::test_parent_directories_created_automatically PASSED [ 83%]
+tests/test_audit_logger.py::TestFileSystem::test_log_file_created_on_init PASSED [ 83%]
+tests/test_audit_logger.py::TestFileSystem::test_new_file_has_600_permissions PASSED [ 84%]
+tests/test_audit_logger.py::TestFileSystem::test_permissions_stable_across_reopens PASSED [ 84%]
+tests/test_audit_logger.py::TestReadAll::test_read_all_returns_all_entries PASSED [ 84%]
+tests/test_audit_logger.py::TestReadAll::test_read_all_preserves_order PASSED [ 84%]
+tests/test_audit_logger.py::TestReadAll::test_read_all_returns_empty_list_when_file_missing PASSED [ 84%]
+tests/test_audit_logger.py::TestReadAll::test_read_all_returns_empty_list_on_empty_file PASSED [ 84%]
+tests/test_audit_logger.py::TestConcurrency::test_concurrent_writes_all_recorded PASSED [ 84%]
+tests/test_audit_logger.py::TestConcurrency::test_concurrent_writes_all_valid_json PASSED [ 84%]
+tests/test_audit_logger.py::TestConcurrency::test_concurrent_writes_no_interleaved_lines PASSED [ 84%]
+tests/test_cli.py::TestArgumentParser::test_goal_required PASSED         [ 84%]
+tests/test_cli.py::TestArgumentParser::test_goal_parsed PASSED           [ 84%]
+tests/test_cli.py::TestArgumentParser::test_auto_flag PASSED             [ 84%]
+tests/test_cli.py::TestArgumentParser::test_auto_default_false PASSED    [ 85%]
+tests/test_cli.py::TestArgumentParser::test_redirect_flag PASSED         [ 85%]
+tests/test_cli.py::TestArgumentParser::test_redirect_default_none PASSED [ 85%]
+tests/test_cli.py::TestArgumentParser::test_model_flag PASSED            [ 85%]
+tests/test_cli.py::TestArgumentParser::test_model_default PASSED         [ 85%]
+tests/test_cli.py::TestArgumentParser::test_no_color_flag PASSED         [ 85%]
+tests/test_cli.py::TestRunAutoMode::test_auto_mode_returns_zero_on_success PASSED [ 85%]
+tests/test_cli.py::TestRunAutoMode::test_auto_mode_completes_pipeline PASSED [ 85%]
+tests/test_cli.py::TestRunAutoMode::test_auto_mode_does_not_prompt PASSED [ 85%]
+tests/test_cli.py::TestRunOutput::test_stage_transitions_printed PASSED  [ 85%]
+tests/test_cli.py::TestRunOutput::test_result_printed PASSED             [ 85%]
+tests/test_cli.py::TestRunOutput::test_goal_printed_in_header PASSED     [ 86%]
+tests/test_cli.py::TestRunOutput::test_thought_stream_printed PASSED     [ 86%]
+tests/test_cli.py::TestRunCheckpoint::test_checkpoint_prompts_user PASSED [ 86%]
+tests/test_cli.py::TestRunCheckpoint::test_checkpoint_yes_completes PASSED [ 86%]
+tests/test_cli.py::TestRunCheckpoint::test_checkpoint_no_aborts PASSED   [ 86%]
+tests/test_cli.py::TestRunCheckpoint::test_checkpoint_redirect_input_completes PASSED [ 86%]
+tests/test_cli.py::TestRunCheckpoint::test_checkpoint_plan_printed PASSED [ 86%]
+tests/test_cli.py::TestRunCheckpoint::test_redirect_flag_applied_at_checkpoint PASSED [ 86%]
+tests/test_cli.py::TestRunAuditLog::test_audit_log_contains_run PASSED   [ 86%]
+tests/test_cli.py::TestRunAuditLog::test_audit_log_contains_task_id PASSED [ 86%]
+tests/test_cli.py::TestMain::test_main_exits_zero_auto PASSED            [ 86%]
+tests/test_cli.py::TestMain::test_main_exits_nonzero_no_goal PASSED      [ 86%]
+tests/test_cli.py::TestMain::test_no_color_flag_disables_ansi PASSED     [ 87%]
+tests/test_cli_unittest.py::TestArgumentParserUnittest::test_auto_default_false PASSED [ 87%]
+tests/test_cli_unittest.py::TestArgumentParserUnittest::test_auto_flag PASSED [ 87%]
+tests/test_cli_unittest.py::TestArgumentParserUnittest::test_goal_parsed PASSED [ 87%]
+tests/test_cli_unittest.py::TestArgumentParserUnittest::test_goal_required PASSED [ 87%]
+tests/test_cli_unittest.py::TestArgumentParserUnittest::test_model_default PASSED [ 87%]
+tests/test_cli_unittest.py::TestArgumentParserUnittest::test_model_flag PASSED [ 87%]
+tests/test_cli_unittest.py::TestArgumentParserUnittest::test_no_color_flag PASSED [ 87%]
+tests/test_cli_unittest.py::TestArgumentParserUnittest::test_redirect_default_none PASSED [ 87%]
+tests/test_cli_unittest.py::TestArgumentParserUnittest::test_redirect_flag PASSED [ 87%]
+tests/test_cli_unittest.py::TestRunAutoModeUnittest::test_auto_mode_does_not_prompt PASSED [ 87%]
+tests/test_cli_unittest.py::TestRunAutoModeUnittest::test_auto_mode_returns_zero PASSED [ 87%]
+tests/test_cli_unittest.py::TestRunOutputUnittest::test_goal_in_header PASSED [ 88%]
+tests/test_cli_unittest.py::TestRunOutputUnittest::test_result_printed PASSED [ 88%]
+tests/test_cli_unittest.py::TestRunOutputUnittest::test_stage_transitions_printed PASSED [ 88%]
+tests/test_cli_unittest.py::TestRunCheckpointUnittest::test_checkpoint_no_aborts PASSED [ 88%]
+tests/test_cli_unittest.py::TestRunCheckpointUnittest::test_checkpoint_yes_completes PASSED [ 88%]
+tests/test_cli_unittest.py::TestRunCheckpointUnittest::test_plan_printed_at_checkpoint PASSED [ 88%]
+tests/test_cli_unittest.py::TestRunCheckpointUnittest::test_redirect_flag_no_prompt PASSED [ 88%]
+tests/test_cli_unittest.py::TestRunAuditLogUnittest::test_audit_log_written PASSED [ 88%]
+tests/test_cli_unittest.py::TestRunAuditLogUnittest::test_audit_single_task_id PASSED [ 88%]
+tests/test_cli_unittest.py::TestMainUnittest::test_main_exits_zero PASSED [ 88%]
+tests/test_cli_unittest.py::TestMainUnittest::test_main_no_goal_exits_nonzero PASSED [ 88%]
+tests/test_step01_scaffold.py::test_module_importable[bossbox] PASSED    [ 88%]
+tests/test_step01_scaffold.py::test_module_importable[bossbox.config.loader] PASSED [ 89%]
+tests/test_step01_scaffold.py::test_module_importable[bossbox.providers.base] PASSED [ 89%]
+tests/test_step01_scaffold.py::test_module_importable[bossbox.providers.ollama] PASSED [ 89%]
+tests/test_step01_scaffold.py::test_module_importable[bossbox.pipeline.envelope] PASSED [ 89%]
+tests/test_step01_scaffold.py::test_module_importable[bossbox.pipeline.supervisor] PASSED [ 89%]
+tests/test_step01_scaffold.py::test_module_importable[bossbox.pipeline.decomposer] PASSED [ 89%]
+tests/test_step01_scaffold.py::test_module_importable[bossbox.pipeline.backup] PASSED [ 89%]
+tests/test_step01_scaffold.py::test_module_importable[bossbox.hypervisor.hypervisor] PASSED [ 89%]
+tests/test_step01_scaffold.py::test_module_importable[bossbox.ingest.sanitizer] PASSED [ 89%]
+tests/test_step01_scaffold.py::test_module_importable[bossbox.ingest.analyzer] PASSED [ 89%]
+tests/test_step01_scaffold.py::test_module_importable[bossbox.skills.loader] PASSED [ 89%]
+tests/test_step01_scaffold.py::test_module_importable[bossbox.skills.elicitor] PASSED [ 90%]
+tests/test_step01_scaffold.py::test_module_importable[bossbox.audit.logger] PASSED [ 90%]
+tests/test_step01_scaffold.py::test_module_importable[bossbox.notify.notifier] PASSED [ 90%]
+tests/test_step01_scaffold.py::test_module_importable[bossbox.vram.budgeter] PASSED [ 90%]
+tests/test_step01_scaffold.py::test_module_importable[bossbox.gui.app] PASSED [ 90%]
+tests/test_step01_scaffold.py::test_module_importable[bossbox.gui.wizard] PASSED [ 90%]
+tests/test_step01_scaffold.py::test_module_importable[bossbox.gui.security_center] PASSED [ 90%]
+tests/test_step01_scaffold.py::test_module_importable[bossbox.cli] PASSED [ 90%]
+tests/test_step01_scaffold.py::test_version_present PASSED               [ 90%]
+tests/test_step01_scaffold.py::test_file_exists[pyproject.toml] PASSED   [ 90%]
+tests/test_step01_scaffold.py::test_file_exists[README.md] PASSED        [ 90%]
+tests/test_step01_scaffold.py::test_file_exists[PRINCIPLES.md] PASSED    [ 90%]
+tests/test_step01_scaffold.py::test_file_exists[bossbox/__init__.py] PASSED [ 91%]
+tests/test_step01_scaffold.py::test_file_exists[bossbox/config/loader.py] PASSED [ 91%]
+tests/test_step01_scaffold.py::test_file_exists[bossbox/providers/base.py] PASSED [ 91%]
+tests/test_step01_scaffold.py::test_file_exists[bossbox/providers/ollama.py] PASSED [ 91%]
+tests/test_step01_scaffold.py::test_file_exists[bossbox/pipeline/envelope.py] PASSED [ 91%]
+tests/test_step01_scaffold.py::test_file_exists[bossbox/pipeline/supervisor.py] PASSED [ 91%]
+tests/test_step01_scaffold.py::test_file_exists[bossbox/pipeline/decomposer.py] PASSED [ 91%]
+tests/test_step01_scaffold.py::test_file_exists[bossbox/pipeline/backup.py] PASSED [ 91%]
+tests/test_step01_scaffold.py::test_file_exists[bossbox/hypervisor/hypervisor.py] PASSED [ 91%]
+tests/test_step01_scaffold.py::test_file_exists[bossbox/ingest/sanitizer.py] PASSED [ 91%]
+tests/test_step01_scaffold.py::test_file_exists[bossbox/ingest/analyzer.py] PASSED [ 91%]
+tests/test_step01_scaffold.py::test_file_exists[bossbox/skills/loader.py] PASSED [ 91%]
+tests/test_step01_scaffold.py::test_file_exists[bossbox/skills/elicitor.py] PASSED [ 92%]
+tests/test_step01_scaffold.py::test_file_exists[bossbox/audit/logger.py] PASSED [ 92%]
+tests/test_step01_scaffold.py::test_file_exists[bossbox/notify/notifier.py] PASSED [ 92%]
+tests/test_step01_scaffold.py::test_file_exists[bossbox/vram/budgeter.py] PASSED [ 92%]
+tests/test_step01_scaffold.py::test_file_exists[bossbox/gui/app.py] PASSED [ 92%]
+tests/test_step01_scaffold.py::test_file_exists[bossbox/gui/wizard.py] PASSED [ 92%]
+tests/test_step01_scaffold.py::test_file_exists[bossbox/gui/security_center.py] PASSED [ 92%]
+tests/test_step01_scaffold.py::test_file_exists[bossbox/cli.py] PASSED   [ 92%]
+tests/test_step01_scaffold.py::test_file_exists[config/providers.yaml] PASSED [ 92%]
+tests/test_step01_scaffold.py::test_file_exists[config/tiers.yaml] PASSED [ 92%]
+tests/test_step01_scaffold.py::test_file_exists[skills/default/README.md] PASSED [ 92%]
+tests/test_step01_scaffold.py::test_entry_point PASSED                   [ 93%]
+tests/test_step01_scaffold.py::test_principles_content PASSED            [ 93%]
+tests/test_step01_scaffold.py::test_providers_yaml PASSED                [ 93%]
+tests/test_step01_scaffold.py::test_tiers_yaml PASSED                    [ 93%]
+tests/test_step01_scaffold.py::test_cli_callable PASSED                  [ 93%]
+tests/test_step01_scaffold.py::test_sanitize_implemented PASSED          [ 93%]
+tests/test_step01_scaffold.py::test_vram_budgeter_implemented PASSED     [ 93%]
+tests/vram/test_budgeter.py::TestHelpers::test_strip_provider_removes_prefix PASSED [ 93%]
+tests/vram/test_budgeter.py::TestHelpers::test_strip_provider_no_prefix PASSED [ 93%]
+tests/vram/test_budgeter.py::TestHelpers::test_strip_provider_anthropic PASSED [ 93%]
+tests/vram/test_budgeter.py::TestHelpers::test_eviction_order_constant PASSED [ 93%]
+tests/vram/test_budgeter.py::TestHelpers::test_model_size_estimates_present PASSED [ 93%]
+tests/vram/test_budgeter.py::TestHelpers::test_detect_vram_falls_back_to_default_without_pynvml PASSED [ 94%]
+tests/vram/test_budgeter.py::TestHelpers::test_detect_vram_uses_pynvml_when_available PASSED [ 94%]
+tests/vram/test_budgeter.py::TestHelpers::test_detect_vram_raises_detection_error_on_unexpected_pynvml_failure PASSED [ 94%]
+tests/vram/test_budgeter.py::TestAllocation::test_available_equals_budget_when_nothing_loaded PASSED [ 94%]
+tests/vram/test_budgeter.py::TestAllocation::test_current_allocation_empty_initially PASSED [ 94%]
+tests/vram/test_budgeter.py::TestAllocation::test_available_reduces_with_loaded_models PASSED [ 94%]
+tests/vram/test_budgeter.py::TestAllocation::test_current_allocation_returns_copy PASSED [ 94%]
+tests/vram/test_budgeter.py::TestAllocation::test_available_returns_float PASSED [ 94%]
+tests/vram/test_budgeter.py::TestRequestLoad::test_returns_true_when_model_fits_without_eviction PASSED [ 94%]
+tests/vram/test_budgeter.py::TestRequestLoad::test_strips_provider_prefix PASSED [ 94%]
+tests/vram/test_budgeter.py::TestRequestLoad::test_returns_false_when_nothing_to_evict_and_model_too_large PASSED [ 94%]
+tests/vram/test_budgeter.py::TestRequestLoad::test_evicts_reasoner_first_to_make_room 
+-------------------------------- live log call ---------------------------------
+INFO     bossbox.vram.budgeter:budgeter.py:269 Offloading deepseek-r1:7b to free VRAM for qwen2.5-coder:1.5b.
+INFO     httpx:_client.py:1025 HTTP Request: POST http://localhost:11434/api/generate "HTTP/1.1 200 OK"
+PASSED                                                                   [ 94%]
+tests/vram/test_budgeter.py::TestRequestLoad::test_evicts_specialist_when_reasoner_not_loaded 
+-------------------------------- live log call ---------------------------------
+INFO     bossbox.vram.budgeter:budgeter.py:269 Offloading qwen2.5-coder:1.5b to free VRAM for smollm:1.7b.
+INFO     httpx:_client.py:1025 HTTP Request: POST http://localhost:11434/api/generate "HTTP/1.1 200 OK"
+PASSED                                                                   [ 95%]
+tests/vram/test_budgeter.py::TestRequestLoad::test_evicts_multiple_models_when_needed 
+-------------------------------- live log call ---------------------------------
+INFO     bossbox.vram.budgeter:budgeter.py:269 Offloading qwen2.5-coder:1.5b to free VRAM for deepseek-r1:7b.
+INFO     httpx:_client.py:1025 HTTP Request: POST http://localhost:11434/api/generate "HTTP/1.1 200 OK"
+INFO     bossbox.vram.budgeter:budgeter.py:269 Offloading smollm:1.7b to free VRAM for deepseek-r1:7b.
+INFO     httpx:_client.py:1025 HTTP Request: POST http://localhost:11434/api/generate "HTTP/1.1 200 OK"
+PASSED                                                                   [ 95%]
+tests/vram/test_budgeter.py::TestRequestLoad::test_nano_never_evicted PASSED [ 95%]
+tests/vram/test_budgeter.py::TestRequestLoad::test_does_not_evict_model_being_loaded PASSED [ 95%]
+tests/vram/test_budgeter.py::TestEviction::test_eviction_emits_correct_thought_message 
+-------------------------------- live log call ---------------------------------
+INFO     bossbox.vram.budgeter:budgeter.py:269 Offloading deepseek-r1:7b to free VRAM for qwen2.5-coder:1.5b.
+INFO     httpx:_client.py:1025 HTTP Request: POST http://localhost:11434/api/generate "HTTP/1.1 200 OK"
+PASSED                                                                   [ 95%]
+tests/vram/test_budgeter.py::TestEviction::test_eviction_posts_keep_alive_zero_to_ollama 
+-------------------------------- live log call ---------------------------------
+INFO     bossbox.vram.budgeter:budgeter.py:269 Offloading deepseek-r1:7b to free VRAM for qwen2.5-coder:1.5b.
+INFO     httpx:_client.py:1025 HTTP Request: POST http://localhost:11434/api/generate "HTTP/1.1 200 OK"
+PASSED                                                                   [ 95%]
+tests/vram/test_budgeter.py::TestEviction::test_eviction_removes_model_from_loaded 
+-------------------------------- live log call ---------------------------------
+INFO     bossbox.vram.budgeter:budgeter.py:269 Offloading deepseek-r1:7b to free VRAM for qwen2.5-coder:1.5b.
+INFO     httpx:_client.py:1025 HTTP Request: POST http://localhost:11434/api/generate "HTTP/1.1 200 OK"
+PASSED                                                                   [ 95%]
+tests/vram/test_budgeter.py::TestEviction::test_eviction_continues_when_ollama_unreachable 
+-------------------------------- live log call ---------------------------------
+INFO     bossbox.vram.budgeter:budgeter.py:269 Offloading deepseek-r1:7b to free VRAM for qwen2.5-coder:1.5b.
+WARNING  bossbox.vram.budgeter:budgeter.py:279 Could not signal Ollama to evict deepseek-r1:7b: refused
+PASSED                                                                   [ 95%]
+tests/vram/test_budgeter.py::TestEviction::test_thought_cb_exception_does_not_propagate 
+-------------------------------- live log call ---------------------------------
+INFO     bossbox.vram.budgeter:budgeter.py:269 Offloading deepseek-r1:7b to free VRAM for qwen2.5-coder:1.5b.
+ERROR    bossbox.vram.budgeter:budgeter.py:289 thought_cb raised an exception
+Traceback (most recent call last):
+  File "/home/jarrod/Projects/BBS/BossBox/bossbox/vram/budgeter.py", line 287, in _emit_thought
+    self._thought_cb(message)
+  File "/home/jarrod/Projects/BBS/BossBox/tests/vram/test_budgeter.py", line 326, in bad_cb
+    raise RuntimeError("boom")
+RuntimeError: boom
+INFO     httpx:_client.py:1025 HTTP Request: POST http://localhost:11434/api/generate "HTTP/1.1 200 OK"
+PASSED                                                                   [ 95%]
+tests/vram/test_budgeter.py::TestRefreshLoaded::test_refresh_updates_loaded_from_api_ps 
+-------------------------------- live log call ---------------------------------
+INFO     httpx:_client.py:1025 HTTP Request: GET http://localhost:11434/api/ps "HTTP/1.1 200 OK"
+PASSED                                                                   [ 95%]
+tests/vram/test_budgeter.py::TestRefreshLoaded::test_refresh_strips_provider_prefix_from_names 
+-------------------------------- live log call ---------------------------------
+INFO     httpx:_client.py:1025 HTTP Request: GET http://localhost:11434/api/ps "HTTP/1.1 200 OK"
+PASSED                                                                   [ 95%]
+tests/vram/test_budgeter.py::TestRefreshLoaded::test_refresh_falls_back_to_size_field 
+-------------------------------- live log call ---------------------------------
+INFO     httpx:_client.py:1025 HTTP Request: GET http://localhost:11434/api/ps "HTTP/1.1 200 OK"
+PASSED                                                                   [ 95%]
+tests/vram/test_budgeter.py::TestRefreshLoaded::test_refresh_silent_when_ollama_unreachable PASSED [ 96%]
+tests/vram/test_budgeter.py::TestRefreshLoaded::test_refresh_replaces_stale_loaded_state 
+-------------------------------- live log call ---------------------------------
+INFO     httpx:_client.py:1025 HTTP Request: GET http://localhost:11434/api/ps "HTTP/1.1 200 OK"
+PASSED                                                                   [ 96%]
+tests/vram/test_budgeter.py::TestThreadLifecycle::test_auto_start_false_does_not_spawn_thread PASSED [ 96%]
+tests/vram/test_budgeter.py::TestThreadLifecycle::test_start_spawns_daemon_thread 
+-------------------------------- live log call ---------------------------------
+INFO     httpx:_client.py:1025 HTTP Request: GET http://localhost:11434/api/ps "HTTP/1.1 200 OK"
+PASSED                                                                   [ 96%]
+tests/vram/test_budgeter.py::TestThreadLifecycle::test_start_is_idempotent 
+-------------------------------- live log call ---------------------------------
+INFO     httpx:_client.py:1025 HTTP Request: GET http://localhost:11434/api/ps "HTTP/1.1 200 OK"
+PASSED                                                                   [ 96%]
+tests/vram/test_budgeter.py::TestThreadLifecycle::test_stop_joins_thread 
+-------------------------------- live log call ---------------------------------
+INFO     httpx:_client.py:1025 HTTP Request: GET http://localhost:11434/api/ps "HTTP/1.1 200 OK"
+PASSED                                                                   [ 96%]
+tests/vram/test_budgeter.py::TestEdgeCases::test_unknown_model_uses_fallback_estimate PASSED [ 96%]
+tests/vram/test_budgeter.py::TestEdgeCases::test_size_for_prefers_loaded_value_over_estimate PASSED [ 96%]
+tests/vram/test_budgeter.py::TestEdgeCases::test_request_load_with_empty_tier_map_still_returns_bool PASSED [ 96%]
+tests/vram/test_budgeter.py::TestEdgeCases::test_available_never_negative_when_loaded_exceeds_budget PASSED [ 96%]
+tests/vram/test_budgeter.py::TestEdgeCases::test_no_thought_cb_does_not_raise 
+-------------------------------- live log call ---------------------------------
+INFO     bossbox.vram.budgeter:budgeter.py:269 Offloading deepseek-r1:7b to free VRAM for qwen2.5-coder:1.5b.
+INFO     httpx:_client.py:1025 HTTP Request: POST http://localhost:11434/api/generate "HTTP/1.1 200 OK"
+PASSED                                                                   [ 96%]
+tests/vram/test_budgeter_unittest.py::TestHelpers::test_detect_vram_falls_back_without_pynvml PASSED [ 97%]
+tests/vram/test_budgeter_unittest.py::TestHelpers::test_detect_vram_raises_on_unexpected_pynvml_error PASSED [ 97%]
+tests/vram/test_budgeter_unittest.py::TestHelpers::test_detect_vram_uses_pynvml_when_available PASSED [ 97%]
+tests/vram/test_budgeter_unittest.py::TestHelpers::test_eviction_order_constant PASSED [ 97%]
+tests/vram/test_budgeter_unittest.py::TestHelpers::test_model_size_estimates_present PASSED [ 97%]
+tests/vram/test_budgeter_unittest.py::TestHelpers::test_strip_provider_anthropic PASSED [ 97%]
+tests/vram/test_budgeter_unittest.py::TestHelpers::test_strip_provider_no_prefix PASSED [ 97%]
+tests/vram/test_budgeter_unittest.py::TestHelpers::test_strip_provider_removes_prefix PASSED [ 97%]
+tests/vram/test_budgeter_unittest.py::TestAllocation::test_available_equals_budget_when_nothing_loaded PASSED [ 97%]
+tests/vram/test_budgeter_unittest.py::TestAllocation::test_available_reduces_with_loaded_model PASSED [ 97%]
+tests/vram/test_budgeter_unittest.py::TestAllocation::test_available_returns_float PASSED [ 97%]
+tests/vram/test_budgeter_unittest.py::TestAllocation::test_current_allocation_empty_initially PASSED [ 97%]
+tests/vram/test_budgeter_unittest.py::TestAllocation::test_current_allocation_returns_copy PASSED [ 98%]
+tests/vram/test_budgeter_unittest.py::TestRequestLoad::test_does_not_evict_target_model_itself PASSED [ 98%]
+tests/vram/test_budgeter_unittest.py::TestRequestLoad::test_evicts_reasoner_to_make_room 
+-------------------------------- live log call ---------------------------------
+INFO     bossbox.vram.budgeter:budgeter.py:269 Offloading deepseek-r1:7b to free VRAM for qwen2.5-coder:1.5b.
+PASSED                                                                   [ 98%]
+tests/vram/test_budgeter_unittest.py::TestRequestLoad::test_evicts_specialist_when_reasoner_absent 
+-------------------------------- live log call ---------------------------------
+INFO     bossbox.vram.budgeter:budgeter.py:269 Offloading qwen2.5-coder:1.5b to free VRAM for smollm:1.7b.
+PASSED                                                                   [ 98%]
+tests/vram/test_budgeter_unittest.py::TestRequestLoad::test_nano_never_evicted PASSED [ 98%]
+tests/vram/test_budgeter_unittest.py::TestRequestLoad::test_returns_false_when_nothing_to_evict PASSED [ 98%]
+tests/vram/test_budgeter_unittest.py::TestRequestLoad::test_returns_true_when_fits PASSED [ 98%]
+tests/vram/test_budgeter_unittest.py::TestRequestLoad::test_strips_provider_prefix PASSED [ 98%]
+tests/vram/test_budgeter_unittest.py::TestEviction::test_eviction_emits_correct_thought 
+-------------------------------- live log call ---------------------------------
+INFO     bossbox.vram.budgeter:budgeter.py:269 Offloading deepseek-r1:7b to free VRAM for qwen2.5-coder:1.5b.
+PASSED                                                                   [ 98%]
+tests/vram/test_budgeter_unittest.py::TestEviction::test_eviction_posts_keep_alive_zero 
+-------------------------------- live log call ---------------------------------
+INFO     bossbox.vram.budgeter:budgeter.py:269 Offloading deepseek-r1:7b to free VRAM for qwen2.5-coder:1.5b.
+PASSED                                                                   [ 98%]
+tests/vram/test_budgeter_unittest.py::TestEviction::test_eviction_removes_from_loaded 
+-------------------------------- live log call ---------------------------------
+INFO     bossbox.vram.budgeter:budgeter.py:269 Offloading deepseek-r1:7b to free VRAM for qwen2.5-coder:1.5b.
+PASSED                                                                   [ 98%]
+tests/vram/test_budgeter_unittest.py::TestEviction::test_thought_cb_exception_does_not_propagate 
+-------------------------------- live log call ---------------------------------
+INFO     bossbox.vram.budgeter:budgeter.py:269 Offloading deepseek-r1:7b to free VRAM for qwen2.5-coder:1.5b.
+ERROR    bossbox.vram.budgeter:budgeter.py:289 thought_cb raised an exception
+Traceback (most recent call last):
+  File "/home/jarrod/Projects/BBS/BossBox/bossbox/vram/budgeter.py", line 287, in _emit_thought
+    self._thought_cb(message)
+  File "/home/jarrod/Projects/BBS/BossBox/tests/vram/test_budgeter_unittest.py", line 263, in bad_cb
+    raise RuntimeError("boom")
+RuntimeError: boom
+PASSED                                                                   [ 98%]
+tests/vram/test_budgeter_unittest.py::TestRefreshLoaded::test_refresh_replaces_stale_state PASSED [ 99%]
+tests/vram/test_budgeter_unittest.py::TestRefreshLoaded::test_refresh_silent_when_ollama_unreachable PASSED [ 99%]
+tests/vram/test_budgeter_unittest.py::TestRefreshLoaded::test_refresh_strips_provider_prefix PASSED [ 99%]
+tests/vram/test_budgeter_unittest.py::TestRefreshLoaded::test_refresh_updates_loaded_state PASSED [ 99%]
+tests/vram/test_budgeter_unittest.py::TestThreadLifecycle::test_auto_start_false_no_thread PASSED [ 99%]
+tests/vram/test_budgeter_unittest.py::TestThreadLifecycle::test_start_idempotent 
+-------------------------------- live log call ---------------------------------
+INFO     httpx:_client.py:1025 HTTP Request: GET http://localhost:11434/api/ps "HTTP/1.1 200 OK"
+PASSED                                                                   [ 99%]
+tests/vram/test_budgeter_unittest.py::TestThreadLifecycle::test_start_spawns_daemon_thread 
+-------------------------------- live log call ---------------------------------
+INFO     httpx:_client.py:1025 HTTP Request: GET http://localhost:11434/api/ps "HTTP/1.1 200 OK"
+PASSED                                                                   [ 99%]
+tests/vram/test_budgeter_unittest.py::TestThreadLifecycle::test_stop_joins_thread 
+-------------------------------- live log call ---------------------------------
+INFO     httpx:_client.py:1025 HTTP Request: GET http://localhost:11434/api/ps "HTTP/1.1 200 OK"
+PASSED                                                                   [ 99%]
+tests/vram/test_budgeter_unittest.py::TestEdgeCases::test_no_thought_cb_does_not_raise 
+-------------------------------- live log call ---------------------------------
+INFO     bossbox.vram.budgeter:budgeter.py:269 Offloading deepseek-r1:7b to free VRAM for qwen2.5-coder:1.5b.
+PASSED                                                                   [ 99%]
+tests/vram/test_budgeter_unittest.py::TestEdgeCases::test_request_load_returns_bool_with_empty_tier_map PASSED [ 99%]
+tests/vram/test_budgeter_unittest.py::TestEdgeCases::test_size_for_prefers_live_loaded_value PASSED [ 99%]
+tests/vram/test_budgeter_unittest.py::TestEdgeCases::test_unknown_model_uses_fallback_estimate PASSED [100%]
+
+============================ 1172 passed in 32.26s =============================

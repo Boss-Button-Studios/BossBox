@@ -1,0 +1,60 @@
+# config/notify.yaml
+#
+# Notification Service configuration (Section 12 of spec).
+#
+# OS native notifications are enabled by default and require no configuration.
+# ntfy.sh and SMTP are opt-in — uncomment and configure the relevant section.
+#
+# Credentials are read from environment variables via the config loader's
+# env-var expansion.  They are never written to logs or the audit trail.
+
+notify:
+  os_native:
+    # Desktop notifications via the OS notification system.
+    # On Linux this uses D-Bus / libnotify; on Windows, toast notifications;
+    # on macOS, Notification Center.  Degrades gracefully if no display is
+    # available (headless servers, CI) — a warning is logged and execution
+    # continues normally.
+    enabled: true
+
+  # ── ntfy.sh push notifications ─────────────────────────────────────────────
+  # Recommended for background tasks.  The user controls a private topic and
+  # subscribes on a phone or other device via the ntfy app or any HTTP client.
+  #
+  # Self-hosted ntfy example:
+  #   base_url: https://ntfy.myserver.com
+  #
+  # ntfy:
+  #   enabled: false
+  #   base_url: https://ntfy.sh
+  #   topic: ${BOSSBOX_NTFY_TOPIC}
+
+  # ── SMTP email ─────────────────────────────────────────────────────────────
+  # Optional.  BossBox never runs a mail server — provide your own SMTP relay.
+  # Email content is strictly templated: event type, task title, and timestamp
+  # only.  No pipeline output, document content, or model reasoning is included.
+  #
+  # Gmail:
+  #   Enable 2-step verification, generate an App Password at
+  #   myaccount.google.com/apppasswords, and use that as BOSSBOX_SMTP_PASSWORD.
+  #   host: smtp.gmail.com  port: 587  use_tls: true
+  #
+  # Proton Mail (via Proton Mail Bridge):
+  #   Install Proton Mail Bridge (proton.me/mail/bridge).  Bridge runs locally
+  #   and exposes an SMTP server at 127.0.0.1:1025 (default).  Use your Bridge
+  #   password (not your Proton account password) as BOSSBOX_SMTP_PASSWORD.
+  #   host: 127.0.0.1  port: 1025  use_tls: false
+  #   (Bridge handles encryption upstream — do not use STARTTLS with Bridge.)
+  #
+  # smtp:
+  #   enabled: false
+  #   host: ${BOSSBOX_SMTP_HOST}
+  #   port: 587
+  #   username: ${BOSSBOX_SMTP_USER}
+  #   password: ${BOSSBOX_SMTP_PASSWORD}
+  #   from_address: ${BOSSBOX_SMTP_FROM}
+  #   to_address: ${BOSSBOX_SMTP_TO}
+  #   use_tls: true
+  #   # Send email for human checkpoint events (in addition to task complete/failed).
+  #   # Useful when BossBox runs as a background service.
+  #   email_on_checkpoint: false

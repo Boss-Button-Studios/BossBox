@@ -138,10 +138,47 @@ class TiersConfig:
 
 
 @dataclass
+class OsNativeNotifyConfig:
+    """OS native desktop notification settings."""
+    enabled: bool = True
+
+
+@dataclass
+class NtfyNotifyConfig:
+    """ntfy.sh (or self-hosted ntfy) push notification settings."""
+    enabled: bool = False
+    base_url: str = "https://ntfy.sh"
+    topic: str | None = None
+
+
+@dataclass
+class SmtpNotifyConfig:
+    """SMTP email notification settings."""
+    enabled: bool = False
+    host: str | None = None
+    port: int = 587
+    username: str | None = None
+    password: str | None = None
+    from_address: str | None = None
+    to_address: str | None = None
+    use_tls: bool = True
+    email_on_checkpoint: bool = False
+
+
+@dataclass
+class NotifyConfig:
+    """Aggregated notification configuration."""
+    os_native: OsNativeNotifyConfig = field(default_factory=OsNativeNotifyConfig)
+    ntfy: NtfyNotifyConfig | None = None
+    smtp: SmtpNotifyConfig | None = None
+
+
+@dataclass
 class BossBoxConfig:
     """Root configuration object returned by :func:`load_config`."""
     providers: ProvidersConfig = field(default_factory=ProvidersConfig)
     tiers: TiersConfig = field(default_factory=TiersConfig)
+    notify: NotifyConfig = field(default_factory=NotifyConfig)
 
 
 # ---------------------------------------------------------------------------
@@ -204,6 +241,41 @@ def _build_tiers(data: dict[str, Any]) -> TiersConfig:
     )
 
 
+def _build_notify(data: dict[str, Any]) -> NotifyConfig:
+    notify_raw: dict[str, Any] = data.get("notify") or {}
+
+    os_raw: dict[str, Any] = notify_raw.get("os_native") or {}
+    os_native = OsNativeNotifyConfig(
+        enabled=bool(os_raw.get("enabled", True)),
+    )
+
+    ntfy: NtfyNotifyConfig | None = None
+    if "ntfy" in notify_raw:
+        n: dict[str, Any] = notify_raw["ntfy"] or {}
+        ntfy = NtfyNotifyConfig(
+            enabled=bool(n.get("enabled", False)),
+            base_url=n.get("base_url") or "https://ntfy.sh",
+            topic=n.get("topic"),
+        )
+
+    smtp: SmtpNotifyConfig | None = None
+    if "smtp" in notify_raw:
+        s: dict[str, Any] = notify_raw["smtp"] or {}
+        smtp = SmtpNotifyConfig(
+            enabled=bool(s.get("enabled", False)),
+            host=s.get("host"),
+            port=int(s.get("port") or 587),
+            username=s.get("username"),
+            password=s.get("password"),
+            from_address=s.get("from_address"),
+            to_address=s.get("to_address"),
+            use_tls=bool(s.get("use_tls", True)),
+            email_on_checkpoint=bool(s.get("email_on_checkpoint", False)),
+        )
+
+    return NotifyConfig(os_native=os_native, ntfy=ntfy, smtp=smtp)
+
+
 # ---------------------------------------------------------------------------
 # Public API
 # ---------------------------------------------------------------------------
@@ -226,6 +298,16 @@ def load_tiers(path: Path) -> TiersConfig:
     :func:`load_config` call, or when testing with a custom file path.
     """
     return _build_tiers(_load_yaml(Path(path)))
+
+
+def load_notify(path: Path) -> NotifyConfig:
+    """
+    Load and parse a notify YAML file at *path*.
+
+    Useful when you want to load notification config independently of the
+    full :func:`load_config` call, or when testing with a custom file path.
+    """
+    return _build_notify(_load_yaml(Path(path)))
 
 
 def load_config(config_dir: Path | str | None = None) -> BossBoxConfig:
@@ -251,6 +333,8 @@ def load_config(config_dir: Path | str | None = None) -> BossBoxConfig:
     providers_path = directory / "providers.yaml"
     tiers_path = directory / "tiers.yaml"
 
+    notify_path = directory / "notify.yaml"
+
     providers = (
         load_providers(providers_path)
         if providers_path.exists()
@@ -261,5 +345,10 @@ def load_config(config_dir: Path | str | None = None) -> BossBoxConfig:
         if tiers_path.exists()
         else TiersConfig()
     )
+    notify = (
+        load_notify(notify_path)
+        if notify_path.exists()
+        else NotifyConfig()
+    )
 
-    return BossBoxConfig(providers=providers, tiers=tiers)
+    return BossBoxConfig(providers=providers, tiers=tiers, notify=notify)
