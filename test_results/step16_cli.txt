@@ -1,0 +1,60 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.3, pytest-9.0.2, pluggy-1.6.0 -- /home/jarrod/Projects/BBS/BossBox/.venv/bin/python3
+cachedir: .pytest_cache
+rootdir: /home/jarrod/Projects/BBS/BossBox
+configfile: pyproject.toml
+plugins: cov-7.1.0, asyncio-1.3.0, mock-3.15.1, respx-0.22.0, anyio-4.13.0
+asyncio: mode=Mode.AUTO, debug=False, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
+collecting ... collected 49 items
+
+tests/test_cli.py::TestArgumentParser::test_goal_required PASSED         [  2%]
+tests/test_cli.py::TestArgumentParser::test_goal_parsed PASSED           [  4%]
+tests/test_cli.py::TestArgumentParser::test_auto_flag PASSED             [  6%]
+tests/test_cli.py::TestArgumentParser::test_auto_default_false PASSED    [  8%]
+tests/test_cli.py::TestArgumentParser::test_redirect_flag PASSED         [ 10%]
+tests/test_cli.py::TestArgumentParser::test_redirect_default_none PASSED [ 12%]
+tests/test_cli.py::TestArgumentParser::test_model_flag PASSED            [ 14%]
+tests/test_cli.py::TestArgumentParser::test_model_default PASSED         [ 16%]
+tests/test_cli.py::TestArgumentParser::test_no_color_flag PASSED         [ 18%]
+tests/test_cli.py::TestRunAutoMode::test_auto_mode_returns_zero_on_success PASSED [ 20%]
+tests/test_cli.py::TestRunAutoMode::test_auto_mode_completes_pipeline PASSED [ 22%]
+tests/test_cli.py::TestRunAutoMode::test_auto_mode_does_not_prompt PASSED [ 24%]
+tests/test_cli.py::TestRunOutput::test_stage_transitions_printed PASSED  [ 26%]
+tests/test_cli.py::TestRunOutput::test_result_printed PASSED             [ 28%]
+tests/test_cli.py::TestRunOutput::test_goal_printed_in_header PASSED     [ 30%]
+tests/test_cli.py::TestRunOutput::test_thought_stream_printed PASSED     [ 32%]
+tests/test_cli.py::TestRunCheckpoint::test_checkpoint_prompts_user PASSED [ 34%]
+tests/test_cli.py::TestRunCheckpoint::test_checkpoint_yes_completes PASSED [ 36%]
+tests/test_cli.py::TestRunCheckpoint::test_checkpoint_no_aborts PASSED   [ 38%]
+tests/test_cli.py::TestRunCheckpoint::test_checkpoint_redirect_input_completes PASSED [ 40%]
+tests/test_cli.py::TestRunCheckpoint::test_checkpoint_plan_printed PASSED [ 42%]
+tests/test_cli.py::TestRunCheckpoint::test_redirect_flag_applied_at_checkpoint PASSED [ 44%]
+tests/test_cli.py::TestRunAuditLog::test_audit_log_contains_run PASSED   [ 46%]
+tests/test_cli.py::TestRunAuditLog::test_audit_log_contains_task_id PASSED [ 48%]
+tests/test_cli.py::TestMain::test_main_exits_zero_auto PASSED            [ 51%]
+tests/test_cli.py::TestMain::test_main_exits_nonzero_no_goal PASSED      [ 53%]
+tests/test_cli.py::TestMain::test_no_color_flag_disables_ansi PASSED     [ 55%]
+tests/test_cli_unittest.py::TestArgumentParserUnittest::test_auto_default_false PASSED [ 57%]
+tests/test_cli_unittest.py::TestArgumentParserUnittest::test_auto_flag PASSED [ 59%]
+tests/test_cli_unittest.py::TestArgumentParserUnittest::test_goal_parsed PASSED [ 61%]
+tests/test_cli_unittest.py::TestArgumentParserUnittest::test_goal_required PASSED [ 63%]
+tests/test_cli_unittest.py::TestArgumentParserUnittest::test_model_default PASSED [ 65%]
+tests/test_cli_unittest.py::TestArgumentParserUnittest::test_model_flag PASSED [ 67%]
+tests/test_cli_unittest.py::TestArgumentParserUnittest::test_no_color_flag PASSED [ 69%]
+tests/test_cli_unittest.py::TestArgumentParserUnittest::test_redirect_default_none PASSED [ 71%]
+tests/test_cli_unittest.py::TestArgumentParserUnittest::test_redirect_flag PASSED [ 73%]
+tests/test_cli_unittest.py::TestRunAutoModeUnittest::test_auto_mode_does_not_prompt PASSED [ 75%]
+tests/test_cli_unittest.py::TestRunAutoModeUnittest::test_auto_mode_returns_zero PASSED [ 77%]
+tests/test_cli_unittest.py::TestRunOutputUnittest::test_goal_in_header PASSED [ 79%]
+tests/test_cli_unittest.py::TestRunOutputUnittest::test_result_printed PASSED [ 81%]
+tests/test_cli_unittest.py::TestRunOutputUnittest::test_stage_transitions_printed PASSED [ 83%]
+tests/test_cli_unittest.py::TestRunCheckpointUnittest::test_checkpoint_no_aborts PASSED [ 85%]
+tests/test_cli_unittest.py::TestRunCheckpointUnittest::test_checkpoint_yes_completes PASSED [ 87%]
+tests/test_cli_unittest.py::TestRunCheckpointUnittest::test_plan_printed_at_checkpoint PASSED [ 89%]
+tests/test_cli_unittest.py::TestRunCheckpointUnittest::test_redirect_flag_no_prompt PASSED [ 91%]
+tests/test_cli_unittest.py::TestRunAuditLogUnittest::test_audit_log_written PASSED [ 93%]
+tests/test_cli_unittest.py::TestRunAuditLogUnittest::test_audit_single_task_id PASSED [ 95%]
+tests/test_cli_unittest.py::TestMainUnittest::test_main_exits_zero PASSED [ 97%]
+tests/test_cli_unittest.py::TestMainUnittest::test_main_no_goal_exits_nonzero PASSED [100%]
+
+============================== 49 passed in 2.18s ==============================
