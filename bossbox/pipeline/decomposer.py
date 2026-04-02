@@ -38,29 +38,23 @@ log = logging.getLogger(__name__)
 # ---------------------------------------------------------------------------
 
 _SYSTEM_PROMPT = """\
-You are a task planning assistant. Your job is to break down a user's goal into
-an ordered list of concrete subtasks.
+You are a task planner. Output ONLY valid YAML — no prose, no code, no explanation outside the YAML.
 
-Separate the subtasks into two groups:
-  core_tasks      — the minimum set of steps required to achieve the goal,
-                    in the order they should be executed.
-  suggested_tasks — optional steps that would improve the result but are not
-                    strictly required (e.g. testing, documentation, review).
-
-Also write a short reasoning section explaining your decomposition.
-
-Respond ONLY with a YAML block in this exact format — no commentary outside it:
+Example output for goal "Write a hello-world script and test it":
 
 decomposition:
-  reasoning: "Your explanation here."
+  reasoning: "Two clear steps: write the script, then verify it."
   core_tasks:
-    - title: "Short task title"
-      description: "What needs to be done and why."
-    - title: "Next task"
-      description: "..."
+    - title: "Write hello.py"
+      description: "Create hello.py that prints Hello World."
+    - title: "Test hello.py"
+      description: "Run the script and verify the output."
   suggested_tasks:
-    - title: "Optional task"
-      description: "..."
+    - title: "Add a docstring"
+      description: "Document the script with a module-level docstring."
+
+Use that exact structure. suggested_tasks may be an empty list [].
+Do NOT answer the question — only output the YAML decomposition.
 """
 
 # ---------------------------------------------------------------------------
@@ -159,11 +153,11 @@ def _parse_response(response: str) -> DecompositionResult:
 
 def _fail_safe(goal: str, reason: str) -> DecompositionResult:
     """Return a single-task result when decomposition cannot complete."""
-    log.error("Task decomposition fail-safe triggered: %s", reason)
+    log.warning("Decomposition fall-back (treating goal as single task): %s", reason)
     return DecompositionResult(
         core_tasks=[Subtask(title=goal[:120], description=goal)],
         suggested_tasks=[],
-        reasoning=f"[Decomposition failed: {reason}]",
+        reasoning="",
     )
 
 
@@ -204,27 +198,31 @@ async def decompose(
     """
     messages = [
         {"role": "system", "content": _SYSTEM_PROMPT},
-        {"role": "user", "content": f"Goal: {goal}"},
+        {"role": "user", "content": f"Break this goal into tasks: {goal}"},
     ]
 
     kwargs: dict = {}
     if model is not None:
         kwargs["model"] = model
 
+    model_label = model or "model"
+    envelope.add_thought("progress", f"Asking {model_label} to decompose goal…")
+
     try:
         response = await provider.complete(messages, **kwargs)
     except Exception as exc:
         result = _fail_safe(goal, f"Provider call failed: {exc}")
-        envelope.add_thought("reasoning", result.reasoning)
+        envelope.add_thought("progress", "Decomposition unavailable — proceeding as single task.")
         return result
 
     try:
         result = _parse_response(response)
     except ValueError as exc:
         result = _fail_safe(goal, str(exc))
-        envelope.add_thought("reasoning", result.reasoning)
+        envelope.add_thought("progress", "Decomposition unavailable — proceeding as single task.")
         return result
 
     # Append reasoning to thought stream — visible at human checkpoint
-    envelope.add_thought("reasoning", result.reasoning or "(No reasoning provided.)")
+    if result.reasoning:
+        envelope.add_thought("reasoning", result.reasoning)
     return result

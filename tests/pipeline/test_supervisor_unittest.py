@@ -22,7 +22,7 @@ from bossbox.pipeline.supervisor import PassthroughShield, ShieldProtocol, Super
 # ---------------------------------------------------------------------------
 
 def _run(coro):
-    return asyncio.get_event_loop().run_until_complete(coro)
+    return asyncio.run(coro)
 
 
 def _decomp_response():

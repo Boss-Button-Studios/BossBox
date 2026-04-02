@@ -94,7 +94,7 @@ def _print_plan(result: DecompositionResult) -> None:
         print(_c("\n  Suggested (optional):", _DIM))
         for task in result.suggested_tasks:
             print(f"    • {task.title}")
-    if result.reasoning:
+    if result.reasoning and not result.reasoning.startswith("[Decomposition"):
         print(_c("\n  Reasoning:", _DIM))
         for line in result.reasoning.splitlines():
             if line.strip():
@@ -190,6 +190,7 @@ async def _run(goal: str, auto: bool, redirect: str | None, model: str) -> int:
     _print_separator("═")
     print(_c("  BossBox", _BOLD, _CYAN))
     print(f"  Goal: {goal}")
+    print(_c(f"  Model: {model}", _DIM))
     if auto:
         print(_c("  Trust Mode (--auto)", _DIM))
     _print_separator("═")

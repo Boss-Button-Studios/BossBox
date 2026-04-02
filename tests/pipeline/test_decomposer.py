@@ -156,9 +156,9 @@ class TestFailSafe:
         result = _fail_safe("my goal", "reason")
         assert result.suggested_tasks == []
 
-    def test_reasoning_contains_failure_note(self):
+    def test_reasoning_empty_on_fail_safe(self):
         result = _fail_safe("g", "network error")
-        assert "network error" in result.reasoning
+        assert result.reasoning == ""
 
     def test_long_goal_title_truncated(self):
         long_goal = "x" * 200
@@ -217,13 +217,13 @@ class TestDecomposeAcceptanceCriteria:
         assert isinstance(result, DecompositionResult)
         assert len(result.core_tasks) >= 1
 
-    async def test_fail_safe_still_adds_reasoning_to_thought_stream(self):
+    async def test_fail_safe_adds_progress_thought_to_stream(self):
         from bossbox.providers.base import ProviderUnavailableError
         provider = MagicMock()
         provider.complete = AsyncMock(side_effect=ProviderUnavailableError("down"))
         envelope = _make_envelope("goal")
         await decompose("goal", provider, envelope)
-        assert any(t["source"] == "reasoning" for t in envelope.thought_stream)
+        assert any(t["source"] == "progress" for t in envelope.thought_stream)
 
     async def test_unparseable_response_returns_fail_safe(self):
         provider = _make_provider("I have no idea what you want.")
@@ -269,7 +269,7 @@ class TestDecomposeAcceptanceCriteria:
         assert reasoning_entries
         assert "ts" in reasoning_entries[0]
 
-    async def test_no_reasoning_in_response_still_adds_thought(self):
+    async def test_no_reasoning_in_response_still_adds_progress_thought(self):
         data = {
             "decomposition": {
                 "core_tasks": [
@@ -282,7 +282,7 @@ class TestDecomposeAcceptanceCriteria:
         provider = _make_provider(yaml.dump(data))
         envelope = _make_envelope("goal")
         result = await decompose("goal", provider, envelope)
-        assert any(t["source"] == "reasoning" for t in envelope.thought_stream)
+        assert any(t["source"] == "progress" for t in envelope.thought_stream)
 
 
 # ---------------------------------------------------------------------------

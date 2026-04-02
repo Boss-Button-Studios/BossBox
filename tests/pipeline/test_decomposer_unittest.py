@@ -28,7 +28,7 @@ from bossbox.pipeline.envelope import create_envelope
 # ---------------------------------------------------------------------------
 
 def _run(coro):
-    return asyncio.get_event_loop().run_until_complete(coro)
+    return asyncio.run(coro)
 
 
 def _make_provider(response: str) -> MagicMock:
@@ -140,8 +140,8 @@ class TestFailSafeUnittest(unittest.TestCase):
     def test_suggested_empty(self):
         self.assertEqual(_fail_safe("g", "r").suggested_tasks, [])
 
-    def test_reasoning_contains_reason(self):
-        self.assertIn("net err", _fail_safe("g", "net err").reasoning)
+    def test_reasoning_empty_on_fail_safe(self):
+        self.assertEqual(_fail_safe("g", "net err").reasoning, "")
 
     def test_title_truncated(self):
         self.assertLessEqual(len(_fail_safe("x" * 200, "r").core_tasks[0].title), 120)
@@ -192,13 +192,13 @@ class TestDecomposeAcceptanceUnittest(unittest.TestCase):
         self.assertIsInstance(result, DecompositionResult)
         self.assertGreaterEqual(len(result.core_tasks), 1)
 
-    def test_fail_safe_adds_reasoning_to_thought_stream(self):
+    def test_fail_safe_adds_progress_thought_to_stream(self):
         from bossbox.providers.base import ProviderUnavailableError
         provider = MagicMock()
         provider.complete = AsyncMock(side_effect=ProviderUnavailableError("down"))
         envelope = _make_envelope("goal")
         _run(decompose("goal", provider, envelope))
-        self.assertTrue(any(t["source"] == "reasoning" for t in envelope.thought_stream))
+        self.assertTrue(any(t["source"] == "progress" for t in envelope.thought_stream))
 
     def test_unparseable_response_returns_fail_safe(self):
         provider = _make_provider("No idea what you want.")

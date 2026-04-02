@@ -306,6 +306,9 @@ class Supervisor:
         if self._model and self._vram is not None:
             self._vram.request_load(self._model)
 
+        model_label = self._model or "model"
+        self._envelope.add_thought("progress", f"Asking {model_label} to execute…")
+
         # Provider call — execute the goal.
         messages = [
             {
