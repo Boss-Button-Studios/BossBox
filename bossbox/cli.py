@@ -31,6 +31,7 @@ from bossbox.pipeline.decomposer import DecompositionResult
 from bossbox.pipeline.envelope import TaskEnvelope, create_envelope
 from bossbox.pipeline.supervisor import Supervisor
 from bossbox.providers.ollama import OllamaProvider
+from bossbox.vram.budgeter import VRAMBudgeter
 
 # ---------------------------------------------------------------------------
 # Defaults
@@ -199,6 +200,7 @@ async def _run(goal: str, auto: bool, redirect: str | None, model: str) -> int:
     envelope: TaskEnvelope = create_envelope(goal, auto_approve=auto)
     provider = OllamaProvider(model=model)
     audit_logger = AuditLogger(log_path=_DEFAULT_AUDIT_PATH)
+    vram_budgeter = VRAMBudgeter()
 
     # Wire thought stream → terminal in real time.
     _orig_add_thought = envelope.add_thought
@@ -214,6 +216,7 @@ async def _run(goal: str, auto: bool, redirect: str | None, model: str) -> int:
         envelope=envelope,
         provider=provider,
         audit_logger=audit_logger,
+        vram_budgeter=vram_budgeter,
         model=model,
     )
 

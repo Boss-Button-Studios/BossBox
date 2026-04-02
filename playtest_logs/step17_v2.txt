@@ -1,0 +1,300 @@
+════════════════════════════════════════════════════════════
+  BossBox
+  Goal: write a Python function that reverses a string
+  Model: smollm:1.7b
+  Trust Mode (--auto)
+════════════════════════════════════════════════════════════
+
+[ingest    ]
+  → Ingest complete.
+[decompose ]
+  → Asking smollm:1.7b to decompose goal…
+Decomposition fall-back (treating goal as single task): Provider call failed: Ollama returned HTTP 500: {"error":"llama runner process has terminated: cudaMalloc failed: out of memory\nggml_gallocr_reserve_n_impl: failed to allocate CUDA0 buffer of size 201064448"}
+  → Decomposition unavailable — proceeding as single task.
+[human_checkpoint]
+  → Checkpoint skipped (Trust Mode).
+[execute   ]
+  → Asking smollm:1.7b to execute…
+  → Execution failed: Ollama returned HTTP 500: {"error":"llama runner process has terminated: cudaMalloc failed: out of memory\nggml_gallocr_reserve_n_impl: failed to allocate CUDA0 buffer of size 201064448"}
+  ✗ Pipeline did not complete (status: failed).
+
+════════════════════════════════════════════════════════════
+  BossBox
+  Goal: write a Flask web app
+  Model: smollm:1.7b
+  Trust Mode (--auto)
+════════════════════════════════════════════════════════════
+
+[ingest    ]
+  → Ingest complete.
+[decompose ]
+  → Asking smollm:1.7b to decompose goal…
+Decomposition fall-back (treating goal as single task): Provider call failed: Ollama returned HTTP 500: {"error":"llama runner process has terminated: cudaMalloc failed: out of memory\nggml_gallocr_reserve_n_impl: failed to allocate CUDA0 buffer of size 201064448"}
+  → Decomposition unavailable — proceeding as single task.
+[human_checkpoint]
+  → Checkpoint skipped (Trust Mode).
+[execute   ]
+  → Asking smollm:1.7b to execute…
+  → Execution failed: Ollama returned HTTP 500: {"error":"llama runner process has terminated: cudaMalloc failed: out of memory\nggml_gallocr_reserve_n_impl: failed to allocate CUDA0 buffer of size 201064448"}
+  ✗ Pipeline did not complete (status: failed).
+
+════════════════════════════════════════════════════════════
+  BossBox
+  Goal: summarize async/await
+  Model: smollm:1.7b
+  Trust Mode (--auto)
+════════════════════════════════════════════════════════════
+
+[ingest    ]
+  → Ingest complete.
+[decompose ]
+  → Asking smollm:1.7b to decompose goal…
+Decomposition fall-back (treating goal as single task): Provider call failed: Ollama returned HTTP 500: {"error":"llama runner process has terminated: cudaMalloc failed: out of memory\nggml_gallocr_reserve_n_impl: failed to allocate CUDA0 buffer of size 201064448"}
+  → Decomposition unavailable — proceeding as single task.
+[human_checkpoint]
+  → Checkpoint skipped (Trust Mode).
+[execute   ]
+  → Asking smollm:1.7b to execute…
+  → Execution failed: Ollama returned HTTP 500: {"error":"llama runner process has terminated: cudaMalloc failed: out of memory\nggml_gallocr_reserve_n_impl: failed to allocate CUDA0 buffer of size 201064448"}
+  ✗ Pipeline did not complete (status: failed).
+
+════════════════════════════════════════════════════════════
+  BossBox
+  Goal: explain recursion
+  Model: smollm:360m
+  Trust Mode (--auto)
+════════════════════════════════════════════════════════════
+
+[ingest    ]
+  → Ingest complete.
+[decompose ]
+  → Asking smollm:360m to decompose goal…
+Decomposition fall-back (treating goal as single task): Provider call failed: Ollama returned HTTP 500: {"error":"llama runner process has terminated: cudaMalloc failed: out of memory\nggml_gallocr_reserve_n_impl: failed to allocate CUDA0 buffer of size 166984576"}
+  → Decomposition unavailable — proceeding as single task.
+[human_checkpoint]
+  → Checkpoint skipped (Trust Mode).
+[execute   ]
+  → Asking smollm:360m to execute…
+  → Execution failed: Ollama returned HTTP 500: {"error":"llama runner process has terminated: cudaMalloc failed: out of memory\nggml_gallocr_reserve_n_impl: failed to allocate CUDA0 buffer of size 166984576"}
+  ✗ Pipeline did not complete (status: failed).
+
+════════════════════════════════════════════════════════════
+  BossBox
+  Goal: explain recursion
+  Model: qwen2.5-coder:1.5b
+  Trust Mode (--auto)
+════════════════════════════════════════════════════════════
+
+[ingest    ]
+  → Ingest complete.
+[decompose ]
+  → Asking qwen2.5-coder:1.5b to decompose goal…
+Decomposition fall-back (treating goal as single task): Provider call failed: Ollama returned HTTP 500: {"error":"llama runner process has terminated: cudaMalloc failed: out of memory"}
+  → Decomposition unavailable — proceeding as single task.
+[human_checkpoint]
+  → Checkpoint skipped (Trust Mode).
+[execute   ]
+  → Asking qwen2.5-coder:1.5b to execute…
+  → Execution failed: Ollama returned HTTP 500: {"error":"llama runner process has terminated: cudaMalloc failed: out of memory\nggml_gallocr_reserve_n_impl: failed to allocate CUDA0 buffer of size 505750016"}
+  ✗ Pipeline did not complete (status: failed).
+
+════════════════════════════════════════════════════════════
+  BossBox
+  Goal: Launch a podcast
+  Model: smollm:1.7b
+  Trust Mode (--auto)
+════════════════════════════════════════════════════════════
+
+[ingest    ]
+  → Ingest complete.
+[decompose ]
+  → Asking smollm:1.7b to decompose goal…
+Decomposition fall-back (treating goal as single task): Provider call failed: Ollama returned HTTP 500: {"error":"llama runner process has terminated: cudaMalloc failed: out of memory\nggml_gallocr_reserve_n_impl: failed to allocate CUDA0 buffer of size 201064448"}
+  → Decomposition unavailable — proceeding as single task.
+[human_checkpoint]
+  → Checkpoint skipped (Trust Mode).
+[execute   ]
+  → Asking smollm:1.7b to execute…
+  → Execution failed: Ollama returned HTTP 500: {"error":"llama runner process has terminated: cudaMalloc failed: out of memory\nggml_gallocr_reserve_n_impl: failed to allocate CUDA0 buffer of size 201064448"}
+  ✗ Pipeline did not complete (status: failed).
+
+════════════════════════════════════════════════════════════
+  BossBox
+  Goal: Fix my team's communication problems
+  Model: smollm:1.7b
+  Trust Mode (--auto)
+════════════════════════════════════════════════════════════
+
+[ingest    ]
+  → Ingest complete.
+[decompose ]
+  → Asking smollm:1.7b to decompose goal…
+Decomposition fall-back (treating goal as single task): Provider call failed: Ollama returned HTTP 500: {"error":"llama runner process has terminated: cudaMalloc failed: out of memory\nggml_gallocr_reserve_n_impl: failed to allocate CUDA0 buffer of size 201064448"}
+  → Decomposition unavailable — proceeding as single task.
+[human_checkpoint]
+  → Checkpoint skipped (Trust Mode).
+[execute   ]
+  → Asking smollm:1.7b to execute…
+  → Execution failed: Ollama returned HTTP 500: {"error":"llama runner process has terminated: cudaMalloc failed: out of memory\nggml_gallocr_reserve_n_impl: failed to allocate CUDA0 buffer of size 201064448"}
+  ✗ Pipeline did not complete (status: failed).
+
+════════════════════════════════════════════════════════════
+  BossBox
+  Goal: Build a mobile app
+  Model: smollm:1.7b
+  Trust Mode (--auto)
+════════════════════════════════════════════════════════════
+
+[ingest    ]
+  → Ingest complete.
+[decompose ]
+  → Asking smollm:1.7b to decompose goal…
+Decomposition fall-back (treating goal as single task): Provider call failed: Ollama returned HTTP 500: {"error":"llama runner process has terminated: cudaMalloc failed: out of memory"}
+  → Decomposition unavailable — proceeding as single task.
+[human_checkpoint]
+  → Checkpoint skipped (Trust Mode).
+[execute   ]
+  → Asking smollm:1.7b to execute…
+  → Execution failed: Ollama returned HTTP 500: {"error":"llama runner process has terminated: cudaMalloc failed: out of memory\nggml_gallocr_reserve_n_impl: failed to allocate CUDA0 buffer of size 201064448"}
+  ✗ Pipeline did not complete (status: failed).
+
+════════════════════════════════════════════════════════════
+  BossBox
+  Goal: Move to a new city
+  Model: smollm:1.7b
+  Trust Mode (--auto)
+════════════════════════════════════════════════════════════
+
+[ingest    ]
+  → Ingest complete.
+[decompose ]
+  → Asking smollm:1.7b to decompose goal…
+Decomposition fall-back (treating goal as single task): Provider call failed: Ollama returned HTTP 500: {"error":"llama runner process has terminated: cudaMalloc failed: out of memory\nggml_gallocr_reserve_n_impl: failed to allocate CUDA0 buffer of size 201064448"}
+  → Decomposition unavailable — proceeding as single task.
+[human_checkpoint]
+  → Checkpoint skipped (Trust Mode).
+[execute   ]
+  → Asking smollm:1.7b to execute…
+  → Execution failed: Ollama returned HTTP 500: {"error":"llama runner process has terminated: cudaMalloc failed: out of memory\nggml_gallocr_reserve_n_impl: failed to allocate CUDA0 buffer of size 201064448"}
+  ✗ Pipeline did not complete (status: failed).
+
+════════════════════════════════════════════════════════════
+  BossBox
+  Goal: Publish a research paper
+  Model: smollm:1.7b
+  Trust Mode (--auto)
+════════════════════════════════════════════════════════════
+
+[ingest    ]
+  → Ingest complete.
+[decompose ]
+  → Asking smollm:1.7b to decompose goal…
+Decomposition fall-back (treating goal as single task): Provider call failed: Ollama returned HTTP 500: {"error":"llama runner process has terminated: cudaMalloc failed: out of memory\nggml_gallocr_reserve_n_impl: failed to allocate CUDA0 buffer of size 201064448"}
+  → Decomposition unavailable — proceeding as single task.
+[human_checkpoint]
+  → Checkpoint skipped (Trust Mode).
+[execute   ]
+  → Asking smollm:1.7b to execute…
+  → Execution failed: Ollama returned HTTP 500: {"error":"llama runner process has terminated: cudaMalloc failed: out of memory"}
+  ✗ Pipeline did not complete (status: failed).
+
+════════════════════════════════════════════════════════════
+  BossBox
+  Goal: Deploy a software product
+  Model: smollm:1.7b
+  Trust Mode (--auto)
+════════════════════════════════════════════════════════════
+
+[ingest    ]
+  → Ingest complete.
+[decompose ]
+  → Asking smollm:1.7b to decompose goal…
+Decomposition fall-back (treating goal as single task): Provider call failed: Ollama returned HTTP 500: {"error":"llama runner process has terminated: cudaMalloc failed: out of memory\nggml_gallocr_reserve_n_impl: failed to allocate CUDA0 buffer of size 201064448"}
+  → Decomposition unavailable — proceeding as single task.
+[human_checkpoint]
+  → Checkpoint skipped (Trust Mode).
+[execute   ]
+  → Asking smollm:1.7b to execute…
+  → Execution failed: Ollama returned HTTP 500: {"error":"llama runner process has terminated: cudaMalloc failed: out of memory\nggml_gallocr_reserve_n_impl: failed to allocate CUDA0 buffer of size 201064448"}
+  ✗ Pipeline did not complete (status: failed).
+
+════════════════════════════════════════════════════════════
+  BossBox
+  Goal: Open a restaurant
+  Model: smollm:1.7b
+  Trust Mode (--auto)
+════════════════════════════════════════════════════════════
+
+[ingest    ]
+  → Ingest complete.
+[decompose ]
+  → Asking smollm:1.7b to decompose goal…
+Decomposition fall-back (treating goal as single task): Provider call failed: Ollama returned HTTP 500: {"error":"llama runner process has terminated: cudaMalloc failed: out of memory"}
+  → Decomposition unavailable — proceeding as single task.
+[human_checkpoint]
+  → Checkpoint skipped (Trust Mode).
+[execute   ]
+  → Asking smollm:1.7b to execute…
+  → Execution failed: Ollama returned HTTP 500: {"error":"llama runner process has terminated: cudaMalloc failed: out of memory\nggml_gallocr_reserve_n_impl: failed to allocate CUDA0 buffer of size 201064448"}
+  ✗ Pipeline did not complete (status: failed).
+
+════════════════════════════════════════════════════════════
+  BossBox
+  Goal: Run a clinical trial
+  Model: smollm:1.7b
+  Trust Mode (--auto)
+════════════════════════════════════════════════════════════
+
+[ingest    ]
+  → Ingest complete.
+[decompose ]
+  → Asking smollm:1.7b to decompose goal…
+Decomposition fall-back (treating goal as single task): Provider call failed: Ollama returned HTTP 500: {"error":"llama runner process has terminated: cudaMalloc failed: out of memory"}
+  → Decomposition unavailable — proceeding as single task.
+[human_checkpoint]
+  → Checkpoint skipped (Trust Mode).
+[execute   ]
+  → Asking smollm:1.7b to execute…
+  → Execution failed: Ollama returned HTTP 500: {"error":"llama runner process has terminated: cudaMalloc failed: out of memory\nggml_gallocr_reserve_n_impl: failed to allocate CUDA0 buffer of size 201064448"}
+  ✗ Pipeline did not complete (status: failed).
+
+════════════════════════════════════════════════════════════
+  BossBox
+  Goal: Make it better
+  Model: smollm:1.7b
+  Trust Mode (--auto)
+════════════════════════════════════════════════════════════
+
+[ingest    ]
+  → Ingest complete.
+[decompose ]
+  → Asking smollm:1.7b to decompose goal…
+Decomposition fall-back (treating goal as single task): Provider call failed: Ollama returned HTTP 500: {"error":"llama runner process has terminated: cudaMalloc failed: out of memory"}
+  → Decomposition unavailable — proceeding as single task.
+[human_checkpoint]
+  → Checkpoint skipped (Trust Mode).
+[execute   ]
+  → Asking smollm:1.7b to execute…
+  → Execution failed: Ollama returned HTTP 500: {"error":"llama runner process has terminated: cudaMalloc failed: out of memory"}
+  ✗ Pipeline did not complete (status: failed).
+
+════════════════════════════════════════════════════════════
+  BossBox
+  Goal: Handle the thing from yesterday
+  Model: smollm:1.7b
+  Trust Mode (--auto)
+════════════════════════════════════════════════════════════
+
+[ingest    ]
+  → Ingest complete.
+[decompose ]
+  → Asking smollm:1.7b to decompose goal…
+Decomposition fall-back (treating goal as single task): Provider call failed: Ollama returned HTTP 500: {"error":"llama runner process has terminated: cudaMalloc failed: out of memory\nggml_gallocr_reserve_n_impl: failed to allocate CUDA0 buffer of size 201064448"}
+  → Decomposition unavailable — proceeding as single task.
+[human_checkpoint]
+  → Checkpoint skipped (Trust Mode).
+[execute   ]
+  → Asking smollm:1.7b to execute…
+  → Execution failed: Ollama returned HTTP 500: {"error":"llama runner process has terminated: cudaMalloc failed: out of memory"}
+  ✗ Pipeline did not complete (status: failed).
+
