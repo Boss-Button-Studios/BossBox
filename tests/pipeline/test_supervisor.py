@@ -55,6 +55,14 @@ def _make_provider(decomp_resp=None, exec_resp="Done."):
     return provider
 
 
+def _make_provider_multi(decomp_resp=None, task_responses=None):
+    """Provider that returns decomp first, then one response per subtask + review."""
+    provider = MagicMock()
+    responses = [decomp_resp or _decomp_response()] + (task_responses or ["Result A.", "Result B."])
+    provider.complete = AsyncMock(side_effect=responses)
+    return provider
+
+
 def _make_supervisor(envelope, audit_logger, *, auto_provider=True,
                      input_shield=None, action_shield=None,
                      vram_budgeter=None, model=None):
@@ -413,6 +421,96 @@ class TestVRAMBudgeter:
 # ---------------------------------------------------------------------------
 # PassthroughShield
 # ---------------------------------------------------------------------------
+
+class TestDecomposedExecution:
+    """Supervisor iterates over decomposed subtasks individually."""
+
+    async def test_two_tasks_produce_two_provider_calls(self, audit_logger):
+        envelope = create_envelope("Write and test a script.", auto_approve=True)
+        provider = _make_provider_multi(task_responses=["Result A.", "Result B."])
+        sv = Supervisor(envelope=envelope, provider=provider, audit_logger=audit_logger)
+        await sv.run()
+        # 1 decomp + 2 task executions = 3 total calls (review uses envelope.result, not provider)
+        assert provider.complete.call_count == 3
+
+    async def test_decomposed_result_contains_task_headers(self, audit_logger):
+        envelope = create_envelope("Write and test a script.", auto_approve=True)
+        provider = _make_provider_multi(task_responses=["Result A.", "Result B."])
+        sv = Supervisor(envelope=envelope, provider=provider, audit_logger=audit_logger)
+        await sv.run()
+        assert "## Write script" in envelope.result
+        assert "## Test script" in envelope.result
+
+    async def test_decomposed_result_contains_task_results(self, audit_logger):
+        envelope = create_envelope("Write and test a script.", auto_approve=True)
+        provider = _make_provider_multi(task_responses=["Result A.", "Result B."])
+        sv = Supervisor(envelope=envelope, provider=provider, audit_logger=audit_logger)
+        await sv.run()
+        assert "Result A." in envelope.result
+        assert "Result B." in envelope.result
+
+    async def test_status_complete_after_decomposed_run(self, audit_logger):
+        envelope = create_envelope("Write and test a script.", auto_approve=True)
+        provider = _make_provider_multi(task_responses=["Result A.", "Result B."])
+        sv = Supervisor(envelope=envelope, provider=provider, audit_logger=audit_logger)
+        await sv.run()
+        assert envelope.status == "complete"
+
+    async def test_single_task_decomp_uses_single_execute(self, audit_logger):
+        """When decomposition returns 1 task, _execute_single is used (one provider call)."""
+        single_decomp = yaml.dump({
+            "decomposition": {
+                "reasoning": "Just one step.",
+                "core_tasks": [{"title": "Do it all", "description": "Do everything at once."}],
+                "suggested_tasks": [],
+            }
+        })
+        envelope = create_envelope("Simple task.", auto_approve=True)
+        provider = MagicMock()
+        provider.complete = AsyncMock(side_effect=[single_decomp, "Done."])
+        sv = Supervisor(envelope=envelope, provider=provider, audit_logger=audit_logger)
+        await sv.run()
+        # 1 decomp + 1 single execute = 2 calls
+        assert provider.complete.call_count == 2
+        assert envelope.status == "complete"
+
+    async def test_redirect_injected_into_each_subtask_prompt(self, audit_logger):
+        envelope = create_envelope("Write and test a script.", auto_approve=True)
+        provider = _make_provider_multi(task_responses=["Result A.", "Result B."])
+        sv = Supervisor(envelope=envelope, provider=provider, audit_logger=audit_logger)
+        # Inject redirect before run so it's in context during execute
+        envelope.context.append({"redirect": "use snake_case", "type": "redirect"})
+        await sv.run()
+        calls = provider.complete.call_args_list
+        # The two subtask calls (indices 1 and 2) should contain the redirect
+        task_call_1_content = calls[1][0][0][-1]["content"]  # messages[-1] is user msg
+        task_call_2_content = calls[2][0][0][-1]["content"]
+        assert "use snake_case" in task_call_1_content
+        assert "use snake_case" in task_call_2_content
+
+    async def test_failed_subtask_recorded_in_result(self, audit_logger):
+        from bossbox.providers.base import ProviderError
+        envelope = create_envelope("Write and test a script.", auto_approve=True)
+        provider = MagicMock()
+        provider.complete = AsyncMock(side_effect=[
+            _decomp_response(),
+            "Result A.",
+            ProviderError("model offline"),
+        ])
+        sv = Supervisor(envelope=envelope, provider=provider, audit_logger=audit_logger)
+        await sv.run()
+        assert "Result A." in envelope.result
+        assert "[Failed:" in envelope.result
+
+    async def test_thought_stream_records_each_task(self, audit_logger):
+        envelope = create_envelope("Write and test a script.", auto_approve=True)
+        provider = _make_provider_multi(task_responses=["Result A.", "Result B."])
+        sv = Supervisor(envelope=envelope, provider=provider, audit_logger=audit_logger)
+        await sv.run()
+        contents = [t["content"] for t in envelope.thought_stream]
+        assert any("1/2" in c for c in contents)
+        assert any("2/2" in c for c in contents)
+
 
 class TestPassthroughShield:
 

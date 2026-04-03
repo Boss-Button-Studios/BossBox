@@ -44,6 +44,13 @@ def _make_provider(exec_resp="Done."):
     return provider
 
 
+def _make_provider_multi(task_responses=None):
+    provider = MagicMock()
+    responses = [_decomp_response()] + (task_responses or ["Result A.", "Result B."])
+    provider.complete = AsyncMock(side_effect=responses)
+    return provider
+
+
 def _make_audit(tmp_dir):
     import tempfile
     from pathlib import Path
@@ -319,6 +326,68 @@ class TestVRAMUnittest(_Base):
         sv = self._sv(self.envelope_auto)
         _run(sv.run())
         self.assertEqual(self.envelope_auto.status, "complete")
+
+
+# ---------------------------------------------------------------------------
+# Decomposed execution
+# ---------------------------------------------------------------------------
+
+class TestDecomposedExecutionUnittest(_Base):
+
+    def test_two_tasks_produce_two_provider_calls(self):
+        envelope = create_envelope("Write and test a script.", auto_approve=True)
+        provider = _make_provider_multi(task_responses=["Result A.", "Result B."])
+        sv = Supervisor(envelope=envelope, provider=provider, audit_logger=self.audit)
+        _run(sv.run())
+        self.assertEqual(provider.complete.call_count, 3)
+
+    def test_decomposed_result_contains_task_headers(self):
+        envelope = create_envelope("Write and test a script.", auto_approve=True)
+        provider = _make_provider_multi(task_responses=["Result A.", "Result B."])
+        sv = Supervisor(envelope=envelope, provider=provider, audit_logger=self.audit)
+        _run(sv.run())
+        self.assertIn("## Step 1", envelope.result)
+        self.assertIn("## Step 2", envelope.result)
+
+    def test_decomposed_result_contains_task_results(self):
+        envelope = create_envelope("Write and test a script.", auto_approve=True)
+        provider = _make_provider_multi(task_responses=["Result A.", "Result B."])
+        sv = Supervisor(envelope=envelope, provider=provider, audit_logger=self.audit)
+        _run(sv.run())
+        self.assertIn("Result A.", envelope.result)
+        self.assertIn("Result B.", envelope.result)
+
+    def test_status_complete_after_decomposed_run(self):
+        envelope = create_envelope("Write and test a script.", auto_approve=True)
+        provider = _make_provider_multi(task_responses=["Result A.", "Result B."])
+        sv = Supervisor(envelope=envelope, provider=provider, audit_logger=self.audit)
+        _run(sv.run())
+        self.assertEqual(envelope.status, "complete")
+
+    def test_single_task_uses_single_execute(self):
+        single_decomp = yaml.dump({
+            "decomposition": {
+                "reasoning": "Just one step.",
+                "core_tasks": [{"title": "Do it all", "description": "Do everything."}],
+                "suggested_tasks": [],
+            }
+        })
+        envelope = create_envelope("Simple task.", auto_approve=True)
+        provider = MagicMock()
+        provider.complete = AsyncMock(side_effect=[single_decomp, "Done."])
+        sv = Supervisor(envelope=envelope, provider=provider, audit_logger=self.audit)
+        _run(sv.run())
+        self.assertEqual(provider.complete.call_count, 2)
+        self.assertEqual(envelope.status, "complete")
+
+    def test_thought_stream_records_each_task(self):
+        envelope = create_envelope("Write and test a script.", auto_approve=True)
+        provider = _make_provider_multi(task_responses=["Result A.", "Result B."])
+        sv = Supervisor(envelope=envelope, provider=provider, audit_logger=self.audit)
+        _run(sv.run())
+        contents = [t["content"] for t in envelope.thought_stream]
+        self.assertTrue(any("1/2" in c for c in contents))
+        self.assertTrue(any("2/2" in c for c in contents))
 
 
 # ---------------------------------------------------------------------------

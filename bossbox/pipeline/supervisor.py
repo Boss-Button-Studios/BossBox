@@ -314,12 +314,30 @@ class Supervisor:
                 provider_kwargs["num_gpu"] = strategy.num_gpu
 
         model_label = self._model or "model"
-        self._envelope.add_thought("progress", f"Asking {model_label} to execute…")
-
-        # Provider call — execute the goal.
         redirects = [
             e["redirect"] for e in self._envelope.context if e.get("type") == "redirect"
         ]
+        kwargs: dict = {}
+        if self._model:
+            kwargs["model"] = self._model
+        kwargs.update(provider_kwargs)
+
+        # Execute as individual subtasks when decomposition produced 2+ tasks.
+        if self._decomposition and len(self._decomposition.core_tasks) > 1:
+            await self._execute_decomposed(goal, model_label, redirects, kwargs)
+        else:
+            await self._execute_single(goal, model_label, redirects, kwargs)
+
+    async def _execute_single(
+        self,
+        goal: str,
+        model_label: str,
+        redirects: list[str],
+        kwargs: dict,
+    ) -> None:
+        """Execute the goal as a single provider call (no decomposition)."""
+        self._envelope.add_thought("progress", f"Asking {model_label} to execute…")
+
         user_content = goal
         if redirects:
             user_content = goal + "\n\nAdditional direction: " + "; ".join(redirects)
@@ -334,10 +352,6 @@ class Supervisor:
             },
             {"role": "user", "content": user_content},
         ]
-        kwargs: dict = {}
-        if self._model:
-            kwargs["model"] = self._model
-        kwargs.update(provider_kwargs)
 
         try:
             result = await self._provider.complete(messages, **kwargs)
@@ -350,6 +364,64 @@ class Supervisor:
 
         self._envelope.result = result
         self._envelope.add_thought("progress", "Execution complete.")
+
+    async def _execute_decomposed(
+        self,
+        goal: str,
+        model_label: str,
+        redirects: list[str],
+        kwargs: dict,
+    ) -> None:
+        """Execute each core subtask individually and aggregate results."""
+        assert self._decomposition is not None
+        tasks = self._decomposition.core_tasks
+        n = len(tasks)
+        self._envelope.add_thought("progress", f"Executing {n} tasks with {model_label}…")
+
+        redirect_suffix = (
+            "\n\nAdditional direction: " + "; ".join(redirects) if redirects else ""
+        )
+        task_results: list[str] = []
+
+        for i, task in enumerate(tasks, 1):
+            if self._aborted:
+                break
+            self._envelope.add_thought(
+                "progress", f"Task {i}/{n}: {task.title}"
+            )
+            task_prompt = (
+                f"Overall goal: {goal}{redirect_suffix}\n\n"
+                f"Your task ({i}/{n}): {task.title}"
+            )
+            if task.description and task.description != goal:
+                task_prompt += f"\n{task.description}"
+
+            messages = [
+                {
+                    "role": "system",
+                    "content": (
+                        "You are a capable assistant. Complete the specific task "
+                        "concisely and accurately."
+                    ),
+                },
+                {"role": "user", "content": task_prompt},
+            ]
+
+            try:
+                result = await self._provider.complete(messages, **kwargs)
+                task_results.append(f"## {task.title}\n{result}")
+                self._envelope.add_thought("progress", f"Task {i}/{n} complete.")
+            except Exception as exc:
+                self._envelope.log_event("execute_error", f"Task {i} '{task.title}': {exc}")
+                self._envelope.add_thought("progress", f"Task {i}/{n} failed: {exc}")
+                task_results.append(f"## {task.title}\n[Failed: {exc}]")
+
+        if task_results:
+            self._envelope.result = "\n\n".join(task_results)
+            self._envelope.add_thought("progress", f"All {n} tasks complete.")
+        else:
+            self._envelope.status = "failed"
+            self._aborted = True
 
     async def _stage_review(self) -> None:
         """

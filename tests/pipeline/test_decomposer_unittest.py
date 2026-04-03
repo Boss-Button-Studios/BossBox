@@ -17,6 +17,7 @@ from bossbox.pipeline.decomposer import (
     Subtask,
     _extract_yaml_block,
     _fail_safe,
+    _parse_markdown_tasks,
     _parse_response,
     decompose,
 )
@@ -257,6 +258,70 @@ class TestDataclassesUnittest(unittest.TestCase):
         self.assertEqual(len(dr.core_tasks), 2)
         self.assertEqual(len(dr.suggested_tasks), 1)
         self.assertEqual(dr.reasoning, "why")
+
+
+
+# ---------------------------------------------------------------------------
+# Markdown fallback parser
+# ---------------------------------------------------------------------------
+
+class TestMarkdownFallbackUnittest(unittest.TestCase):
+
+    def test_bold_task_headings_parsed(self):
+        response = "**Task 1: Write the script**\nSome prose.\n**Task 2: Test the script**\nMore prose."
+        result = _parse_markdown_tasks(response)
+        self.assertIsNotNone(result)
+        self.assertEqual(len(result.core_tasks), 2)
+        self.assertEqual(result.core_tasks[0].title, "Write the script")
+        self.assertEqual(result.core_tasks[1].title, "Test the script")
+
+    def test_bold_step_headings_parsed(self):
+        response = "**Step 1: Gather data**\n**Step 2: Analyse results**\n**Step 3: Write report**"
+        result = _parse_markdown_tasks(response)
+        self.assertIsNotNone(result)
+        self.assertEqual(len(result.core_tasks), 3)
+
+    def test_numbered_list_parsed(self):
+        response = "Here are the sub-goals:\n1. Research the topic\n2. Draft the outline\n3. Write the content"
+        result = _parse_markdown_tasks(response)
+        self.assertIsNotNone(result)
+        self.assertEqual(len(result.core_tasks), 3)
+        self.assertEqual(result.core_tasks[0].title, "Research the topic")
+
+    def test_single_item_returns_none(self):
+        response = "**Task 1: Do the thing**\nJust one task."
+        self.assertIsNone(_parse_markdown_tasks(response))
+
+    def test_prose_only_returns_none(self):
+        self.assertIsNone(_parse_markdown_tasks("Just do the thing. It is simple."))
+
+    def test_reasoning_is_placeholder(self):
+        response = "**Task 1: Step one**\n**Task 2: Step two**"
+        result = _parse_markdown_tasks(response)
+        self.assertIsNotNone(result)
+        self.assertIn("markdown", result.reasoning.lower())
+
+    def test_max_ten_tasks_extracted(self):
+        lines = "\n".join(f"**Task {i}: Task title {i}**" for i in range(1, 15))
+        result = _parse_markdown_tasks(lines)
+        self.assertIsNotNone(result)
+        self.assertLessEqual(len(result.core_tasks), 10)
+
+    def test_decompose_falls_back_to_markdown(self):
+        md_response = "**Task 1: Write it**\nDo the writing.\n**Task 2: Test it**\nRun tests."
+        provider = _make_provider(md_response)
+        envelope = _make_envelope("Write and test a script")
+        result = _run(decompose("Write and test a script", provider, envelope))
+        self.assertEqual(len(result.core_tasks), 2)
+        self.assertEqual(result.core_tasks[0].title, "Write it")
+
+    def test_decompose_markdown_appends_thought(self):
+        md_response = "**Task 1: Alpha**\n**Task 2: Beta**"
+        provider = _make_provider(md_response)
+        envelope = _make_envelope("goal")
+        _run(decompose("goal", provider, envelope))
+        contents = [t["content"] for t in envelope.thought_stream]
+        self.assertTrue(any("2 tasks" in c for c in contents))
 
 
 if __name__ == "__main__":

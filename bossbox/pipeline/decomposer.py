@@ -151,6 +151,44 @@ def _parse_response(response: str) -> DecompositionResult:
     )
 
 
+def _parse_markdown_tasks(response: str) -> DecompositionResult | None:
+    """
+    Secondary parser for markdown-formatted task lists.
+
+    Handles the natural output of small models that follow the decomposition
+    intent but ignore the YAML format constraint.  Recognises two patterns:
+
+    1. ``**Task N: Title**`` or ``**Step N: Title**`` headings.
+    2. Numbered list items (``1. Title`` or ``1. **Title**``) after a
+       "sub-goals", "steps", or "tasks" heading.
+
+    Returns None when fewer than two tasks are found, so the caller can
+    fall through to the fail-safe rather than treating a prose reply as a
+    valid decomposition.
+    """
+    # Pattern 1: **Task N: ...** or **Step N: ...**
+    task_heading = re.compile(
+        r"\*\*(?:Task|Step)\s+\d+\s*:?\s*([^*\n]{3,80})\*\*",
+        re.IGNORECASE,
+    )
+    titles = [m.strip().rstrip("*").strip() for m in task_heading.findall(response)]
+
+    if len(titles) < 2:
+        # Pattern 2: numbered list items (possibly after a "sub-goals:" line)
+        numbered = re.compile(r"^\d+\.\s+\*?\*?([^*\n]{5,120})\*?\*?", re.MULTILINE)
+        titles = [m.strip() for m in numbered.findall(response) if m.strip()]
+
+    if len(titles) < 2:
+        return None
+
+    tasks = [Subtask(title=t[:120], description="") for t in titles[:10]]
+    return DecompositionResult(
+        core_tasks=tasks,
+        suggested_tasks=[],
+        reasoning="[Decomposition extracted from markdown-format response]",
+    )
+
+
 def _fail_safe(goal: str, reason: str) -> DecompositionResult:
     """Return a single-task result when decomposition cannot complete."""
     log.warning("Decomposition fall-back (treating goal as single task): %s", reason)
@@ -220,6 +258,16 @@ async def decompose(
     try:
         result = _parse_response(response)
     except ValueError as exc:
+        # YAML parse failed — try markdown fallback before giving up.
+        md_result = _parse_markdown_tasks(response)
+        if md_result is not None:
+            log.info("Decomposition: YAML failed, markdown fallback succeeded (%d tasks).",
+                     len(md_result.core_tasks))
+            envelope.add_thought(
+                "progress",
+                f"Decomposed into {len(md_result.core_tasks)} tasks (markdown format).",
+            )
+            return md_result
         result = _fail_safe(goal, str(exc))
         envelope.add_thought("progress", "Decomposition unavailable — proceeding as single task.")
         return result
