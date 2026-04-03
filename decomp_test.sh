@@ -1,57 +1,120 @@
 #!/bin/bash
+# Must run in project root with sudo privileges (for ollama restart)
+# Usage: ./decomp_test.sh <logfile> <session_name>
 
-# Check that the user provided a log file argument
 if [ -z "$1" ]; then
-  echo "Usage: $0 <logfile>"
+  echo "Usage: $0 <logfile> <session_name>"
+  exit 1
+fi
+
+if [ -z "$2" ]; then
+  echo "Usage: $0 <logfile> <session_name>"
   exit 1
 fi
 
 LOG_FILE="$1"
+SESSION_NAME="$2"
 
-#Initialize
-pkill ollama
-ollama serve
+# Restart Ollama to clear VRAM state before each run
+restart_ollama() {
+  echo "--- [ollama restart] ---" | tee -a "$LOG_FILE"
+  sudo systemctl stop ollama
+  sleep 3
+  sudo systemctl start ollama
+  sleep 5
+}
+
+# Run a single bossbox test with label and optional extra args
+run_test() {
+  local label="$1"
+  local goal="$2"
+  shift 2
+  echo "--- TEST: $label ---" | tee -a "$LOG_FILE"
+  bossbox "$goal" --auto "$@" 2>&1 | tee -a "$LOG_FILE"
+}
+
+# Initialize
+restart_ollama
 source .venv/bin/activate
 
-#All tests will be done in auto mode for the sake of expediency. Check the provided log file
-#for output.
+echo "--- Beginning CLI decomposition testing, session: $SESSION_NAME ---" | tee -a "$LOG_FILE"
 
-#Basic manual suggestions
+# ---------------------------------------------------------------------------
+# Basic manual suggestions
+# ---------------------------------------------------------------------------
+echo "---TESTING BASIC SUGGESTIONS FROM MANUAL" | tee -a "$LOG_FILE"
 
-bossbox "write a Python function that reverses a string" --auto 2>&1 | tee -a "$LOG_FILE"
+run_test "reverse a string" "write a Python function that reverses a string"
+run_test "Flask web app" "write a Flask web app" --redirect "focus on just the route handlers, no templates"
+run_test "summarize async/await" "summarize async/await" --no-color
 
-bossbox "write a Flask web app" --auto --redirect "focus on just the route handlers, no templates" 2>&1 | tee -a "$LOG_FILE"
+# ---------------------------------------------------------------------------
+# Custom model checks
+# ---------------------------------------------------------------------------
+echo "---TESTING ABILITY TO CALL OTHER MODELS" | tee -a "$LOG_FILE"
 
-bossbox "summarize async/await" --auto --no-color 2>&1 | tee -a "$LOG_FILE"
+restart_ollama
+run_test "explain recursion w/smollm:360m" "explain recursion" --model smollm:360m
 
-#Custom model checks
-bossbox "explain recursion" --auto --model smollm:360m 2>&1 | tee -a "$LOG_FILE"
+restart_ollama
+run_test "explain recursion w/qwen2.5-coder:1.5b" "explain recursion" --model qwen2.5-coder:1.5b
 
-bossbox "explain recursion" --auto --model qwen2.5-coder:1.5b 2>&1 | tee -a "$LOG_FILE"
+# ---------------------------------------------------------------------------
+# Ambiguous high-level goals  (restart before each — these are long outputs)
+# ---------------------------------------------------------------------------
+echo "---TESTING AMBIGUOUS GOALS" | tee -a "$LOG_FILE"
 
-#Ambiguous high level goals
-bossbox "Launch a podcast" --auto 2>&1 | tee -a "$LOG_FILE"
+restart_ollama
+run_test "Launch a podcast" "Launch a podcast"
 
-bossbox "Fix my team's communication problems" --auto 2>&1 | tee -a "$LOG_FILE"
+restart_ollama
+run_test "Fix communication problems" "Fix my team's communication problems"
 
-bossbox "Build a mobile app" --auto 2>&1 | tee -a "$LOG_FILE"
+restart_ollama
+run_test "Build a mobile app" "Build a mobile app"
 
-#Tasks with hidden dependencies
+# ---------------------------------------------------------------------------
+# Tasks with hidden dependencies
+# ---------------------------------------------------------------------------
+echo "---TESTING TASKS WITH HIDDEN DEPENDENCIES" | tee -a "$LOG_FILE"
 
-bossbox "Move to a new city" --auto 2>&1 | tee -a "$LOG_FILE"
+restart_ollama
+run_test "Move to a new city" "Move to a new city"
 
-bossbox "Publish a research paper" --auto 2>&1 | tee -a "$LOG_FILE"
+restart_ollama
+run_test "Publish a research paper" "Publish a research paper"
 
-bossbox "Deploy a software product" --auto 2>&1 | tee -a "$LOG_FILE"
+restart_ollama
+run_test "Deploy a software product" "Deploy a software product"
 
-#Cross-domain tasks
+# ---------------------------------------------------------------------------
+# Cross-domain tasks
+# ---------------------------------------------------------------------------
+echo "---TESTING CROSS-DOMAIN TASKS" | tee -a "$LOG_FILE"
 
-bossbox "Open a restaurant" --auto 2>&1 | tee -a "$LOG_FILE"
+restart_ollama
+run_test "Open restaurant" "Open a restaurant"
 
-bossbox "Run a clinical trial" --auto 2>&1 | tee -a "$LOG_FILE"
+restart_ollama
+run_test "Run a clinical trial" "Run a clinical trial"
 
-#Ill-formed requests
+# ---------------------------------------------------------------------------
+# Ill-formed requests
+# ---------------------------------------------------------------------------
+echo "---TESTING ILL-FORMED REQUESTS" | tee -a "$LOG_FILE"
 
-bossbox "Make it better" --auto 2>&1 | tee -a "$LOG_FILE"
+restart_ollama
+run_test "Make it better" "Make it better"
+run_test "Handle yesterday" "Handle the thing from yesterday"
 
-bossbox "Handle the thing from yesterday" --auto 2>&1 | tee -a "$LOG_FILE"
+# ---------------------------------------------------------------------------
+# Recursive depth / granularity scaling
+# ---------------------------------------------------------------------------
+echo "---TESTING RECURSIVE DEPTH" | tee -a "$LOG_FILE"
+
+restart_ollama
+run_test "Write a for loop" "Write a for loop"
+run_test "Build a web app" "Build a web application"
+
+restart_ollama
+run_test "Start a company" "Start a company"
