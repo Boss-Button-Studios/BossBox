@@ -7,10 +7,9 @@ agentic pipelines, and provides a supervised human-in-the-loop interface for
 accomplishing complex tasks. It runs entirely on your hardware — no cloud
 account, no telemetry, no paid tier.
 
-> **Development status:** Steps 1–9 of 24 are complete. The core infrastructure
-> is in place but the pipeline and GUI are not yet functional. The first
-> end-to-end usable milestone is Step 16 (CLI Runner). See
-> [docs/bossbox_spec_v4.3.md](docs/bossbox_spec_v4.3.md) for the full roadmap.
+> **Development status:** Steps 1–17 of 24 are complete. The core pipeline
+> is functional end-to-end via CLI. The GUI milestone begins at Step 22. See
+> [docs/bossbox_spec_v4.3.1.md](docs/bossbox_spec_v4.3.1.md) for the full roadmap.
 
 ---
 
@@ -26,6 +25,14 @@ account, no telemetry, no paid tier.
 | 7 | Secrets Manager | AES-256-GCM encrypted secrets; password, keychain, or hardware token unlock |
 | 8 | VRAM Budgeter | Background thread; evicts lower-priority models before loading; Nano always hot |
 | 9 | Document Sanitizer | Strips hidden PDF layers, DOCX hidden runs, `display:none` HTML; OCR escalation via tesseract |
+| 10 | Injection Detection | Skill profile for detecting prompt injection in incoming documents |
+| 11 | Document Type Coherence | Profiles that validate document type consistency |
+| 12 | Linguistic Analysis Agent | Heuristic and model-based text analysis |
+| 13 | Backup Manager | Workspace snapshot and restore with sandbox enforcement |
+| 14 | Task Decomposer | Breaks complex tasks into ordered subtasks via model call |
+| 15 | Supervisor State Machine | Async orchestrator; routes subtasks through the model tier chain |
+| 16 | CLI Runner | End-to-end `bossbox run` command; human-in-the-loop confirmation prompts |
+| 17 | Notification Service | Desktop and terminal notifications for pipeline events |
 
 ---
 
@@ -74,7 +81,7 @@ pytest --cov=bossbox --cov-report=term-missing
 pytest tests/vram/ -v
 ```
 
-The test suite has 612 passing tests across all completed steps.
+The test suite has 1231+ passing tests across all completed steps.
 Every step ships two test files: `test_<name>.py` (pytest) and
 `test_<name>_unittest.py` (stdlib unittest, no network required).
 
@@ -97,7 +104,7 @@ model sees it. All model calls go through the Provider Abstraction Layer.
 Every action is logged to an append-only audit trail. The human is always
 in the loop.
 
-See [docs/bossbox_spec_v4.3.md](docs/bossbox_spec_v4.3.md) for the full
+See [docs/bossbox_spec_v4.3.1.md](docs/bossbox_spec_v4.3.1.md) for the full
 specification including the complete step sequence, security model, and
 hardware guidance.
 
