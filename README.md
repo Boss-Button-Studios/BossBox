@@ -2,10 +2,13 @@
 
 **Local-first AI workbench — Boss Button Studios**
 
-BossBox manages a tiered fleet of small language models, orchestrates them into
-agentic pipelines, and provides a supervised human-in-the-loop interface for
-accomplishing complex tasks. It runs entirely on your hardware — no cloud
-account, no telemetry, no paid tier.
+Running AI pipelines on untrusted documents means trusting whatever the model
+sees. BossBox solves that: it sanitizes inputs, detects prompt injection, and
+routes work through a tiered fleet of small local models — all on your hardware,
+with a human confirmation step before anything consequential happens.
+
+No cloud account. No telemetry. No paid tier. Works on modest hardware (tested
+on a 2GB VRAM GPU with Ollama and open-weight models).
 
 > **Development status:** Steps 1–17 of 24 are complete. The core pipeline
 > is functional end-to-end via CLI. The GUI milestone begins at Step 22. See
