@@ -383,6 +383,10 @@ class Supervisor:
         )
         task_results: list[str] = []
 
+        task_list = "\n".join(
+            f"  {j}. {t.title}" for j, t in enumerate(tasks, 1)
+        )
+
         for i, task in enumerate(tasks, 1):
             if self._aborted:
                 break
@@ -391,10 +395,15 @@ class Supervisor:
             )
             task_prompt = (
                 f"Overall goal: {goal}{redirect_suffix}\n\n"
+                f"Full plan ({n} tasks):\n{task_list}\n\n"
                 f"Your task ({i}/{n}): {task.title}"
             )
             if task.description and task.description != goal:
                 task_prompt += f"\n{task.description}"
+            task_prompt += (
+                f"\n\nFocus ONLY on this task. "
+                f"The other {n - 1} tasks will be handled separately."
+            )
 
             messages = [
                 {
