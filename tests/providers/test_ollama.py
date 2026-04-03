@@ -241,6 +241,52 @@ class TestCompleteErrors:
         with pytest.raises(ProviderUnavailableError):
             await provider.complete(GOOD_MESSAGES)
 
+    @pytest.mark.asyncio
+    @respx.mock
+    async def test_cuda_oom_retries_with_cpu_mode(self, provider):
+        """GPU OOM on first call → retry with num_gpu=0 → success."""
+        oom_body = {"error": "llama runner process has terminated: cudaMalloc failed: out of memory"}
+        oom_resp = httpx.Response(500, json=oom_body)
+        ok_resp = httpx.Response(200, json=GOOD_CHAT_RESPONSE)
+        respx.post(CHAT_URL).mock(side_effect=[oom_resp, ok_resp])
+        result = await provider.complete(GOOD_MESSAGES)
+        assert result == "Hello, world!"
+        # Both requests should have been made.
+        assert respx.calls.call_count == 2
+
+    @pytest.mark.asyncio
+    @respx.mock
+    async def test_cuda_oom_retry_sends_num_gpu_zero(self, provider):
+        """The retry payload must include options.num_gpu = 0."""
+        oom_body = {"error": "cudaMalloc failed: out of memory"}
+        oom_resp = httpx.Response(500, json=oom_body)
+        ok_resp = httpx.Response(200, json=GOOD_CHAT_RESPONSE)
+        respx.post(CHAT_URL).mock(side_effect=[oom_resp, ok_resp])
+        await provider.complete(GOOD_MESSAGES)
+        retry_request = respx.calls[1].request
+        import json
+        body = json.loads(retry_request.content)
+        assert body.get("options", {}).get("num_gpu") == 0
+
+    @pytest.mark.asyncio
+    @respx.mock
+    async def test_cuda_oom_does_not_retry_when_already_cpu(self, provider):
+        """If num_gpu=0 is already set and Ollama still OOMs, raise immediately."""
+        oom_body = {"error": "cudaMalloc failed: out of memory"}
+        respx.post(CHAT_URL).mock(return_value=httpx.Response(500, json=oom_body))
+        with pytest.raises(ProviderUnavailableError):
+            await provider.complete(GOOD_MESSAGES, num_gpu=0)
+        assert respx.calls.call_count == 1
+
+    @pytest.mark.asyncio
+    @respx.mock
+    async def test_non_oom_500_does_not_retry(self, provider):
+        """A generic 500 that is not a CUDA OOM must not trigger a retry."""
+        respx.post(CHAT_URL).mock(return_value=httpx.Response(500, text="disk full"))
+        with pytest.raises(ProviderUnavailableError):
+            await provider.complete(GOOD_MESSAGES)
+        assert respx.calls.call_count == 1
+
 
 # ---------------------------------------------------------------------------
 # is_available()

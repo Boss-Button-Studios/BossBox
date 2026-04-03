@@ -18,9 +18,15 @@ Ollama error conventions
 
 from __future__ import annotations
 
+import logging
+
 import httpx
 
 from .base import ModelNotFoundError, ModelProvider, ProviderUnavailableError
+
+log = logging.getLogger(__name__)
+
+_CUDA_OOM_MARKER = "cudaMalloc failed"
 
 # ---------------------------------------------------------------------------
 # Constants
@@ -112,8 +118,24 @@ class OllamaProvider(ModelProvider):
         if options:
             payload["options"] = options
 
-        response = await self._post("/api/chat", payload, model=model)
-        return self._extract_content(response, model)
+        try:
+            response = await self._post("/api/chat", payload, model=model)
+            return self._extract_content(response, model)
+        except ProviderUnavailableError as exc:
+            # GPU OOM — Ollama cannot allocate CUDA memory.  Retry once with
+            # num_gpu=0 (full CPU inference) so the run can still complete.
+            if _CUDA_OOM_MARKER not in str(exc):
+                raise
+            if options.get("num_gpu") == 0:
+                raise  # already tried CPU; give up
+            log.warning(
+                "GPU OOM detected for model '%s'; retrying with num_gpu=0 (CPU mode).",
+                model,
+            )
+            options["num_gpu"] = 0
+            payload["options"] = options
+            response = await self._post("/api/chat", payload, model=model)
+            return self._extract_content(response, model)
 
     async def is_available(self) -> bool:
         """
