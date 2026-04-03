@@ -200,6 +200,18 @@ def _fail_safe(goal: str, reason: str) -> DecompositionResult:
 
 
 # ---------------------------------------------------------------------------
+# TODO: clarification_needed field (future step)
+# ---------------------------------------------------------------------------
+# Playtesting shows models correctly recognise underspecified goals (e.g.
+# "Make it better") and signal the gap via scaffolding / placeholder text
+# rather than a confident answer.  The right mechanism is a
+# `clarification_needed: str` field in DecompositionResult that the
+# Supervisor surfaces at the human checkpoint instead of a task plan.
+# The redirect mechanism already exists to inject the user's answer and
+# re-decompose.  This is blocked on test-harness support for interactive
+# clarification prompts.
+
+# ---------------------------------------------------------------------------
 # Public API
 # ---------------------------------------------------------------------------
 
