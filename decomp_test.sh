@@ -15,6 +15,12 @@ fi
 LOG_FILE="$1"
 SESSION_NAME="$2"
 
+# Keep sudo credentials alive for the duration of the script
+sudo -v
+while true; do sudo -v; sleep 60; done &
+SUDO_KEEPALIVE_PID=$!
+trap "kill $SUDO_KEEPALIVE_PID 2>/dev/null" EXIT
+
 # Restart Ollama to clear VRAM state before each run
 restart_ollama() {
   echo "--- [ollama restart] ---" | tee -a "$LOG_FILE"
