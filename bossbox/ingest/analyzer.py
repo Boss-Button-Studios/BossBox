@@ -28,6 +28,25 @@ from bossbox.providers.base import ModelProvider
 log = logging.getLogger(__name__)
 
 # ---------------------------------------------------------------------------
+# Exception scrubbing
+# ---------------------------------------------------------------------------
+
+# Redact URL credentials and absolute paths before they reach the Python log.
+# Why: httpx exceptions from provider.complete() may include connection URLs
+# that could contain embedded credentials or expose local filesystem structure.
+_URL_CRED_RE = re.compile(r"//[^@\s]+@")
+_ABS_PATH_RE = re.compile(r"/(?:home|root|usr|var|etc|tmp|opt|proc)/\S+")
+
+
+def _scrub_exc(exc: Exception) -> str:
+    """Return a loggable string with URL credentials and paths redacted."""
+    msg = str(exc)
+    msg = _URL_CRED_RE.sub("//[redacted]@", msg)
+    msg = _ABS_PATH_RE.sub("[path redacted]", msg)
+    return msg
+
+
+# ---------------------------------------------------------------------------
 # Paths
 # ---------------------------------------------------------------------------
 
@@ -269,7 +288,8 @@ async def analyze(
     try:
         response = await provider.complete(messages, **kwargs)
     except Exception as exc:
-        return _fail_safe(declared_type, f"Provider call failed: {exc}")
+        # Scrub before logging — provider exceptions may contain connection URLs.
+        return _fail_safe(declared_type, f"Provider call failed: {_scrub_exc(exc)}")
 
     try:
         return _parse_response(response, declared_type)

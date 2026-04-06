@@ -120,6 +120,15 @@ class Notifier:
             and self._config.ntfy.enabled
             and self._config.ntfy.topic
         ):
+            # Law 2: data is leaving the user's machine — disclose each time.
+            ntfy_url = (
+                f"{self._config.ntfy.base_url.rstrip('/')}/{self._config.ntfy.topic}"
+            )
+            log.info(
+                "[BossBox] External notification: dispatching '%s' to ntfy at %s",
+                event.event_type.value,
+                ntfy_url,
+            )
             tasks.append(asyncio.create_task(self._send_ntfy(event)))
 
         if (
@@ -127,6 +136,14 @@ class Notifier:
             and self._config.smtp.enabled
             and self._should_send_email(event.event_type)
         ):
+            # Law 2: data is leaving the user's machine — disclose each time.
+            log.info(
+                "[BossBox] External notification: sending email for '%s' to %s via %s:%s",
+                event.event_type.value,
+                self._config.smtp.to_address,
+                self._config.smtp.host,
+                self._config.smtp.port,
+            )
             tasks.append(asyncio.create_task(self._send_smtp(event)))
 
         return tasks

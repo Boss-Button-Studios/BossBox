@@ -1,6 +1,6 @@
 """
-bossbox/providers/base.py
-
+Provider Base — BossBox Atomic Step 5
+======================================
 Abstract base class for all model providers and the two exceptions that
 callers must handle.  Every concrete provider (Ollama, Anthropic, OpenAI)
 implements this interface so the Supervisor can treat them uniformly.

@@ -14,7 +14,7 @@ import pytest
 import yaml
 
 import bossbox.cli as cli_module
-from bossbox.cli import _build_parser, _run
+from bossbox.cli import _MAX_GOAL_LEN, _build_parser, _run, _validate_goal
 
 
 # ---------------------------------------------------------------------------
@@ -38,6 +38,56 @@ def _make_ollama(decomp=None, exec_resp="Here is the result."):
     provider = MagicMock()
     provider.complete = AsyncMock(side_effect=[decomp or _decomp_yaml(), exec_resp])
     return provider
+
+
+# ---------------------------------------------------------------------------
+# Goal validation
+# ---------------------------------------------------------------------------
+
+class TestGoalValidation:
+
+    def test_normal_goal_passes_through(self):
+        assert _validate_goal("write a function") == "write a function"
+
+    def test_strips_leading_trailing_whitespace(self):
+        assert _validate_goal("  hello  ") == "hello"
+
+    def test_removes_null_bytes(self):
+        assert _validate_goal("goal\x00with\x00nulls") == "goalwithnulls"
+
+    def test_empty_string_raises(self):
+        with pytest.raises(SystemExit) as exc_info:
+            _validate_goal("")
+        assert exc_info.value.code == 1
+
+    def test_whitespace_only_raises(self):
+        with pytest.raises(SystemExit) as exc_info:
+            _validate_goal("   ")
+        assert exc_info.value.code == 1
+
+    def test_null_only_raises(self):
+        with pytest.raises(SystemExit) as exc_info:
+            _validate_goal("\x00\x00")
+        assert exc_info.value.code == 1
+
+    def test_too_long_raises(self):
+        with pytest.raises(SystemExit) as exc_info:
+            _validate_goal("x" * (_MAX_GOAL_LEN + 1))
+        assert exc_info.value.code == 1
+
+    def test_exactly_max_length_passes(self):
+        goal = "x" * _MAX_GOAL_LEN
+        assert _validate_goal(goal) == goal
+
+    def test_error_message_on_empty(self, capsys):
+        with pytest.raises(SystemExit):
+            _validate_goal("")
+        assert "empty" in capsys.readouterr().err.lower()
+
+    def test_error_message_on_too_long(self, capsys):
+        with pytest.raises(SystemExit):
+            _validate_goal("x" * (_MAX_GOAL_LEN + 1))
+        assert "long" in capsys.readouterr().err.lower()
 
 
 # ---------------------------------------------------------------------------

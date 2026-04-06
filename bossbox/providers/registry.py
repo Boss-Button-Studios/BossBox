@@ -1,4 +1,7 @@
-"""ProviderRegistry — instantiates and holds all configured providers.
+"""
+Provider Registry — BossBox Atomic Step 6
+==========================================
+Instantiates and holds all configured providers.
 
 The registry is the single point of truth for which providers are available
 in a given BossBox session.  It is built once from the loaded config and

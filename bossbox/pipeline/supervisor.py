@@ -25,6 +25,7 @@ from __future__ import annotations
 
 import asyncio
 import logging
+import re
 from typing import Any, Protocol, runtime_checkable
 
 from bossbox.audit.logger import AuditLogger
@@ -33,6 +34,26 @@ from bossbox.pipeline.envelope import TaskEnvelope
 from bossbox.providers.base import ModelProvider
 
 log = logging.getLogger(__name__)
+
+# ---------------------------------------------------------------------------
+# Exception scrubbing
+# ---------------------------------------------------------------------------
+
+# Patterns for redacting sensitive details from exception messages before they
+# are written to the audit trail or envelope thought stream.
+# Why: third-party libraries (httpx, smtplib) may include URL credentials or
+# absolute filesystem paths in exception strings.
+_URL_CRED_RE = re.compile(r"//[^@\s]+@")          # "//user:pass@" in URLs
+_ABS_PATH_RE = re.compile(r"/(?:home|root|usr|var|etc|tmp|opt|proc)/\S+")
+
+
+def _scrub_exc(exc: Exception) -> str:
+    """Return a loggable string with URL credentials and paths redacted."""
+    msg = str(exc)
+    msg = _URL_CRED_RE.sub("//[redacted]@", msg)
+    msg = _ABS_PATH_RE.sub("[path redacted]", msg)
+    return msg
+
 
 # ---------------------------------------------------------------------------
 # Shield protocol
@@ -153,7 +174,7 @@ class Supervisor:
                 await getattr(self, f"_stage_{stage}")()
             except Exception as exc:  # noqa: BLE001
                 log.error("Supervisor caught unexpected error in stage %s: %s", stage, exc)
-                self._envelope.log_event("pipeline_error", str(exc))
+                self._envelope.log_event("pipeline_error", _scrub_exc(exc))
                 self._envelope.status = "failed"
                 return self._envelope
             if self._aborted:
@@ -356,8 +377,8 @@ class Supervisor:
         try:
             result = await self._provider.complete(messages, **kwargs)
         except Exception as exc:
-            self._envelope.log_event("execute_error", str(exc))
-            self._envelope.add_thought("progress", f"Execution failed: {exc}")
+            self._envelope.log_event("execute_error", _scrub_exc(exc))
+            self._envelope.add_thought("progress", f"Execution failed: {_scrub_exc(exc)}")
             self._envelope.status = "failed"
             self._aborted = True
             return
@@ -414,9 +435,10 @@ class Supervisor:
                 task_results.append(f"## {task.title}\n{result}")
                 self._envelope.add_thought("progress", f"Task {i}/{n} complete.")
             except Exception as exc:
-                self._envelope.log_event("execute_error", f"Task {i} '{task.title}': {exc}")
-                self._envelope.add_thought("progress", f"Task {i}/{n} failed: {exc}")
-                task_results.append(f"## {task.title}\n[Failed: {exc}]")
+                scrubbed = _scrub_exc(exc)
+                self._envelope.log_event("execute_error", f"Task {i} '{task.title}': {scrubbed}")
+                self._envelope.add_thought("progress", f"Task {i}/{n} failed: {scrubbed}")
+                task_results.append(f"## {task.title}\n[Failed: {scrubbed}]")
 
         if task_results:
             self._envelope.result = "\n\n".join(task_results)

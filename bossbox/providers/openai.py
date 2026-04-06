@@ -1,4 +1,7 @@
-"""OpenAIProvider — wraps the OpenAI Chat Completions API.
+"""
+OpenAI Provider — BossBox Atomic Step 5
+========================================
+Wraps the OpenAI Chat Completions API.
 
 The openai SDK is an optional dependency (installed via the [cloud] extra).
 If it is not installed, or if no API key is supplied, the provider raises

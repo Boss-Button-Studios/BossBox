@@ -54,6 +54,11 @@ _RESET = "\033[0m"
 
 _USE_COLOR = True  # toggled by --no-color or non-tty
 
+# Maximum goal length accepted before reaching the pipeline.
+# original_input is a write-once field on TaskEnvelope — it must be bounded
+# and clean before it is locked in.
+_MAX_GOAL_LEN = 4_000
+
 
 def _c(text: str, *codes: str) -> str:
     if not _USE_COLOR:
@@ -113,6 +118,35 @@ def _print_result(result: str | None) -> None:
 
 def _print_error(msg: str) -> None:
     print(_c(f"  ✗ {msg}", _RED), file=sys.stderr)
+
+
+# ---------------------------------------------------------------------------
+# Input conditioning
+# ---------------------------------------------------------------------------
+
+
+def _validate_goal(raw: str) -> str:
+    """
+    Condition the raw goal string before it is locked into the pipeline.
+
+    Why: original_input is a write-once field on TaskEnvelope.  It must be
+    clean before it is locked in — there is no opportunity to correct it later.
+    Null bytes are never legitimate input and can corrupt downstream processing.
+
+    Raises SystemExit(1) with a user-facing message on rejection.
+    """
+    goal = raw.strip()
+    goal = goal.replace("\x00", "")  # null bytes are not legitimate goal content
+    if not goal:
+        _print_error("Goal cannot be empty.")
+        raise SystemExit(1)
+    if len(goal) > _MAX_GOAL_LEN:
+        _print_error(
+            f"Goal is too long ({len(goal):,} characters). "
+            f"Please keep it under {_MAX_GOAL_LEN:,} characters."
+        )
+        raise SystemExit(1)
+    return goal
 
 
 # ---------------------------------------------------------------------------
@@ -187,6 +221,8 @@ async def _run(goal: str, auto: bool, redirect: str | None, model: str) -> int:
     global _USE_COLOR
     if not sys.stdout.isatty():
         _USE_COLOR = False
+
+    goal = _validate_goal(goal)
 
     _print_separator("═")
     print(_c("  BossBox", _BOLD, _CYAN))

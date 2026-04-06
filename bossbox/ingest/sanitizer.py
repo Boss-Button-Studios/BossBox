@@ -489,6 +489,8 @@ def sanitize(
             escalated_to_deep=True,
         )
     except SanitizerDeepModeError as exc:
+        # SanitizerDeepModeError messages are fully controlled by this module
+        # (missing tesseract binary notice), so str(exc) is safe to surface.
         std_log.append(f"Deep-mode re-processing skipped: {exc}")
         return SanitizedDocument(
             clean_text=clean,

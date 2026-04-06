@@ -1,4 +1,7 @@
-"""AnthropicProvider — wraps the Anthropic Messages API.
+"""
+Anthropic Provider — BossBox Atomic Step 5
+===========================================
+Wraps the Anthropic Messages API.
 
 The anthropic SDK is an optional dependency (installed via the [cloud] extra).
 If it is not installed, or if no API key is supplied, the provider raises

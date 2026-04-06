@@ -1,6 +1,6 @@
 """
-bossbox.config.loader
-~~~~~~~~~~~~~~~~~~~~~
+Configuration Loader — BossBox Atomic Step 2
+=============================================
 Load, validate, and return typed configuration from YAML files.
 
 Design contract

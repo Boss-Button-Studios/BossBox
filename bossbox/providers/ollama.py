@@ -1,6 +1,6 @@
 """
-bossbox/providers/ollama.py
-
+Ollama Provider — BossBox Atomic Step 5
+========================================
 Async HTTP provider for a locally-running Ollama instance.
 
 Wire protocol

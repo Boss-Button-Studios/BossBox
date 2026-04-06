@@ -17,7 +17,7 @@ from unittest.mock import AsyncMock, MagicMock, patch
 import yaml
 
 import bossbox.cli as cli_module
-from bossbox.cli import _build_parser, _run
+from bossbox.cli import _MAX_GOAL_LEN, _build_parser, _run, _validate_goal
 
 
 def _run_async(coro):
@@ -41,6 +41,42 @@ def _make_ollama(exec_resp="Here is the result."):
     provider = MagicMock()
     provider.complete = AsyncMock(side_effect=[_decomp_yaml(), exec_resp])
     return provider
+
+
+class TestGoalValidationUnittest(unittest.TestCase):
+
+    def test_normal_goal_passes_through(self):
+        self.assertEqual(_validate_goal("write a function"), "write a function")
+
+    def test_strips_whitespace(self):
+        self.assertEqual(_validate_goal("  hello  "), "hello")
+
+    def test_removes_null_bytes(self):
+        self.assertEqual(_validate_goal("goal\x00with\x00nulls"), "goalwithnulls")
+
+    def test_empty_string_raises(self):
+        with self.assertRaises(SystemExit) as ctx:
+            _validate_goal("")
+        self.assertEqual(ctx.exception.code, 1)
+
+    def test_whitespace_only_raises(self):
+        with self.assertRaises(SystemExit) as ctx:
+            _validate_goal("   ")
+        self.assertEqual(ctx.exception.code, 1)
+
+    def test_null_only_raises(self):
+        with self.assertRaises(SystemExit) as ctx:
+            _validate_goal("\x00\x00")
+        self.assertEqual(ctx.exception.code, 1)
+
+    def test_too_long_raises(self):
+        with self.assertRaises(SystemExit) as ctx:
+            _validate_goal("x" * (_MAX_GOAL_LEN + 1))
+        self.assertEqual(ctx.exception.code, 1)
+
+    def test_exactly_max_length_passes(self):
+        goal = "x" * _MAX_GOAL_LEN
+        self.assertEqual(_validate_goal(goal), goal)
 
 
 class TestArgumentParserUnittest(unittest.TestCase):
